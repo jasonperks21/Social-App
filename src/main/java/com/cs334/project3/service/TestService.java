@@ -16,4 +16,9 @@ public class TestService implements ITestService{
     public List<Test> getAll() {
         return testRepository.getAll();
     }
+
+    @Override
+    public void insert(Test t) {
+        testRepository.save(t);
+    }
 }
