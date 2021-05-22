@@ -13,19 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class TestController {
     @Autowired
     private ITestService testService;
 
     @GetMapping("/test")
-    public ResponseEntity<List<Test>> getAll(){
-        List<Test> data =  testService.getAll();
-        return ResponseEntity.ok(data);
+    public List<Test> getAll(){
+        return testService.getAll();
     }
 
     @PostMapping(value = "/add")
-    @ResponseBody
     public String add(@RequestBody Test t){
         testService.insert(t);
         return "THANKS FOR POSTING " + t.text;
