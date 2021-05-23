@@ -8,3 +8,4 @@ public interface ITestService {
     public List<Test> getAll();
     public void insert(Test t);
 }
+
