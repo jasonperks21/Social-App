@@ -12,9 +12,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public interface TestRepository extends CrudRepository<Test,Integer>{
+public interface TestRepository extends JpaRepository<Test,Integer>{
 
     @Query("select t from Test t")
     public List<Test> getAll();
+
+    
 
 }
