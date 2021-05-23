@@ -1,9 +1,12 @@
 package com.cs334.project3.model;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="test2")
+@NoArgsConstructor
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,9 +15,6 @@ public class Test {
 
     public Test(String text) {
         this.text = text;
-    }
-
-    public Test() {
     }
 }
 
