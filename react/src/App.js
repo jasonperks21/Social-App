@@ -31,7 +31,6 @@ class Demo extends React.Component {
    }
   
    async post(){
-    {
       // Simple POST request with a JSON body using fetch
       const requestOptions = {
           method: 'POST',
@@ -42,7 +41,6 @@ class Demo extends React.Component {
           .then(response => {
             window.location.reload(false);
           });
-  }
   }
 
   render() {
