@@ -28,12 +28,4 @@ public class TestController {
         return "THANKS FOR POSTING " + t.text;
     }
 
-    @PostMapping(value = "/add")
-    @ResponseBody
-    public String add(@RequestBody Test t){
-        testService.insert(t);
-        return "THANKS FOR POSTING " + t.text;
-    }
-
-
 }
