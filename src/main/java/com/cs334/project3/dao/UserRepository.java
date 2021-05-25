@@ -13,9 +13,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public interface TestRepository extends JpaRepository<Test,Integer>{
+public interface UserRepository extends JpaRepository<User,Integer>{
 
-    @Query("select t from Test t")
-    public List<Test> getAll();
+    @Query("select t from User t")
+    public List<User> getAllUsers();
 
 }
