@@ -27,5 +27,4 @@ public class TestController {
         testService.insert(t);
         return "THANKS FOR POSTING " + t.text;
     }
-
 }
