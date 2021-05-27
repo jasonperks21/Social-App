@@ -1,85 +1,76 @@
 package com.cs334.project3.model;
 
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@Data
 @Entity
-@Table(name = "users")
 @NoArgsConstructor
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native"
+    )
+    @GenericGenerator(
+            name = "native",
+            strategy = "native"
+    )
+    private Long user_id;
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private long uid;
+    @Column
+    private String displayName;
+    @Column
+    private String email;
+    @Column
+    private String username;
+    @Column
+    private Integer passwordHash;
 
-   @Column(name = "uname")
-   private String uname;
+    @OneToMany(mappedBy = "user")
+    private List<GroupMember> memberships;
 
-   @Column(name = "dispname")
-   private String dispname;
+    /**
+     * Construct a user.
+     *
+     * @param displayName Name to display.
+     * @param email       User email address. Must be unique.
+     * @param username    Username. Must be unique.
+     * @param password    The password. This class does handles hashing.
+     */
+    public User(String displayName, String email, String username, String password) {
+        this.displayName = displayName;
+        this.email = email;
+        this.username = username;
+        this.passwordHash = password.hashCode();
+        memberships = new ArrayList<>();
+    }
 
-   @Column(name = "pwdhash")
-   private String pwdhash;
+    /**
+     * Add a membership to an existing group.
+     *
+     * @param group The group.
+     * @param admin Whether the user has admin rights on the group.
+     */
+    public void addGroupMembership(Group group, Boolean admin) {
+        GroupMember gm = new GroupMember(group, this, admin);
+        memberships.add(gm);
+    }
 
-   @Column(name = "email")
-   private String email;
 
-   public User() {
-
-   }
-
-   public User(String uname, String dispname, String pwdhash, String email) {
-      super();
-      this.uname = uname;
-      this.dispname = dispname;
-      //TODO Hash password before saving
-      this.pwdhash = pwdhash;
-      this.email = email;
-   }
-
-   public long getId() {
-      return this.uid;
-   }
-
-   public String getUname () {
-      return this.uname;
-   }
-
-   public void setUname(String uname) {
-      this.uname = uname;
-   }
-
-   public String getDispname () {
-      return this.dispname;
-   }
-
-   public void setDispname (String dispname) {
-      this.dispname = dispname;
-   }
-   
-   public String getPwd () {
-      //TODO unhash password and return
-      // At the moment the pwd is stored unhashed and returned as is
-      return this.pwdhash;
-   }
-
-   public void setPwd (String pwdhash) {
-      //TODO hash password before storing
-      // At the moment the pwd is stored unhashed and returned as is
-      this.pwdhash = pwdhash;
-   }
-
-   public String getEmail() {
-      return this.email;
-   }
-
-   public void setEmail(String email) {
-      this.email = email;
-   }
+    /**
+     * Check whether the password matches the stored hash.
+     *
+     * @param password The password.
+     * @return Whether the password matches the stored hash.
+     */
+    public Boolean checkPassword(String password) {
+        return this.passwordHash == password.hashCode();
+    }
 }
