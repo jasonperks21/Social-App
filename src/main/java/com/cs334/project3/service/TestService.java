@@ -1,7 +1,7 @@
 package com.cs334.project3.service;
 
-import com.cs334.project3.dao.TestRepository;
-import com.cs334.project3.dao.UserRepository;
+import com.cs334.project3.repo.TestRepository;
+import com.cs334.project3.repo.UserRepository;
 import com.cs334.project3.model.Test;
 import com.cs334.project3.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
