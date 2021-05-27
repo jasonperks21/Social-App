@@ -1,20 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+
+import App from './App/App';
 import './index.css';
-import Login from './Login/login';
-import NotFound from './NotFound/NotFound'
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Switch>
-      <Route exact path="/">
-        <Login />
-      </Route>
-      <Route component={NotFound} />
-
-    </Switch>
-  </BrowserRouter>,
+  <App />,
   document.getElementById('root')
 );
 
