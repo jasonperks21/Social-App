@@ -2,9 +2,6 @@ package com.cs334.project3.service;
 
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.Group;
-import com.cs334.project3.model.GroupMember;
-import com.cs334.project3.model.Post;
-import com.cs334.project3.model.User;
 import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.PostRepository;
 import com.cs334.project3.repo.PostResultSetMapping;
@@ -42,8 +39,8 @@ public class BasicDisplayService {
         return dto;
     }
 
-    public PostsToDisplayForUser getAllPostsToDisplayForUser(Long userId){
-        PostsToDisplayForUser pdto = new PostsToDisplayForUser();
+    public PostsToDisplayForUserDTO getAllPostsToDisplayForUser(Long userId){
+        PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
         try {
             List<PostResultSetMapping> posts = postRepository.getAllPostsToDisplayForUser(userId);
             System.out.println(posts);
@@ -55,4 +52,20 @@ public class BasicDisplayService {
         }
         return pdto;
     }
+
+    public PostsToDisplayForUserDTO getAllPostsOfGroupToDisplayForUser(Long userId, Long groupId){
+        PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
+        try {
+            List<PostResultSetMapping> posts = postRepository.getAllPostsOfGroupToDisplayForUser(userId, groupId);
+            System.out.println(posts);
+            pdto.createRecursiveDTOStructure(posts);
+            pdto.ok();
+        } catch(Exception e){
+            e.printStackTrace();
+            pdto.error();
+        }
+        return pdto;
+    }
+
+
 }

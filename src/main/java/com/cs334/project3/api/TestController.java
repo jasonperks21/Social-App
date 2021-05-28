@@ -2,7 +2,7 @@ package com.cs334.project3.api;
 
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.GroupsThatUserIsMemberOfDTO;
-import com.cs334.project3.dto.PostsToDisplayForUser;
+import com.cs334.project3.dto.PostsToDisplayForUserDTO;
 import com.cs334.project3.model.Test;
 import com.cs334.project3.service.BasicDisplayService;
 import com.cs334.project3.service.ITestService;
@@ -47,8 +47,13 @@ public class TestController {
     }
 
     @GetMapping("/posts/{userId}")
-    public PostsToDisplayForUser getPostsForUser(@PathVariable Long userId){
+    public PostsToDisplayForUserDTO getPostsForUser(@PathVariable Long userId){
         return groupService.getAllPostsToDisplayForUser(userId);
+    }
+
+    @GetMapping("/posts/{userId}/{groupId}")
+    public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
+        return groupService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
     }
 
 }

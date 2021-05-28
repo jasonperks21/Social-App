@@ -9,11 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class PostsToDisplayForUser extends BaseDTO<List<PostDTO>>{
+public class PostsToDisplayForUserDTO extends BaseDTO<List<PostDTO>>{
 
     private HashMap<Long, PostDTO> hashMap= new HashMap<>();
 
-    public PostsToDisplayForUser(){
+    public PostsToDisplayForUserDTO(){
         super(new ArrayList<>());
     }
 

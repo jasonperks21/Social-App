@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.post_id, p.replied.post_id, p.message, p.timestamp, u.displayName, u.user_id, gm.member_id, c.categoryName)\n" +
+    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.timestamp, p.member.user.displayName, p.member.user.user_id, gm.member_id, c.categoryName)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
             "gm.group.group_id = pg.group_id and\n" +
@@ -25,12 +25,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "order by p.post_id")
     public List<PostResultSetMapping> getAllPostsToDisplayForUser(@Param("uid") Long userId);
 
-    @Query(value = "SELECT p FROM Post p, Post pr, Group pg, GroupMember gm, User u join fetch p.replied rep " +
+    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.timestamp, p.member.user.displayName, p.member.user.user_id, gm.member_id, c.categoryName)\n" +
+            "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
-            "rep.post_id = p.replied.post_id and\n" +
             "gm.group.group_id = pg.group_id and\n" +
             "p.group.group_id = pg.group_id and\n" +
-            "gm.user.user_id = :uid \n" +
-            "order by p.post_id ")
-    public List<Post> getAllPostsToDisplayForUserHQL(@Param("uid") Long userId);
+            "gm.user.user_id = :uid and\n" +
+            "p.group.group_id = :gid and\n" +
+            "c.category_id = p.category.category_id\n" +
+            "order by p.post_id")
+    public List<PostResultSetMapping> getAllPostsOfGroupToDisplayForUser(@Param("uid") Long userId, @Param("gid") Long groupId);
+
 }

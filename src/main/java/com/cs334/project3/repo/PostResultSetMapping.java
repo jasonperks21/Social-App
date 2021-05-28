@@ -6,8 +6,12 @@ import lombok.Data;
 import java.time.ZonedDateTime;
 
 @Data
+@AllArgsConstructor
 public class PostResultSetMapping {
     //post stuff
+    private String groupName;
+    private ZonedDateTime timePosted;
+    private Long groupId;
     private Long postId;
     private Long replyId;
     private String message;
@@ -20,15 +24,4 @@ public class PostResultSetMapping {
 
     //category stuff
     private String category;
-
-    public PostResultSetMapping(Long postId, Long replyId, String message, ZonedDateTime timeStamp, String userDisplayName, Long userId, Long groupMemberId, String category) {
-        this.postId = postId;
-        this.replyId = replyId;
-        this.message = message;
-        this.timeStamp = timeStamp;
-        this.userDisplayName = userDisplayName;
-        this.userId = userId;
-        this.groupMemberId = groupMemberId;
-        this.category = category;
-    }
 }

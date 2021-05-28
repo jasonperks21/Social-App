@@ -9,26 +9,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class PostDTO {
+    private String groupName;
+    private Long groupId;
     private Long postId;
-    @Setter
-    private UserDTO user;
     @Setter
     private List<PostDTO> replies;
     @Setter
     private String categoryName;
     private String message;
+    private Long postUserId;
+    private String userDisplayName;
+    private ZonedDateTime timePosted;
 
     public PostDTO(PostResultSetMapping post){
+        groupId = post.getGroupId();
         postId = post.getPostId();
-        user = new UserDTO(post.getUserId(), post.getUserDisplayName(), false); //to do, update admin
         replies = new ArrayList<>();
         categoryName = post.getCategory();
         this.message = post.getMessage();
+        postUserId = post.getUserId();
+        userDisplayName = post.getUserDisplayName();
+        timePosted = post.getTimePosted();
+        groupName = post.getGroupName();
     }
 
     public void addReply(PostDTO dto){
