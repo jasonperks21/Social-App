@@ -1,6 +1,7 @@
 package com.cs334.project3.dto;
 
 import com.cs334.project3.model.Post;
+import com.cs334.project3.repo.PostResultSetMapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,24 +18,29 @@ public class PostsToDisplayForUser extends BaseDTO<List<PostDTO>>{
     }
 
 
-    public void createRecursiveDTOStructure(List<Post> posts){
+    public void createRecursiveDTOStructure(List<PostResultSetMapping> posts){
         List<PostDTO> dtos = new ArrayList<>();
-        Iterator<Post> it = posts.iterator();
+        Iterator<PostResultSetMapping> it = posts.iterator();
+        int size = posts.size();
         while (it.hasNext()) {
-            Post post = it.next();
-            if(post.getReplied() != null) {
+            PostResultSetMapping post = it.next();
+            if(post.getReplyId() == null) {
                 PostDTO dto = new PostDTO(post);
-                hashMap.put(post.getPost_id(), dto);
+                hashMap.put(post.getPostId(), dto);
                 dtos.add(dto);
                 it.remove();
             }
         }
-        while(hashMap.size() != posts.size()){
+        while(hashMap.size() != size){
             it = posts.iterator();
             while (it.hasNext()) {
-                Post post =  it.next();
-                if(hashMap.containsKey(post.getReplied().getPost_id())){
-                    System.out.println("FOUND ROOT");
+                PostResultSetMapping post =  it.next();
+                if(hashMap.containsKey(post.getReplyId())){
+                    PostDTO reply = new PostDTO(post);
+                    PostDTO root = hashMap.get(post.getReplyId());
+                    root.addReply(reply);
+                    hashMap.put(reply.getPostId(), reply);
+                    it.remove();
                 }
             }
         }

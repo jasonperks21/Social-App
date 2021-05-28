@@ -33,14 +33,14 @@ public class Post {
     @JoinColumn(name = "member_id")
     private GroupMember member;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "replied", fetch = FetchType.LAZY)
     private List<Post> replies;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Post replied = null;
 
     @Column(length = 4096)

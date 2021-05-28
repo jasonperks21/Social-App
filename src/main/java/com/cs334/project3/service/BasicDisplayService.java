@@ -7,6 +7,7 @@ import com.cs334.project3.model.Post;
 import com.cs334.project3.model.User;
 import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.PostRepository;
+import com.cs334.project3.repo.PostResultSetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,8 @@ public class BasicDisplayService {
     public PostsToDisplayForUser getAllPostsToDisplayForUser(Long userId){
         PostsToDisplayForUser pdto = new PostsToDisplayForUser();
         try {
-            List<Post> posts = postRepository.getAllPostsToDisplayForUser(userId);
+            List<PostResultSetMapping> posts = postRepository.getAllPostsToDisplayForUser(userId);
+            System.out.println(posts);
             pdto.createRecursiveDTOStructure(posts);
             pdto.ok();
         } catch(Exception e){
