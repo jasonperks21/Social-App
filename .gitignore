@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Node.js ###
+react/node_modules
