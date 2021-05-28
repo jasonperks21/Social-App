@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class TestController {
+public class Controller {
     @Autowired
     private ITestService testService;
 
@@ -55,5 +55,7 @@ public class TestController {
     public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
         return groupService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
     }
+
+    
 
 }
