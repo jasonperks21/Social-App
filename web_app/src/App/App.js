@@ -9,6 +9,15 @@ import "./styles.css";
 
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+          loggedIn : true,
+          userId : '9'
+        };
+      }
+
     render() { return(
         <BrowserRouter>
             <Switch>
@@ -16,7 +25,7 @@ class App extends React.Component {
                 <Login />
             </Route>
             <Route path="/">
-                <Home />
+                <Home userId={this.state.userId}/>
             </Route>
             <Route component={NotFound} />
             </Switch>
