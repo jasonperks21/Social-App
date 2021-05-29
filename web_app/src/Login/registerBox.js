@@ -4,49 +4,43 @@ class RegisterBox extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      email: '',
+      username: '',
+      password: ''
+    };
   }
-
-  submitRegister(e) {}
 
   render() {
     return (
-      <div className="top-box">
-        <div className="header">
-          Register
+
+      <div className="login-wrapper">
+      <h1>Sign Up</h1>
+      <form onSubmit={this.handleSubmit}>
+      <label>
+          <p>Email</p>
+          <input type="email" placeholder="example@something.com"/>
+        </label>
+        <label>
+          <p>Username</p>
+          <input type="text" placeholder="Username"/>
+        </label>
+        <label>
+          <p>Password</p>
+          <input type="password" placeholder="Password"/>
+        </label>
+        <label>
+          <p>Confirm Password</p>
+          <input type="password" placeholder="Confirm Password"/>
+        </label>
+        <div>
+          <div className="bDown">
+          <button type="submit" id="submit">Register</button>
+          </div>
         </div>
-        <div className="box">
+      </form>
+    </div>
 
-          <div className="input">
-            <label val="username">Username</label>
-            <input
-              type="text"
-              name="username"
-              className="login-input"
-              placeholder="Username"/>
-          </div>
-
-          <div className="input-group">
-            <label val="email">Email</label>
-            <input type="text" name="email" className="login-input" placeholder="Email"/>
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="login-input"
-              placeholder="Password"/>
-          </div>
-          <button
-            type="button"
-            className="login-btn"
-            onClick={this
-            .submitRegister
-            .bind(this)}>Register</button>
-        </div>
-      </div>
     );
   }
 }

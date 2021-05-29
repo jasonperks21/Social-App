@@ -9,31 +9,26 @@ class LoginBox extends React.Component {
         token: null,
         login: true
     };
-    this.handle = this.handle.bind(this)
   }
-  handle(){
-    this.setState({login:false});
-  }
-
 
   render() {
     return (
+
         <div className="login-wrapper">
-        <h1>Log In</h1>
+        <h1>Login</h1>
         <form onSubmit={this.handleSubmit}>
           <label>
             <p>Username</p>
             <input type="text" placeholder="Username"/>
           </label>
-          <br></br>
           <label>
             <p>Password</p>
             <input type="password" placeholder="Password"/>
           </label>
-          <a id='forgot' href="#">Forgot your password?</a>
+          <a id='forgot' href="/login">Forgot your password?</a>
           <div>
             <div className="bDown">
-            <button type="submit" id="submit">Submit</button>
+            <button type="submit" id="submit">Login</button>
             </div>
           </div>
         </form>

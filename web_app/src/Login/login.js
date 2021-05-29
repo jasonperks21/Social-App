@@ -11,19 +11,28 @@ class Login extends React.Component {
         this.state = {
           loginNotRegister : true
         };
+        this.handle = this.handle.bind(this);
       }
+    handle(){
+        let b = !(this.state.loginNotRegister);
+        this.setState({loginNotRegister: b});
+    }
 
     render() {
         let re;
+        let bText;
         if(this.state.loginNotRegister){
             re = <LoginBox/>;
+            bText = 'Register';
         }
         else{
+            bText = 'Login';
             re = <RegisterBox />;
         }
         return(
             <div className="box">
                 <img class="watermark" src={'./logo1.png'} alt="Logo"/>
+                <button type="button" id="switch" onClick={this.handle}>{bText}</button>
                 {re}
             </div>
             );
