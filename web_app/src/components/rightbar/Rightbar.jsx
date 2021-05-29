@@ -1,5 +1,5 @@
 import "./rightbar.css";
-import { Message } from "@material-ui/icons";
+//import { Message } from "@material-ui/icons";
 
 export default function Rightbar() {
   return (

@@ -2,7 +2,6 @@ import React from 'react';
 import LoginBox from './loginBox';
 import RegisterBox from './registerBox';
 import './login.css';
-//import { useSpring, animated } from "react-spring";
 
 class Login extends React.Component {
     constructor(props) {
