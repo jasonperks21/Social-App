@@ -2,7 +2,9 @@ import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import Login from '../Login/login';
 import NotFound from '../NotFound/NotFound';
-import Home from '../Home/Home';
+//import Home from '../Home/Home';
+import Home from "../pages/home/Home"
+import "../styles.css";
 
 
 
@@ -13,7 +15,9 @@ class App extends React.Component {
             <Route path="/login">
                 <Login />
             </Route>
-            <Route path ='/' component={Home} />
+            <Route path="/">
+                <Home />
+            </Route>
             <Route component={NotFound} />
             </Switch>
         </BrowserRouter>);
