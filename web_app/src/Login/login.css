@@ -5,6 +5,7 @@
     margin: 10px;
     border-radius: 20px;
     background-color: rgba(135, 212, 222, 0.589);
+    
 }
 html, body {
     background-image: linear-gradient(315deg, #0cbaba 0%, #380036 74%);
@@ -21,10 +22,16 @@ html, body {
 .login-wrapper input{
     margin: 10px;
     margin-bottom: 20px;
+    padding: 5px;
+    font-size: 15px;
+    border-radius: 5px;
+    font-weight: bold;
 }
 .login-wrapper label{
-
+    font-family: "Monospace", "Lucida Console" ;
+    font-size: 20px;
     padding-bottom: 5px;
+    font-weight: bold;
 }
 .watermark{
     height: 7em;
@@ -33,6 +40,7 @@ html, body {
 }
 .login-wrapper h1{
     text-align: center;
+    margin-bottom: 20px;
 }
 .login-wrapper p{
     margin: 0%;;
@@ -41,9 +49,22 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 20px;
 }
+.login-wrapper input[type=text]:focus {
+    border: 3px solid #555;
+  }
 #submit{
     font-size: 20px;
     background-color: #008CBA;
+    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
+    border-radius: 10px;
+}
+#forgot{
+    font-family: "Montserrat", sans-serif;
+    text-decoration: none;
+    font-size: 15px;
+    text-align: center;
 }
 

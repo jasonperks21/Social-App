@@ -4,7 +4,7 @@ import Login from '../Login/login';
 import NotFound from '../NotFound/NotFound';
 //import Home from '../Home/Home';
 import Home from "../pages/home/Home"
-import "../styles.css";
+import "./styles.css";
 
 
 

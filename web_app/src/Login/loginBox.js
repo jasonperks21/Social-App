@@ -30,11 +30,11 @@ class LoginBox extends React.Component {
             <p>Password</p>
             <input type="password" placeholder="Password"/>
           </label>
+          <a id='forgot' href="#">Forgot your password?</a>
           <div>
             <div className="bDown">
             <button type="submit" id="submit">Submit</button>
             </div>
-            
           </div>
         </form>
       </div>
