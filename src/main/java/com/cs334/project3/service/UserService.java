@@ -29,8 +29,11 @@ public class UserService {
     }
 
     // Get user by ID
-    public User getUserById(Long userID){
-        return userRepository.findById(userID).get();
+    public UserDTO getUserById(Long userID){
+        User user = userRepository.findById(userID).get();
+        //TODO: DB : Implement UserDTO constructor without admin arg
+        UserDTO userDTO = new UserDTO(user, false);
+        return userDTO;
     }
 
     // Get user by username

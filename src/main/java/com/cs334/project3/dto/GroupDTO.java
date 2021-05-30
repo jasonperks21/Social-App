@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class GroupDTO {
+@AllArgsConstructor
+public class GroupDTO extends BaseDTO<List<UserDTO>>{
     private Long groupId;
     private String groupName;
     private boolean isAdminOnThisGroup = false;
