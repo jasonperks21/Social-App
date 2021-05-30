@@ -1,6 +1,6 @@
 import React from 'react';
 
-function WithGroupLoading(Component) {
+function WithLoading(Component) {
   return function WihLoadingComponent({ isLoading, ...props }) {
     if (!isLoading) return <Component {...props} />;
     return (
@@ -10,4 +10,4 @@ function WithGroupLoading(Component) {
     );
   };
 }
-export default WithGroupLoading;
+export default WithLoading;

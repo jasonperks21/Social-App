@@ -3,7 +3,6 @@ import { Group, PermIdentity} from "@material-ui/icons"; //Person
 
 const GroupList = (props) => {
   const { groups } = props;
-  //console.log(props)
   if (!groups || groups.length === 0) return <p>No groups, sorry</p>;
 
   function role(bool){
@@ -17,16 +16,6 @@ const GroupList = (props) => {
   }
 
   return (
-    // <ul>
-    //   <h2 className='list-head'>Available Public Repositories</h2>
-    //   {groups.map((group) => {
-    //     return (
-    //       <li key={group.groupId} className='list'>
-    //         <span className='repo-text'>{group.groupName}</span>
-    //       </li>
-    //     );
-    //   })}
-    // </ul>
     <ul className="sidebarList">
       {groups.map((group) => {
          return (

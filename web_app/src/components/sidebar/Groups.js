@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from 'react';
 //import './App.css';
 import GroupList from './groupList';
-import WithGroupLoading from './WithGroupLoading';
+import WithLoading from './WithGroupLoading';
 
 function Groups(userId) {
   const id = userId.userId;
-  const ListLoading = WithGroupLoading(GroupList);
+  const ListLoading = WithLoading(GroupList);
   const [appState, setAppState] = useState({
     loading: false,
     groups: null,

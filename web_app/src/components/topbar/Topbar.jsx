@@ -5,7 +5,7 @@ export default function Topbar() {
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
-        <span className="logo">Not Facebook</span>
+        <a href='/' className="logo">Not Facebook</a>
       </div>
       <div className="topbarCenter">
         <div className="searchbar">
@@ -18,7 +18,7 @@ export default function Topbar() {
       </div>
       <div className="topbarRight">
         <div className="topbarLinks">
-          <span className="topbarLink">Home Page</span>
+          <a href="/" className="topbarLink">Home Page</a>
           <span className="topbarLink">Timeline</span>
           <span className="topbarLink">Post Map</span>
         </div>
