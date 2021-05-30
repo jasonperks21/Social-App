@@ -95,7 +95,7 @@ public class Controller {
         return groupService.getGroupByName(groupName);
     }
 
-    @GetMapping("/groups/{member}")
+    @PutMapping("/groups/{member}")
     public void addMemberToGroup(@PathVariable GroupMember member) {
         groupService.joinGroup(member);
     }
@@ -154,7 +154,7 @@ public class Controller {
     //Find post by location:
     //TODO: later
 
-    @PostMapping("/posts/{post}")
+    @PutMapping("/posts/{post}")
     public void comment(@PathVariable Post post) {
         postService.addComment(post);
     }
