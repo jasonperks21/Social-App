@@ -1,6 +1,9 @@
 package com.cs334.project3.service;
 
-import com.cs334.project3.dto.*;
+import com.cs334.project3.dto.PostsToDisplayForUserDTO;
+import com.cs334.project3.model.Category;
+import com.cs334.project3.model.Group;
+import com.cs334.project3.model.GroupMember;
 import com.cs334.project3.model.Post;
 import com.cs334.project3.repo.PostRepository;
 import com.cs334.project3.repo.PostResultSetMapping;
@@ -34,6 +37,39 @@ public class PostService {
         return postRepository.findById(post_id).get();
     }
 
+    //Find post by category:
+    public List<Post> getPostByCategory(Category category) {
+        //TODO: DB: implement findAllByCategory in PostRepository that returns List<Post>
+        return postRepository.findAllByCategory(category).get();
+    }
+
+    //Find post by member:
+    public List<Post> getPostByMember(GroupMember member) {
+        //TODO: DB: implement findAllByMember in PostRepository that returns List<Post>
+        return postRepository.findAllByMember(member).get();
+    }
+
+    //Find post by time:
+    public List<Post> getPostByTime(ZonedDateTime timestamp) {
+        //TODO: DB: implement findAllByTime in PostRepository that returns List<Post>
+        return postRepository.findAllByTime(timestamp).get();
+    }
+
+    //Find post by group:
+    public List<Post> getPostByGroup(Group group) {
+        //TODO: DB: implement findAllByGroup in PostRepository that returns List<Post>
+        return postRepository.findAllByGroup(group).get();
+    }
+
+    //Find post by location:
+    //TODO: Later.
+
+    //Add comment:
+    public void addComment(Post post) {
+        //TODO: DB: Implement addComment in PostRepository that returns List<Post>
+        return postRepository.addComment(post);
+    }
+
     // Get posts to display for user
     public PostsToDisplayForUserDTO getAllPostsToDisplayForUser(Long userId){
         PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
@@ -49,6 +85,7 @@ public class PostService {
         return pdto;
     }
 
+    //Get all the posts from a group to display for the user:
     public PostsToDisplayForUserDTO getAllPostsOfGroupToDisplayForUser(Long userId, Long groupId){
         PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
         try {

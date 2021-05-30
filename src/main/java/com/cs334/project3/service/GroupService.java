@@ -1,11 +1,9 @@
 package com.cs334.project3.service;
 
-import com.cs334.project3.dto.PostsToDisplayForUserDTO;
 import com.cs334.project3.model.Group;
 import com.cs334.project3.model.GroupMember;
 import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.PostRepository;
-import com.cs334.project3.repo.PostResultSetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,19 +52,5 @@ public class GroupService {
     public void joinGroup(GroupMember member) {
         //TODO: DB: Implement addMember in GroupRepository
         groupRepository.addMember(member);
-    }
-
-    public PostsToDisplayForUserDTO getAllPostsOfGroupToDisplayForUser(Long userId, Long groupId){
-        PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
-        try {
-            List<PostResultSetMapping> posts = postRepository.getAllPostsOfGroupToDisplayForUser(userId, groupId);
-            System.out.println(posts);
-            pdto.createRecursiveDTOStructure(posts);
-            pdto.ok();
-        } catch(Exception e){
-            e.printStackTrace();
-            pdto.error();
-        }
-        return pdto;
     }
 }
