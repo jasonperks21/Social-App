@@ -23,7 +23,7 @@ const GroupList = (props) => {
           <div className="listWrapper">
             <div className="listTop">
               <Group className="sidebarListIcon" />
-              <span className="sidebarItemText">{group.groupName}</span>
+              <a href={'/groups?gid='+group.groupId} className="sidebarItemText">{group.groupName}</a>
             </div>
             <div className="listBottom">
               {/* <div className="listBottomActive">

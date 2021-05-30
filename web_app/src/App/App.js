@@ -2,8 +2,8 @@ import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import Login from '../Login/login';
 import NotFound from '../NotFound/NotFound';
-//import Home from '../Home/Home';
 import Home from "../pages/home/Home"
+import Groups from "../pages/groups/groups"
 import "./styles.css";
 
 
@@ -18,14 +18,18 @@ class App extends React.Component {
         };
       }
 
-    render() { return(
+    render() {
+        return(
         <BrowserRouter>
             <Switch>
-            <Route path="/login">
+            <Route exact path="/login">
                 <Login />
             </Route>
-            <Route path="/">
+            <Route exact path="/">
                 <Home userId={this.state.userId}/>
+            </Route>
+            <Route exact path="/groups">
+                <Groups userId={this.state.userId}/>
             </Route>
             <Route component={NotFound} />
             </Switch>
