@@ -37,11 +37,6 @@ public class GroupService {
         return groupRepository.findById(group_id).get();
     }
 
-    //Get number of groups that exist:
-    public Long numberOfGroups() {
-        return groupRepository.count();
-    }
-
     //Find group by the groups name:
     public Group getGroupByName(String groupName) {
         //TODO: DB: Implement findGroupByName in GroupRepository that returns type Optional<Group>
