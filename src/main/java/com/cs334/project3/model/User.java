@@ -36,6 +36,13 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<GroupMember> memberships;
 
+    @OneToMany(mappedBy = "user")
+    private List<Friend> friends;
+
+    protected void addFriend(Friend friend){
+        friends.add(friend);
+    }
+
     /**
      * Construct a user.
      *
