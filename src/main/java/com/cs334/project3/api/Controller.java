@@ -3,6 +3,7 @@ package com.cs334.project3.api;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.GroupsThatUserIsMemberOfDTO;
 import com.cs334.project3.dto.PostsToDisplayForUserDTO;
+import com.cs334.project3.dto.UserDTO;
 import com.cs334.project3.model.*;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,11 +111,6 @@ public class Controller {
     public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
         return postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
     }
-
-    ////////////////////////////////////////////////////////
-    //// USER METHODS //////////////////////////////////////
-    ////////////////////////////////////////////////////////
-
     
     @PostMapping("/posts/{post}")
     public void addPost(@PathVariable Post post) {
@@ -163,4 +159,37 @@ public class Controller {
     public void comment(@PathVariable Post post) {
         postService.addComment(post);
     }
+
+    ////////////////////////////////////////////////////////
+    //// USER METHODS //////////////////////////////////////
+    ////////////////////////////////////////////////////////
+
+    @PostMapping("/user")
+    public void addUser(@RequestBody User user){
+        userService.addUser(user);
+    }
+
+    @DeleteMapping("/user/{userId}")
+    public void deleteUserById(@PathVariable Long userId){
+        userService.deleteUserById(userId);
+    }
+
+    @GetMapping("/user/exists/{userId}")
+    public boolean userIdExists(@PathVariable Long userId){
+        return userService.userIdExists(userId);
+    }
+
+    @GetMapping("/user/{userId}")
+    public UserDTO getUserById(@PathVariable Long userId){
+        return userService.getUserById(userId);
+    }
+
+    // The rest I'll implement after the repo code is ready
+
+    ////////////////////////////////////////////////////////
+    //// GROUPMEMBER METHODS ///////////////////////////////
+    ////////////////////////////////////////////////////////
+
+    
+
 }
