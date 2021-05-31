@@ -60,5 +60,12 @@ public class Group {
     protected void addMember(GroupMember member){
         member.setGroup(this);
         members.add(member);
+
+        // group <- repo by id (group)
+        // user <- repo by id (user)
+        // groupmember <- new GroupMember(group, user, admin)
+        // group repo save(groupmember)
+
+
     }
 }
