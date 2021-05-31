@@ -15,9 +15,12 @@ class App extends React.Component {
             <Route path="/login">
                 <Login />
             </Route>
-            <Route path="/">
+            <Route exact path="/">
                 <Home />
             </Route>
+            <route path="/profile/:username">
+
+            </route>
             <Route component={NotFound} />
             </Switch>
         </BrowserRouter>);
