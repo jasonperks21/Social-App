@@ -1,7 +1,9 @@
 package com.cs334.project3.api;
 
 import com.cs334.project3.datagen.DataGenerator;
+import com.cs334.project3.dto.GroupDTO;
 import com.cs334.project3.dto.GroupsThatUserIsMemberOfDTO;
+import com.cs334.project3.dto.PostDTO;
 import com.cs334.project3.dto.PostsToDisplayForUserDTO;
 import com.cs334.project3.model.*;
 import com.cs334.project3.service.*;
@@ -80,24 +82,29 @@ public class Controller {
         groupService.deleteGroup(group);
     }
 
+    @DeleteMapping("/groups/{group}")
+    public void removeGroupById(@PathVariable Long group_id) {
+        groupService.deleteGroupById(group_id);
+    }
+
     @GetMapping("/groups/{groupId}")
     public boolean groupExists(@PathVariable Long groupId) {
         return groupService.groupIdExists(groupId);
     }
 
     @GetMapping("/groups/{groupId}")
-    public Group findGroupById(@PathVariable Long groupId) {
-        return groupService.getGroupById(groupId);
+    public GroupDTO findGroupById(@PathVariable Long groupId, Long user_id) {
+        return groupService.getGroupById(groupId, user_id);
     }
 
     @GetMapping("/groups/{groupName}")
-    public Group findGroupByName(@PathVariable String groupName) {
-        return groupService.getGroupByName(groupName);
+    public GroupDTO findGroupByName(@PathVariable String groupName, Long user_id) {
+        return groupService.getGroupByName(groupName, user_id);
     }
 
     @PutMapping("/groups/{member}")
-    public void addMemberToGroup(@PathVariable GroupMember member) {
-        groupService.joinGroup(member);
+    public void addMemberToGroup(@PathVariable Long group_id, Long user_id) {
+        groupService.joinGroup(group_id,user_id);
     }
 
     ////////////////////Controller for posts/////////////////////
@@ -110,11 +117,6 @@ public class Controller {
     public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
         return postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
     }
-
-    ////////////////////////////////////////////////////////
-    //// USER METHODS //////////////////////////////////////
-    ////////////////////////////////////////////////////////
-
     
     @PostMapping("/posts/{post}")
     public void addPost(@PathVariable Post post) {
@@ -137,22 +139,22 @@ public class Controller {
     }
 
     @GetMapping("/posts/{category}")
-    public List<Post> findPostByCategory(@PathVariable Category category) {
-        return  postService.getPostByCategory(category);
+    public PostDTO findPostByCategory(@PathVariable Category category) {
+        return postService.getPostByCategory(category);
     }
 
     @GetMapping("/posts/{member}")
-    public List<Post> findPostByMember(@PathVariable GroupMember member) {
+    public PostDTO findPostByMember(@PathVariable GroupMember member) {
         return postService.getPostByMember(member);
     }
 
     @GetMapping("/posts/{timestamp}")
-    public List<Post> findPostByTime(@PathVariable ZonedDateTime timestamp) {
+    public PostDTO findPostByTime(@PathVariable ZonedDateTime timestamp) {
         return postService.getPostByTime(timestamp);
     }
 
     @GetMapping("/posts/{group}")
-    public List<Post> findPostByGroup(@PathVariable Group group) {
+    public PostDTO findPostByGroup(@PathVariable Group group) {
         return postService.getPostByGroup(group);
     }
 

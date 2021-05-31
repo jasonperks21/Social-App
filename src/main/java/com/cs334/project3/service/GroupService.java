@@ -39,7 +39,7 @@ public class GroupService {
      * Delete a group by ID.
      * @param group_id
      */
-    public void deleteById(Long group_id) {
+    public void deleteGroupById(Long group_id) {
         groupRepository.deleteById(group_id);
     }
 
