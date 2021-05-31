@@ -76,7 +76,7 @@ method: delete
 	get Friend from repo using userId and friendUserId (Custom Query)
 	repo.delete(friend)
 
-GET FRIENDS for user
+GET FRIENDS OF USER
 method: get
 RequestBody: userId (JWT later)
     get friends list from repo for userId (Custom Query)
