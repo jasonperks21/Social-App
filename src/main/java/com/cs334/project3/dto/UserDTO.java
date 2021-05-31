@@ -1,6 +1,7 @@
 package com.cs334.project3.dto;
 
 import com.cs334.project3.model.User;
+import com.cs334.project3.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -16,6 +17,4 @@ public class UserDTO {
         displayName = user.getDisplayName();
         this.admin = admin;
     }
-
-
 }

@@ -55,5 +55,4 @@ public class TestController {
     public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
         return groupService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
     }
-
 }
