@@ -1,14 +1,17 @@
 package com.cs334.project3.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "postgroups")
@@ -24,10 +27,10 @@ public class Group {
     )
     private Long group_id;
 
-    @OneToMany(mappedBy = "group",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "group", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "group",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "group", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<GroupMember> members;
 
     @Column
