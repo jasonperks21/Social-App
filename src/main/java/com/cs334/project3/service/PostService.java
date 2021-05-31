@@ -1,10 +1,7 @@
 package com.cs334.project3.service;
 
-import com.cs334.project3.dto.PostsToDisplayForUserDTO;
-import com.cs334.project3.model.Category;
-import com.cs334.project3.model.Group;
-import com.cs334.project3.model.GroupMember;
-import com.cs334.project3.model.Post;
+import com.cs334.project3.dto.*;
+import com.cs334.project3.model.*;
 import com.cs334.project3.repo.PostRepository;
 import com.cs334.project3.repo.PostResultSetMapping;
 import org.springframework.beans.factory.annotation.Autowired;

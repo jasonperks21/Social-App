@@ -85,20 +85,20 @@ public class Controller {
         return groupService.groupIdExists(groupId);
     }
 
-    @GetMapping("/groups/{groupId}")
-    public Group findGroupById(@PathVariable Long groupId) {
-        return groupService.getGroupById(groupId);
-    }
-
-    @GetMapping("/groups/{groupName}")
-    public Group findGroupByName(@PathVariable String groupName) {
-        return groupService.getGroupByName(groupName);
-    }
-
-    @PutMapping("/groups/{member}")
-    public void addMemberToGroup(@PathVariable GroupMember member) {
-        groupService.joinGroup(member);
-    }
+//    @GetMapping("/groups/{groupId}")
+//    public Group findGroupById(@PathVariable Long groupId) {
+//        return groupService.getGroupById(groupId, userId);
+//    }
+//
+//    @GetMapping("/groups/{groupName}")
+//    public Group findGroupByName(@PathVariable String groupName) {
+//        return groupService.getGroupByName(groupName);
+//    }
+//
+//    @PutMapping("/groups/{member}")
+//    public void addMemberToGroup(@PathVariable GroupMember member) {
+//        groupService.joinGroup(member);
+//    }
 
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
