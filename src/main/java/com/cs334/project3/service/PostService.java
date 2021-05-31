@@ -36,27 +36,35 @@ public class PostService {
     }
 
     //Find post by category:
-    public List<Post> getPostByCategory(Category category) {
-        //TODO: DB: implement findAllByCategory in PostRepository that returns List<Post>
-        return postRepository.findAllByCategory(category).get();
+    public PostDTO getPostByCategory(Category category) {
+        //TODO: DB: implement findAllByCategory in PostRepository
+        PostResultSetMapping post = postRepository.findByCategory(category).get();
+        PostDTO postDTO = new PostDTO(post);
+        return postDTO;
     }
 
     //Find post by member:
-    public List<Post> getPostByMember(GroupMember member) {
-        //TODO: DB: implement findAllByMember in PostRepository that returns List<Post>
-        return postRepository.findAllByMember(member).get();
+    public PostDTO getPostByMember(GroupMember member) {
+        //TODO: DB: implement findAllByMember in PostRepository
+        PostResultSetMapping post = postRepository.findByMember(member).get();
+        PostDTO postDTO = new PostDTO(post);
+        return  postDTO;
     }
 
     //Find post by time:
-    public List<Post> getPostByTime(ZonedDateTime timestamp) {
-        //TODO: DB: implement findAllByTime in PostRepository that returns List<Post>
-        return postRepository.findAllByTime(timestamp).get();
+    public PostDTO getPostByTime(ZonedDateTime timestamp) {
+        //TODO: DB: implement findAllByTime in PostRepository
+        PostResultSetMapping post = postRepository.findByTime(timestamp).get();
+        PostDTO postDTO = new PostDTO(post);
+        return postDTO;
     }
 
     //Find post by group:
-    public List<Post> getPostByGroup(Group group) {
-        //TODO: DB: implement findAllByGroup in PostRepository that returns List<Post>
-        return postRepository.findAllByGroup(group).get();
+    public PostDTO getPostByGroup(Group group) {
+        //TODO: DB: implement findAllByGroup in PostRepository
+        PostResultSetMapping post = postRepository.findByGroup(group).get();
+        PostDTO postDTO = new PostDTO(post);
+        return postDTO;
     }
 
     //Find post by location:
@@ -65,7 +73,7 @@ public class PostService {
     //Add comment:
     public void addComment(Post post) {
         //TODO: DB: Implement addComment in PostRepository that returns List<Post>
-        return postRepository.addComment(post);
+        postRepository.addComment(post);
     }
 
     // Get posts to display for user

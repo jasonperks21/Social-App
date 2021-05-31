@@ -84,6 +84,5 @@ public class GroupService {
     public void joinGroup(Long group_id, Long user_id) {
         //TODO: DB: Implement addNewMember in GroupRepository
         groupRepository.addNewMember(group_id, user_id);
-
     }
 }

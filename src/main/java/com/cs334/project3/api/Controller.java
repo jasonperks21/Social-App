@@ -136,31 +136,31 @@ public class Controller {
         return postService.getPostByID(postId);
     }
 
-    @GetMapping("/posts/{category}")
-    public List<Post> findPostByCategory(@PathVariable Category category) {
-        return  postService.getPostByCategory(category);
-    }
-
-    @GetMapping("/posts/{member}")
-    public List<Post> findPostByMember(@PathVariable GroupMember member) {
-        return postService.getPostByMember(member);
-    }
-
-    @GetMapping("/posts/{timestamp}")
-    public List<Post> findPostByTime(@PathVariable ZonedDateTime timestamp) {
-        return postService.getPostByTime(timestamp);
-    }
-
-    @GetMapping("/posts/{group}")
-    public List<Post> findPostByGroup(@PathVariable Group group) {
-        return postService.getPostByGroup(group);
-    }
-
-    //Find post by location:
-    //TODO: later
-
-    @PutMapping("/posts/{post}")
-    public void comment(@PathVariable Post post) {
-        postService.addComment(post);
-    }
+//    @GetMapping("/posts/{category}")
+//    public List<Post> findPostByCategory(@PathVariable Category category) {
+//        return  postService.getPostByCategory(category);
+//    }
+//
+//    @GetMapping("/posts/{member}")
+//    public List<Post> findPostByMember(@PathVariable GroupMember member) {
+//        return postService.getPostByMember(member);
+//    }
+//
+//    @GetMapping("/posts/{timestamp}")
+//    public List<Post> findPostByTime(@PathVariable ZonedDateTime timestamp) {
+//        return postService.getPostByTime(timestamp);
+//    }
+//
+//    @GetMapping("/posts/{group}")
+//    public List<Post> findPostByGroup(@PathVariable Group group) {
+//        return postService.getPostByGroup(group);
+//    }
+//
+//    //Find post by location:
+//    //TODO: later
+//
+//    @PutMapping("/posts/{post}")
+//    public void comment(@PathVariable Post post) {
+//        postService.addComment(post);
+//    }
 }
