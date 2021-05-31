@@ -15,27 +15,45 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    //Create a new post:
+    /**
+     * Create a new post:
+     * @param post
+     */
     public void createPost(Post post) {
         postRepository.save(post);
     }
 
-    //Delete a post:
+    /**
+     * Delete a post.
+     * @param post
+     */
     public void deletePost(Post post) {
         postRepository.delete(post);
     }
 
-    //See if a post exists:
+    /**
+     * See if a post exists
+     * @param post_id
+     * @return
+     */
     public boolean postIdExists(Long post_id) {
         return postRepository.existsById(post_id);
     }
 
-    //Find post by ID:
+    /**
+     * Find post by ID.
+     * @param post_id
+     * @return
+     */
     public Post getPostByID(Long post_id) {
         return postRepository.findById(post_id).get();
     }
 
-    //Find post by category:
+    /**
+     * Find post by category
+     * @param category
+     * @return
+     */
     public PostDTO getPostByCategory(Category category) {
         //TODO: DB: implement findAllByCategory in PostRepository
         PostResultSetMapping post = postRepository.findByCategory(category).get();
@@ -43,7 +61,11 @@ public class PostService {
         return postDTO;
     }
 
-    //Find post by member:
+    /**
+     * Find post by member.
+     * @param member
+     * @return
+     */
     public PostDTO getPostByMember(GroupMember member) {
         //TODO: DB: implement findAllByMember in PostRepository
         PostResultSetMapping post = postRepository.findByMember(member).get();
@@ -51,7 +73,11 @@ public class PostService {
         return  postDTO;
     }
 
-    //Find post by time:
+    /**
+     * Find post by time
+     * @param timestamp
+     * @return
+     */
     public PostDTO getPostByTime(ZonedDateTime timestamp) {
         //TODO: DB: implement findAllByTime in PostRepository
         PostResultSetMapping post = postRepository.findByTime(timestamp).get();
@@ -59,7 +85,11 @@ public class PostService {
         return postDTO;
     }
 
-    //Find post by group:
+    /**
+     * Find post by group.
+     * @param group
+     * @return
+     */
     public PostDTO getPostByGroup(Group group) {
         //TODO: DB: implement findAllByGroup in PostRepository
         PostResultSetMapping post = postRepository.findByGroup(group).get();
@@ -70,6 +100,7 @@ public class PostService {
     //Find post by location:
     //TODO: Later.
 
+    //TODO: Fix
     //Add comment:
     public void addComment(Post post) {
         //TODO: DB: Implement addComment in PostRepository that returns List<Post>

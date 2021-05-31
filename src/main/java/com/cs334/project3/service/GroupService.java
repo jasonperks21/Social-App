@@ -76,6 +76,8 @@ public class GroupService {
         return groupDTO;
     }
 
+
+    //TODO: Fix.
     /**
      * Add a member to the group
      * @param group_id
