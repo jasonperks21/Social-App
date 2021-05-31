@@ -1,14 +1,17 @@
 package com.cs334.project3.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "friends")
@@ -22,14 +25,14 @@ public class Friend {
             name = "native",
             strategy = "native"
     )
-    private Long friend_id;
+    private Long friendship_id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne()
+    @JoinColumn(name = "friend_user_id")
     private User friend;
 
     /**
@@ -42,6 +45,7 @@ public class Friend {
         this.friend = friend;
         this.user = user;
         user.addFriend(this);
+        friend.addFriendOf(this);
     }
 
 

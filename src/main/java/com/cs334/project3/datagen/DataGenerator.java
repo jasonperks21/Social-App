@@ -3,6 +3,7 @@ package com.cs334.project3.datagen;
 import com.cs334.project3.model.*;
 import com.cs334.project3.repo.*;
 import lombok.NoArgsConstructor;
+import org.hibernate.type.ZonedDateTimeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +30,8 @@ public class DataGenerator {
     private PostRepository postRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private FriendRepository friendRepository;
 
     private List<String> messages_content = new ArrayList<>();
     private String[] names;
@@ -97,14 +102,15 @@ public class DataGenerator {
         for(int i = 0; i < (int)((float)size*1.5f); i++){
             User u = randElem(users);
             Group g = randElem(groups);
-            members.add(new GroupMember(g, u, rand.nextBoolean()));
+            GroupMember gm = u.addGroupMembership(g, rand.nextBoolean());
+            members.add(gm);
         }
 
 
     }
 
     private List<Post> posts = new ArrayList<>();
-    private List<Category> categories = new ArrayList<>();
+    private List<Category> categories;
     private void createPosts(){
         //create categories
 //        categories.add(new Category("Shakespearean shit", "Some stuff about to be or not be."));
@@ -123,39 +129,71 @@ public class DataGenerator {
             GroupMember member = randElem(members);
             Category cat = randElem(categories);
             Post p = new Post(group, member, cat, mes);
+            ZonedDateTime time = ZonedDateTime.now();
+            time.minusDays(10 + rand.nextInt(10));
+            p.setTimestamp(time);
             posts.add(p);
         }
 
 
+        //replies
         Collections.shuffle(l);
         for(int i = 0; i < size*8; i++){
             Post r = randElem(posts);
             String mes = l.get(i);
+            ZonedDateTime time = r.getTimestamp();
+            time.plusDays(rand.nextInt(10));
+            if(time.isAfter(ZonedDateTime.now())){
+                time = ZonedDateTime.now();
+            }
             Post p = new Post(r, randElem(r.getMember().getGroup().getMembers()), mes);
+            p.setTimestamp(time);
             posts.add(p);
         }
 
     }
 
+    private List<Friend> friendships = new ArrayList<>();
+    private void createFriends(){
+        for(User u: users){
+            List<User> currentFriends = new ArrayList<>();
+            int fsize = 1 + rand.nextInt(5);
+            for(int i = 0; i < fsize; i++){
+                List<GroupMember> memberships= u.getMemberships();
+                if(memberships.size() != 0) {
+                    Group g = randElem(memberships).getGroup();
+                    User f = randElem(g.getMembers()).getUser();
+                    if (!currentFriends.contains(f)) {
+                        Friend friend = new Friend(u, f);
+                        friendships.add(friend);
+                        currentFriends.add(f);
+                    }
+                }
+            }
+        }
+    }
+
 
     private <T> T randElem(List<T> list){
-        return list.get(rand.nextInt(list.size()));
+        if (list.size() > 0) {
+            return list.get(rand.nextInt(list.size()));
+        } else return null;
     }
 
 
     public void genData(){
-
-        categories = categoryRepository.findAll();
+        if (categories == null)
+            categories = categoryRepository.findAll();
         createUsers();
-        System.out.println("Created 100 users.");
         createGroups();
-        System.out.println("Created 10 users.");
         createPosts();
-        System.out.println("Created 1000 posts.");
-        //userRepository.saveAll(users);
+        createFriends();
+        userRepository.saveAll(users);
+        groupRepository.saveAll(groups);
+        groupMemberRepository.saveAll(members);
         postRepository.saveAll(posts);
+        friendRepository.saveAll(friendships);
         //categoryRepository.saveAll(categories);
-        //groupMemberRepository.saveAll(members);
         //postRepository.saveAll(posts);
     }
 

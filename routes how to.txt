@@ -1,0 +1,85 @@
+-----------------------------------------------------------------------------------
+route: /posts
+Note that this covers both the routes
+
+POSTING TO GROUPS
+method: post
+@RequestBody: userId (will use JWT for this later), groupId, replyId, message, categoryId
+	get GroupMembership gm for user using userId and groupId (Custom Query)
+	get Category c by categoryId
+	if replyId null
+	    Post p <- gm.postToGroup(message, c)
+	else
+	    get Post r by replyId
+	    Post p <- gm.replyToPost(r, message)
+	repo.save(p)
+
+DELETING POSTS
+method: delete
+@RequestBody: postId (use JWT later to check if user owns this post)
+	get post by postId
+	repo.delete(post)
+-----------------------------------------------------------------------------------
+route: /membership
+
+ADDING TO MEMBERS TO GROUPS
+method: post
+@RequestBody: userId (JWT later), groupId
+	get user by userId
+	get group by groupId
+	GroupMember gm <- User.addGroupMembership
+	repo.save(gm)
+
+CHANGE ADMIN
+method: update
+@RequestBody: userId (JWT later), groupId, admin
+	get GroupMember from repo using userId and groupId (Custom Query)
+	GroupMember.setAdmin(admin)
+	repo.save(gm)
+
+GETTING POSTS AND GROUPS IS ALREADY DONE BY MARCO (method: get)
+-----------------------------------------------------------------------------------
+route: /group
+
+CREATING A GROUP
+method: post
+@RequestBody: userId (JWT later), groupName
+	get User by userId
+	g <- new Group(groupName)
+	gm <- new GroupMember(g, user, true) //user creating it is by default admin
+	repo.save(g)
+	repo.save(gm)
+
+DELETING A GROUP
+method: delete
+@RequestBody: userId (JWT later), groupId
+	get GroupMember from repo using userId and groupId (Custom Query)
+	check if userId is admin
+	get group by Id
+	repo.delete(group) //automatically deletes all posts and group member objects
+
+GETTING POSTS AND GROUPS IS ALREADY DONE BY MARCO (method: get)
+-----------------------------------------------------------------------------------
+route /friends
+
+ADDING A FRIEND
+method: post
+@RequestBody: userId (JWT later), friendUserId //both are user IDs
+	get User u by userId
+	get User f by friendUserId
+	friend <- new Friend(u,f)
+	repo.save(friend)
+
+DELETING A FRIEND
+method: delete
+@RequestBody: userId (JWT later), friendUserId //both are user IDs
+	get Friend from repo using userId and friendUserId (Custom Query)
+	repo.delete(friend)
+
+GET FRIENDS OF USER
+method: get
+RequestBody: userId (JWT later)
+    get friends list from repo for userId (Custom Query)
+    return formatted DTO
+-----------------------------------------------------------------------------------
+
