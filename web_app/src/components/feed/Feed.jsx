@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Feed() {
-  const [posts,setPosts] = useState([]);
+  const [posts,setPosts] = useState({});
   
 useEffect(()=>{
   const fetchPosts = async() => {
-    const res = await axios.get("app/posts/1");
-    console.log(res.data);
-    setPosts(res.data);
+    const res = await axios.get("/app/posts/1");
+    console.log(res);
+    setPosts(res.data.data);
   }
   fetchPosts();
 })
@@ -20,7 +20,7 @@ useEffect(()=>{
     <div className="feed">
       <div className="feedWrapper">
         <Share />
-        {posts.data.map((p) => (
+        {Object.values(posts).map((p) => (
           <Post key={p.postId} post={p} />
         ))}
       </div>

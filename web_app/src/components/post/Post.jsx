@@ -1,5 +1,6 @@
 import "./post.css";
 import { MoreVert } from "@material-ui/icons";
+import TimeAgo from 'timeago-react';
 
 export default function Post({post}) {
   return (
@@ -13,7 +14,7 @@ export default function Post({post}) {
               alt=""
             />
             <span className="postUsername">{post?.userDisplayName}</span>
-            <span className="postDate">5 min ago</span>
+            <span className="postDate"><TimeAgo datetime={post?.timePosted}/></span>
           </div>
           <div className="postTopRight">
             <MoreVert />
@@ -30,7 +31,7 @@ export default function Post({post}) {
           </div>
           <div className="postBottomRight">
             <img src="/assets/comment.png" alt="" className="commentIcon" />
-            <span className="postCommentText">9 comments</span>
+            <span className="postCommentText">{post?.replies.length} comments</span>
           </div>
           <div className="replies">
            
