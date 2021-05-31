@@ -31,27 +31,32 @@ public class UserService {
     // Get user by ID
     public UserDTO getUserById(Long userID){
         User user = userRepository.findById(userID).get();
-        //TODO: DB : Implement UserDTO constructor without admin arg
         UserDTO userDTO = new UserDTO(user, false);
         return userDTO;
     }
 
     // Get user by username
-    public User getUserByUsername(String uname){
+    public UserDTO getUserByUsername(String uname){
         //TODO: DB : Implement findUserByUsername in userRepository that returns type Optional<User>
-        return userRepository.findUserByUsername(uname).get();
+        User user = userRepository.findUserByUsername(uname).get();
+        UserDTO userDTO = new UserDTO(user, false);
+        return userDTO;
     }
 
     // Get user by display name
-    public User getUserByDispname(String dispname){
+    public UserDTO getUserByDispname(String dispname){
         //TODO: DB : Implement findUserByDispname in userRepository that returns type Optional<User>
-        return userRepository.findUserByDispname(dispname).get();
+        User user = userRepository.findUserByDispname(dispname).get();
+        UserDTO userDTO = new UserDTO(user, false);
+        return userDTO;
     }
 
     // Get user by email
-    public User getUserByEmail(String email){
+    public UserDTO getUserByEmail(String email){
         //TODO: DB : Implement findUserByEmail in userRepository that returns type Optional<User>
-        return userRepository.findUserByEmail(email).get();
+        User user = userRepository.findUserByEmail(email).get();
+        UserDTO userDTO = new UserDTO(user, false);
+        return userDTO;
     }
 
     // Change password

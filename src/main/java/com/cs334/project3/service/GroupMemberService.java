@@ -3,6 +3,7 @@ package com.cs334.project3.service;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.repo.GroupMemberRepository;
 import com.cs334.project3.repo.GroupRepository;
+import com.cs334.project3.repo.UserRepository;
 import com.cs334.project3.model.GroupMember;
 import com.cs334.project3.model.Group;
 import com.cs334.project3.model.User;
@@ -19,6 +20,9 @@ public class GroupMemberService {
 
     @Autowired
     private GroupMemberRepository groupMemberRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // Get all group members of group
     public GroupMembersDTO getAllGroupMembersByGroupId(Long groupId){
@@ -54,15 +58,34 @@ public class GroupMemberService {
                 adminDTOList.add(new UserDTO(a, true));
             }
             dto.setData(adminDTOList);
+        } catch(Exception e){
+            dto.error();
         }
         return dto;
     }
 
     // See if user is group admin
+    public boolean userIdIsGroupAdmin(Long userId, Long groupId){
+        User user = userRepository.findById(userId).get();
+        List <User> adminList = groupMemberRepository.findAllAdminsByGroupId(groupId);
+        if (adminList.contains(user)){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     // Set group admin
+    public void updateGroupAdminByUserId(Long userId, Long groupId, boolean admin){
+        //TODO: DB : Implement updateGroupMembersAdmin in groupMemberRepository; sets/removes an admin
+        groupMemberRepository.updateGroupMembersAdmin(userId, groupId, admin);
+    }
 
     // Get group member count
+    public Long getAmountOfGroupMembers(Long groupId){
+        //TODO: DB : Implement groupMemberCount in groupMemberRepository; counts amount of members in group
+        return groupMemberRepository.groupMemberCount(groupId);
+    }
 
     // Get groups that user is a member of
     public GroupsThatUserIsMemberOfDTO getGroupsWhereUserIsMember(Long userId) {
