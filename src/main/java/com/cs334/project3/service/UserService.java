@@ -36,6 +36,8 @@ public class UserService {
         return userDTO;
     }
 
+    /*
+    COMMENTING THESE OUT WHILE THE REPO FUNCTIONS AREN'T READY
     // Get user by username
     public UserTransferObjectDTO getUserByUsername(String uname){
         //TODO: DB : Implement findUserByUsername in userRepository that returns type Optional<User>
@@ -81,4 +83,5 @@ public class UserService {
         return dto;
     }
 
+    */
 }

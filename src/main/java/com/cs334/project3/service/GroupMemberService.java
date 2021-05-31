@@ -63,7 +63,8 @@ public class GroupMemberService {
         }
         return dto;
     }
-
+    /*
+    COMMENTING THESE OUT SO I CAN FIX THEM ONE AT A TIME
     // See if user is group admin
     public boolean userIdIsGroupAdmin(Long userId, Long groupId){
         User user = userRepository.findById(userId).get();
@@ -106,5 +107,6 @@ public class GroupMemberService {
 
         return dto;
     }
+    */
 
 }
