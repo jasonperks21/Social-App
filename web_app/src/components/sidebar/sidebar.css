@@ -1,0 +1,119 @@
+.sidebar {
+  flex: 3;
+  height: calc(100vh - 50px);
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(179, 179, 179);
+}
+
+.sidebarHeading {
+  margin-bottom: 20px;
+  font-size: 1.17em;
+  font-weight: bold;
+  text-decoration: none;
+  color:black;
+}
+
+.sidebarWrapper {
+  padding: 20px;
+}
+
+.sidebarList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebarListItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  
+}
+
+.sidebarListIcon {
+  margin-right: 10px;
+}
+
+.sidebarButton {
+  width: 150px;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.sidebarHr {
+  margin: 20px 0;
+}
+
+.sidebarFriendList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebarFriend {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.sidebarFriendImg {
+  height: 32px;
+  width: 32px;
+  margin-right: 10px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.listTop {
+  display: flex;
+  align-items: center;
+}
+
+.listBottom {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.listBottomActive {
+  width: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.listBottomMembers {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.listbottomIcon {
+  font-size: small !important;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  background-color: #62bd19;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.sidebarItemText{
+  text-decoration: none;
+  color:black;
+}
