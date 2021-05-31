@@ -1,14 +1,17 @@
 package com.cs334.project3.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "group_members")
@@ -24,11 +27,11 @@ public class GroupMember {
     )
     private Long member_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -57,21 +60,22 @@ public class GroupMember {
 
     /**
      * Post to a group. THIS IS NOT A REPLY.
-     * @param group The group to post on.
      * @param category The category.
      * @param message The message.
+     * @return The Post.
      */
-    public void postToGroup(Group group, Category category, String message){
-        new Post(group, this, category, message);
+    public Post postToGroup(Category category, String message){
+        return new Post(this.group, this, category, message);
     }
 
     /**
      * Reply on post.
      * @param replyingOn The post to reply on.
      * @param message The message.
+     * @return The Post.
      */
-    public void replyToPost(Post replyingOn, String message){
-        new Post(replyingOn, this, message);
+    public Post replyToPost(Post replyingOn, String message){
+        return new Post(replyingOn, this, message);
     }
 
 

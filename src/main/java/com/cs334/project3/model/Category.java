@@ -1,14 +1,17 @@
 package com.cs334.project3.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "categories")
@@ -30,7 +33,7 @@ public class Category {
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", orphanRemoval = true)
     private List<Post> posts;
 
     public Category(String name, String description) {

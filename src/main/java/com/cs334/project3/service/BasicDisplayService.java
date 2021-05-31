@@ -43,7 +43,7 @@ public class BasicDisplayService {
         PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
         try {
             List<PostResultSetMapping> posts = postRepository.getAllPostsToDisplayForUser(userId);
-            System.out.println(posts);
+            //System.out.println(posts);
             pdto.createRecursiveDTOStructure(posts);
             pdto.ok();
         } catch(Exception e){
@@ -57,7 +57,7 @@ public class BasicDisplayService {
         PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
         try {
             List<PostResultSetMapping> posts = postRepository.getAllPostsOfGroupToDisplayForUser(userId, groupId);
-            System.out.println(posts);
+            //System.out.println(posts);
             pdto.createRecursiveDTOStructure(posts);
             pdto.ok();
         } catch(Exception e){

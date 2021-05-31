@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserDTO {
+public class UserDTO{
     private Long id;
     private String displayName;
     private boolean admin;

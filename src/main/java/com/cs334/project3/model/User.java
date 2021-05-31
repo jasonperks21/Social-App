@@ -1,14 +1,17 @@
 package com.cs334.project3.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
@@ -36,6 +39,20 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<GroupMember> memberships;
 
+    @OneToMany(mappedBy = "user")
+    private List<Friend> friends;
+
+    @OneToMany(mappedBy = "friend")
+    private List<Friend> friends_of;
+
+    protected void addFriend(Friend friend){
+        friends.add(friend);
+    }
+
+    protected void addFriendOf(Friend friend){
+        friends_of.add(friend);
+    }
+
     /**
      * Construct a user.
      *
@@ -50,17 +67,21 @@ public class User {
         this.username = username;
         this.passwordHash = password.hashCode();
         memberships = new ArrayList<>();
+        friends = new ArrayList<>();
+        friends_of = new ArrayList<>();
     }
 
     /**
-     * Add a membership to an existing group.
+     * Add a membership to an existing group. This updates all relevant fields.
      *
      * @param group The group.
      * @param admin Whether the user has admin rights on the group.
+     * @return The GroupMember object that was created.
      */
-    public void addGroupMembership(Group group, Boolean admin) {
+    public GroupMember addGroupMembership(Group group, Boolean admin) {
         GroupMember gm = new GroupMember(group, this, admin);
         memberships.add(gm);
+        return gm;
     }
 
 

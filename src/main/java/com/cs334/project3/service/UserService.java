@@ -5,6 +5,7 @@ import com.cs334.project3.repo.UserRepository;
 import com.cs334.project3.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import javax.persistence.EntityNotFoundException;
 
 import java.util.List;
 
@@ -35,40 +36,52 @@ public class UserService {
         return userDTO;
     }
 
+    /*
+    COMMENTING THESE OUT WHILE THE REPO FUNCTIONS AREN'T READY
     // Get user by username
-    public UserDTO getUserByUsername(String uname){
+    public UserTransferObjectDTO getUserByUsername(String uname){
         //TODO: DB : Implement findUserByUsername in userRepository that returns type Optional<User>
-        User user = userRepository.findUserByUsername(uname).get();
-        UserDTO userDTO = new UserDTO(user, false);
-        return userDTO;
+        UserTransferObjectDTO dto = new UserTransferObjectDTO();
+        try{
+            User user = userRepository.findUserByUsername(uname).get();
+            UserDTO userDTO = new UserDTO(user, false);
+            dto.setData(userDTO);
+            dto.ok();
+        } catch(Exception e){
+            dto.error();
+        }
+        return dto;
     }
 
     // Get user by display name
-    public UserDTO getUserByDispname(String dispname){
+    public UserTransferObjectDTO getUserByDispname(String dispname){
         //TODO: DB : Implement findUserByDispname in userRepository that returns type Optional<User>
-        User user = userRepository.findUserByDispname(dispname).get();
-        UserDTO userDTO = new UserDTO(user, false);
-        return userDTO;
+        UserTransferObjectDTO dto = new UserTransferObjectDTO();
+        try{
+            User user = userRepository.findUserByDispname(dispname).get();
+            UserDTO userDTO = new UserDTO(user, false);
+            dto.setData(userDTO);
+            dto.ok();
+        } catch(Exception e){
+            dto.error();
+        }
+        return dto;
     }
 
     // Get user by email
-    public UserDTO getUserByEmail(String email){
-        //TODO: DB : Implement findUserByEmail in userRepository that returns type Optional<User>
-        User user = userRepository.findUserByEmail(email).get();
-        UserDTO userDTO = new UserDTO(user, false);
-        return userDTO;
+    public UserTransferObjectDTO getUserByEmail(String email){
+        //TODO: DB : Implement findUserByDispname in userRepository that returns type Optional<User>
+        UserTransferObjectDTO dto = new UserTransferObjectDTO();
+        try{
+            User user = userRepository.findUserByEmail(email).get();
+            UserDTO userDTO = new UserDTO(user, false);
+            dto.setData(userDTO);
+            dto.ok();
+        } catch(Exception e){
+            dto.error();
+        }
+        return dto;
     }
 
-    // Change password
-    public void updatePasswordById(Long userID, String newPassword){
-        //TODO: DB : Implement updateUserPasswordById in userRepository
-        userRepository.updateUserPasswordById(userID, newPassword);
-    }
-
-    // Change display name
-    public void updateDispnameById(Long userID, String dispname){
-        //TODO: DB : Implement updateUserDispnameById in userRepository
-        userRepository.updateUserDispnameById(userID, dispname);
-    }
-
+    */
 }

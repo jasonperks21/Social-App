@@ -1,0 +1,8 @@
+* {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+}
+
+.homeContainer {
+  background-image: linear-gradient(to bottom right, rgb(255, 255, 255), rgb(250, 250, 250));
+}

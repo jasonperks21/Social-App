@@ -14,4 +14,9 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query(value = "select g.* from postgroups g, group_members gm, users u \nwhere g.group_id = gm.group_id and gm.user_id = u.user_id and u.user_id = :uid",
             nativeQuery = true)
     public List<Group> getALlGroupsThatUserIsMemberOf(@Param("uid") Long userId);
+
+    // group <- groupRepo.getById(groupid)
+    // gm <- group.getMembers()
+    // user <- gm.getUser()
+
 }
