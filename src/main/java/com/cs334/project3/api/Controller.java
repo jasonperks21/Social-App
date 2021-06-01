@@ -69,7 +69,7 @@ public class Controller {
     public GroupsThatUserIsMemberOfDTO getGroupsForUser(@PathVariable Long userId){
         return groupMemberService.getGroupsWhereUserIsMember(userId);
     }
-
+    /*
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups/{group}")
     public void addGroup(@PathVariable Group group) {
@@ -165,7 +165,7 @@ public class Controller {
         postService.addComment(post);
     }
 
-
+    */
     ////////////////////Controller for users/////////////////////
     @GetMapping("/users/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId){

@@ -54,60 +54,67 @@ public class PostService {
      * @param category
      * @return
      */
+    /*
     public PostDTO getPostByCategory(Category category) {
         //TODO: DB: implement findAllByCategory in PostRepository
         PostResultSetMapping post = postRepository.findByCategory(category).get();
         PostDTO postDTO = new PostDTO(post);
         return postDTO;
     }
+    */
 
     /**
      * Find post by member.
      * @param member
      * @return
      */
+    /*
     public PostDTO getPostByMember(GroupMember member) {
         //TODO: DB: implement findAllByMember in PostRepository
         PostResultSetMapping post = postRepository.findByMember(member).get();
         PostDTO postDTO = new PostDTO(post);
         return  postDTO;
     }
-
+    */
     /**
      * Find post by time
      * @param timestamp
      * @return
      */
+    /*
     public PostDTO getPostByTime(ZonedDateTime timestamp) {
         //TODO: DB: implement findAllByTime in PostRepository
         PostResultSetMapping post = postRepository.findByTime(timestamp).get();
         PostDTO postDTO = new PostDTO(post);
         return postDTO;
     }
-
+    */
     /**
      * Find post by group.
      * @param group
      * @return
      */
+    /*
     public PostDTO getPostByGroup(Group group) {
         //TODO: DB: implement findAllByGroup in PostRepository
         PostResultSetMapping post = postRepository.findByGroup(group).get();
         PostDTO postDTO = new PostDTO(post);
         return postDTO;
     }
-
+    */
     //Find post by location:
     //TODO: Later.
 
     //TODO: Fix
     //Add comment:
+    /*
     public void addComment(Post post) {
         //TODO: DB: Implement addComment in PostRepository that returns List<Post>
         postRepository.addComment(post);
     }
-
+    */
     // Get posts to display for user
+    /*
     public PostsToDisplayForUserDTO getAllPostsToDisplayForUser(Long userId){
         PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
         try {
@@ -121,8 +128,9 @@ public class PostService {
         }
         return pdto;
     }
-
+    */
     //Get all the posts from a group to display for the user:
+    /*
     public PostsToDisplayForUserDTO getAllPostsOfGroupToDisplayForUser(Long userId, Long groupId){
         PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
         try {
@@ -135,5 +143,5 @@ public class PostService {
             pdto.error();
         }
         return pdto;
-    }
+    }*/
 }
