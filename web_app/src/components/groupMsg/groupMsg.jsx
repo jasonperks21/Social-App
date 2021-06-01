@@ -8,7 +8,7 @@ class GroupMsg extends React.Component {
     this.state = {
         msg: this.props.msg,
         expand: false,
-        setMsg: null
+        setMsg: ''
 
     }
     this.clicked = this.clicked.bind(this);
@@ -26,6 +26,9 @@ handleChange(event) {
     this.setState({setMsg: ''});
   }
   reply(){
+    if(this.state.setMsg === ''){
+      return <div className="postBottomRight" ><input className="replyMsg" type='text' value={this.state.setMsg} onChange={this.handleChange} placeholder="Reply Message"></input></div>;
+    }
     return (<div className="postBottomRight" ><input className="replyMsg" type='text' value={this.state.setMsg} onChange={this.handleChange} placeholder="Reply Message"></input>
     <button className="sendIcon" onClick={()=> this.post()}>Post</button>  
     </div>);

@@ -14,7 +14,7 @@ class App extends React.Component {
 
         this.state = {
           loggedIn : true,
-          userId : '9'
+          userId : '1'
         };
       }
 
@@ -26,7 +26,7 @@ class App extends React.Component {
                 <Login />
             </Route>
             <Route exact path="/">
-                <Home />
+                <Home userId={this.state.userId}/>
             </Route>
             <Route exact path="/groups">
                 <Groups userId={this.state.userId}/>

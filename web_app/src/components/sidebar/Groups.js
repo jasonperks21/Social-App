@@ -19,7 +19,7 @@ function Groups(userId) {
     fetch(apiUrl)
       .then((res) => res.json())
       .then((groups) => {
-        setAppState({ loading: false, groups: groups.data, numOfGroups: (groups.data).length});
+        setAppState({ loading: false, groups: groups.data});
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setAppState]);
