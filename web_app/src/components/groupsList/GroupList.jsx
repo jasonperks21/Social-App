@@ -19,7 +19,7 @@ export default function GroupList(ids) {
     fetch(apiUrl)
       .then((res) => res.json())
       .then((messages) => {
-        setAppState({ loading: false, messages: messages.data });
+        setAppState({ loading: false, messages: messages.data});
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setAppState]);
@@ -32,14 +32,31 @@ export default function GroupList(ids) {
   );
 }
 
+function deleteGroup(){
+  let isExecuted = window.confirm("Are you want to delete group?");
+  if(isExecuted){
+    alert("Group deleted!");
+  }
+  else{
+    alert("Action aborted");
+  }
+}
+
 const DisplayGroupMsg = (props) => {
-  const { messages } = props;
-  if (!messages || messages.length === 0) return <h2>Please select a group</h2>;
+  const { messages} = props;
+  //console.log(messages)
+  if (!messages) return <h2>Group does not exist</h2>; 
+  if( messages.length === 0) return (<div>
+    <h2>No messages yet!</h2>
+    <button className="deleteGroup" onClick={() => deleteGroup()}>Delete Group</button>
+    </div>);
+  
   return (
     <div className="GroupMessages">
+      <h2>{messages[0].groupName}</h2>
+      <button className="deleteGroup" onClick={() => deleteGroup()}>Delete Group</button>
       {messages.map((msg) => {
          return (
-
           <div className="msgWrapper">
             <GroupMsg msg={msg} />
           </div>

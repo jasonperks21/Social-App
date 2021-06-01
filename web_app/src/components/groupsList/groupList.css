@@ -5,3 +5,10 @@
 .feedWrapper {
   padding: 20px;
 }
+
+.deleteGroup{
+  border: none;
+  font-size: medium;
+  cursor: pointer;
+  color: red;
+}
