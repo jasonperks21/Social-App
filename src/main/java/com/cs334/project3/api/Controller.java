@@ -61,21 +61,31 @@ public class Controller {
 
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups")
+    @ResponseStatus(HttpStatus.CREATED)
     public void createGroup(@RequestBody GroupRequestBodyMapping ids) {
-        User user = userService.getUserById(ids.getUserId());
-        Group g = new Group(ids.getGroupName());
-        GroupMember gm = new GroupMember(g, user, true);
-        groupService.save(g);
-        groupMemberService.save(gm);
+        try {
+            User user = userService.getUserById(ids.getUserId());
+            Group g = new Group(ids.getGroupName());
+            GroupMember gm = new GroupMember(g, user, true);
+            groupService.saveGroup(g);
+            groupMemberService.saveMember(gm);
+        } catch(Exception e) {
+            throw new InternalServerErrorException("Exception raised trying to create group");
+        }
     }
 
     @DeleteMapping("/groups")
+    @ResponseStatus(HttpStatus.OK)
     public void deleteGroup(@RequestBody GroupRequestBodyMapping ids) {
-        GroupMember gm = groupMemberService.getGroupMembership(ids.getUserId(), ids.getGroupId());
+        try {
+            GroupMember gm = groupMemberService.getGroupMembership(ids.getUserId(), ids.getGroupId());
 
-        if (gm.getAdmin()) {
-            Group g = gm.getGroup();
-            groupService.deleteGroup(g);
+            if (gm.getAdmin()) {
+                Group g = gm.getGroup();
+                groupService.deleteGroup(g);
+            }
+        } catch(Exception e) {
+            throw new InternalServerErrorException("Exception raised trying to delete group");
         }
     }
 

@@ -25,7 +25,7 @@ public class GroupMemberService {
     @Autowired
     private UserRepository userRepository;
 
-    public void save(GroupMember groupMember) {
+    public void saveMember(GroupMember groupMember) {
         groupMemberRepository.save(groupMember);
     }
 
