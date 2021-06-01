@@ -1,7 +1,6 @@
 package com.cs334.project3.dto;
 
-import com.cs334.project3.model.Post;
-import com.cs334.project3.repo.PostResultSetMapping;
+import com.cs334.project3.repo.resultset.PostResultSetMapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;

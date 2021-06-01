@@ -1,12 +1,7 @@
 package com.cs334.project3.dto;
 
-import com.cs334.project3.model.GroupMember;
-import com.cs334.project3.model.Post;
-import com.cs334.project3.model.User;
-import com.cs334.project3.repo.PostResultSetMapping;
-import lombok.AllArgsConstructor;
+import com.cs334.project3.repo.resultset.PostResultSetMapping;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;

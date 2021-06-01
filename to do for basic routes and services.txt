@@ -1,0 +1,53 @@
+Routes:
+/user
+/group
+/membership
+/post
+/friend
+
+Each route has:
+Within service
+	create
+		create a new model object and save it -- follow the howto
+			-- takes a RequestBody object for details
+		to do later: the create method for user should return an object containing any errors 
+			-- eg user can have username, password, email errors etc (database throws not unique exception)
+
+	get
+		get the objects -- posts will require a greater variety
+		returned objects must be a DTO or List<DTO>
+		any exceptions thrown is handled in the controller
+
+	update
+		fetch model object by id, update the model object using setters 
+			-- takes a RequestBody object to update the details
+		exceptions thrown by update is handled in the controller
+		for simplicity, user cannot change password, username or email
+
+	delete
+		fetch model object by id and delete it
+		controller handles thrown exceptions
+
+NOTES:
+DTOs must be specified for the get method in the service. Posts and Groups are already done (by Marco).
+RequestBody object mappings must be specified for UPDATES. This is only required for user.
+RequestBody object mappings must be specified for CREATES. This is required for all creates.
+ONLY THE USER CLASS HAS AN UPDATE.
+
+	DTO
+	Must contain any relevant IDs for the frontend.
+	Use @Data to generate getters and setters.
+	Use @AllArgsContructor for simple DTOs
+
+	RequestBody Objects
+	Names must be clear.
+	Must contain all data that must be initiall added to the model on create.
+	Users will require seperate RequestBody objects for create and update. Create requires all parameters. Update only allows certain parameters.
+	If the parameter is null, then don't use it for updating. IT IS ASSUMED TO REMAIN AS IS IN THE DATABASE.
+	
+	Controller
+	Responsible for all error handling.
+	Never explicitly creates model objects. Only passes parameters into services. 
+	User errors are dealt with (password, username or email error) and communicated to frontEnd using DTO.
+	The post method for user is the only post method that will return a DTO (usr_err, pwd_err, email_err).
+

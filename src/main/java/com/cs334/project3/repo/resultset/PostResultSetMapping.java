@@ -1,4 +1,4 @@
-package com.cs334.project3.repo;
+package com.cs334.project3.repo.resultset;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,15 +1,12 @@
 package com.cs334.project3.repo;
 
-import com.cs334.project3.model.Group;
 import com.cs334.project3.model.Post;
+import com.cs334.project3.repo.resultset.PostResultSetMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
-import javax.persistence.SqlResultSetMapping;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -21,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param userId The ID of the user to display for.
      * @return All the posts.
      */
-    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, p.timestamp," +
+    @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, p.timestamp," +
             "p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
             "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
@@ -39,7 +36,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param groupId The ID of the group to find the posts on.
      * @return All the posts meeting the sorting requirement.
      */
-    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, " +
+    @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
             "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
             "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
@@ -58,7 +55,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param postUserId The ID of the user that made the posts.
      * @return All the posts meeting the sorting requirement.
      */
-    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, " +
+    @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
             "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
             "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
@@ -77,7 +74,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param time The time to check for.
      * @return All the posts meeting the sorting requirement.
      */
-    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, " +
+    @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
             "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
             "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
@@ -96,7 +93,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param time The time to check for.
      * @return All the posts meeting the sorting requirement.
      */
-    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, " +
+    @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
             "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
             "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
