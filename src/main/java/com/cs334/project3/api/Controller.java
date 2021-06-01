@@ -61,21 +61,20 @@ public class Controller {
 
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups")
-    public ResponseEntity<Group> createGroup(@RequestBody GroupRequestBodyMapping ids) {
+    public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupRequestBodyMapping ids) {
         UserDTO userDTO = userService.getUserById(ids.getUserId());
-        if (userDTO == null) {
-            throw new ResourceNotFoundException("No user with user ID "+ids.getUserId()+" exists");
-        } else {
-            try {
+        if (userDTO != null) {
                 User user = userService.getUserByIdForGroup(ids.getUserId());
                 Group g = new Group(ids.getGroupName());
                 GroupMember gm = new GroupMember(g, user, true);
                 groupService.saveGroup(g);
                 groupMemberService.saveMember(gm);
-                return new ResponseEntity<>(g, HttpStatus.CREATED);
-            } catch (Exception e) {
-                throw new MethodNotAllowedException("User "+ids.getUserId()+" could not be added to the group");
-            }
+
+                GroupDTO groupDTO = new GroupDTO(g, ids.getUserId());
+
+                return new ResponseEntity<>(groupDTO, HttpStatus.CREATED);
+        } else {
+            throw new ResourceNotFoundException("No user with username "+ids.getUserId()+" exists");
         }
     }
 
@@ -124,13 +123,7 @@ public class Controller {
         List<PostDTO> dto = postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-/*
-    @GetMapping("/posts/{userId}/{groupId}")
-    public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
-        return postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
-    }
 
-    */
     @PostMapping("/posts")
     public void addPost(@RequestBody PostRequestBodyMapping ids) {
         //TODO: TRY CATCH
