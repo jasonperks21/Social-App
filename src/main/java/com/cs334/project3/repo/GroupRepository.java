@@ -11,8 +11,9 @@ import java.util.List;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
-    @Query(value = "select g.* from postgroups g, group_members gm, users u \nwhere g.group_id = gm.group_id and gm.user_id = u.user_id and u.user_id = :uid",
-            nativeQuery = true)
+    @Query("select g from Group g, GroupMember gm, User u " +
+            "where g.group_id = gm.group.group_id and " +
+            "gm.user.user_id = u.user_id and u.user_id = :uid")
     public List<Group> getALlGroupsThatUserIsMemberOf(@Param("uid") Long userId);
 
     // group <- groupRepo.getById(groupid)
