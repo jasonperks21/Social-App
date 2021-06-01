@@ -30,35 +30,24 @@ public class UserService {
     }
 
     // Get user by ID
-    public UserTransferObjectDTO getUserById(Long userId){
-        UserTransferObjectDTO dto = new UserTransferObjectDTO();
-        try{
-            User user = userRepository.findById(userId).get();
-            dto.setData(new UserDTO(user, false));
-            dto.ok();
-        } catch(Exception e){
-            dto.error();
-        }
-        return dto;
+    public UserDTO getUserById(Long userId){
+        User user = userRepository.getById(userId);
+        return new UserDTO(user, false);
     }
 
-    /*
-    COMMENTING THESE OUT WHILE THE REPO FUNCTIONS AREN'T READY
     // Get user by username
-    public UserTransferObjectDTO getUserByUsername(String uname){
-        //TODO: DB : Implement findUserByUsername in userRepository that returns type Optional<User>
-        UserTransferObjectDTO dto = new UserTransferObjectDTO();
+    public UserDTO getUserByUsername(String uname){
+        UserDTO userDTO;
         try{
             User user = userRepository.findUserByUsername(uname).get();
-            UserDTO userDTO = new UserDTO(user, false);
-            dto.setData(userDTO);
-            dto.ok();
+            userDTO = new UserDTO(user, false);
         } catch(Exception e){
-            dto.error();
+            e.printStackTrace();
+            userDTO = null;
         }
-        return dto;
+        return userDTO;
     }
-
+    /*
     // Get user by display name
     public UserTransferObjectDTO getUserByDispname(String dispname){
         //TODO: DB : Implement findUserByDispname in userRepository that returns type Optional<User>

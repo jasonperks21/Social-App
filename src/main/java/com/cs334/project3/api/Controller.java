@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -191,37 +192,86 @@ public class Controller {
 
     */
     ////////////////////Controller for users/////////////////////
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId){
-        UserTransferObjectDTO dto = userService.getUserById(userId);
-        if (dto.getStatus().equals("ok")){
-            return new ResponseEntity<>(dto.getData(), HttpStatus.OK);
-        } else {
-            throw new ResourceNotFoundException();
+    @GetMapping(value="/users", params="uid")
+    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
+        UserDTO userDTO;
+        try{
+            userDTO = userService.getUserById(uid);
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        } catch(Exception e){
+            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
         }
     }
 
-    @GetMapping("/users/exists/{userId}")
-    public ResponseEntity<Boolean> userIdExists(@PathVariable Long userId){
-        boolean exists = userService.userIdExists(userId);
-        return new ResponseEntity<>(exists, HttpStatus.OK);
+    @GetMapping(value="/users", params="uname")
+    public ResponseEntity<UserDTO> getUserByUsername(@RequestParam String uname){
+        UserDTO userDTO = userService.getUserByUsername(uname);
+        if (userDTO!=null){
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        } else {
+            throw new ResourceNotFoundException("No user with username "+uname+" exists");
+        }
     }
 
-    @DeleteMapping("/users/{userId}")
-    public ResponseEntity<String> deleteUserById(@PathVariable Long userId){
-        userService.deleteUserById(userId);
-        return new ResponseEntity<>("Successfully deleted user with ID "+userId, HttpStatus.OK);
+    public Boolean userIdExists(Long userId){
+        boolean exists = userService.userIdExists(userId);
+        return exists;
+    }
+
+    @DeleteMapping(value="/users", params="uid")
+    public ResponseEntity<String> deleteUserById(@RequestParam Long uid){
+        if(userIdExists(uid)){
+            UserDTO userDTO = userService.getUserById(uid);
+            String dispname = userDTO.getDisplayName();
+            userService.deleteUserById(uid);
+            return new ResponseEntity<>("Successfully deleted user "+dispname+" from the database", HttpStatus.OK);
+        } else {
+            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
+        }
+
     }
 
     @PostMapping(value="/users")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> addUser(@RequestBody User user){
-        userService.addUser(user);
-        return new ResponseEntity<>("Successfully added "+user.getUsername(),HttpStatus.CREATED);
+        try{
+            userService.addUser(user);
+            return new ResponseEntity<>("Successfully added "+user.getDisplayName(),HttpStatus.CREATED);
+        } catch(Exception e){
+            throw new InternalServerErrorException("Exception raised trying to insert user "+user.getUsername()+" - maybe the DB is down?");
+        }
     }
 }
 
-// This class extends RuntimeException and is used to return 404.
+// 404 NOT FOUND Error
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-class ResourceNotFoundException extends RuntimeException{
+class ResourceNotFoundException extends ResponseStatusException{
+    public ResourceNotFoundException(){
+        super(HttpStatus.NOT_FOUND);
+    }
+    public ResourceNotFoundException(String message){
+        super(HttpStatus.NOT_FOUND, message);
+    }
+}
+
+// 405 METHOD NOT ALLOWED Error
+@ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+class MethodNotAllowedException extends ResponseStatusException {
+    public MethodNotAllowedException(){
+        super(HttpStatus.METHOD_NOT_ALLOWED);
+    }
+    public MethodNotAllowedException(String message){
+        super(HttpStatus.METHOD_NOT_ALLOWED, message);
+    }
+}
+
+// 500 INTERNAL SERVER ERROR Error
+@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+class InternalServerErrorException extends ResponseStatusException {
+    public InternalServerErrorException(){
+        super(HttpStatus.METHOD_NOT_ALLOWED);
+    }
+    public InternalServerErrorException(String message){
+        super(HttpStatus.METHOD_NOT_ALLOWED, message);
+    }
 }
