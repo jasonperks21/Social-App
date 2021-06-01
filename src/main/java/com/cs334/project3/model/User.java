@@ -31,7 +31,7 @@ public class User {
     private String displayName;
     @Column
     private String email;
-    @Column
+    @Column //TODO: unique
     private String username;
     @Column
     private Integer passwordHash;

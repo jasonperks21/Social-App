@@ -1,7 +1,6 @@
 package com.cs334.project3.dto;
 
-import com.cs334.project3.model.Post;
-import com.cs334.project3.repo.PostResultSetMapping;
+import com.cs334.project3.repo.resultset.PostResultSetMapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +19,8 @@ public class PostDTOProcessor {
             PostResultSetMapping post = it.next();
             if(post.getReplyId() == null) {
                 PostDTO dto = new PostDTO(post);
+                if (hashMap.containsKey(post.getPostId()))
+                    System.out.println("ERROR");
                 hashMap.put(post.getPostId(), dto);
                 dtos.add(dto);
                 it.remove();
@@ -33,7 +34,7 @@ public class PostDTOProcessor {
                     PostDTO reply = new PostDTO(post);
                     PostDTO root = hashMap.get(post.getReplyId());
                     root.addReply(reply);
-                    hashMap.put(reply.getPostId(), reply);
+                    hashMap.put(post.getPostId(), reply);
                     it.remove();
                 }
             }

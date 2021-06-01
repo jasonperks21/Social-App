@@ -1,4 +1,4 @@
-package com.cs334.project3.repo;
+package com.cs334.project3.repo.resultset;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,6 @@ public class PostResultSetMapping {
     private Long postId;
     private Long replyId;
     private String message;
-    private ZonedDateTime timeStamp;
 
     //user stuff
     private String userDisplayName;

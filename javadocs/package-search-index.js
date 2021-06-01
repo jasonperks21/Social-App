@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.cs334.project3"},{"l":"com.cs334.project3.api"},{"l":"com.cs334.project3.datagen"},{"l":"com.cs334.project3.dto"},{"l":"com.cs334.project3.model"},{"l":"com.cs334.project3.repo"},{"l":"com.cs334.project3.service"}]

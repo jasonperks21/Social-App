@@ -3,6 +3,7 @@ package com.cs334.project3.api;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
+import com.cs334.project3.requestbody.PostRequestBodyMapping;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,6 @@ public class Controller {
     //// AUTOWIRED SERVICES ////////////////////////////////
     ////////////////////////////////////////////////////////
 
-    @Autowired
-    private ITestService testService;
 
     @Autowired
     BasicDisplayService basicDisplayService;
@@ -42,21 +41,6 @@ public class Controller {
 
     @Autowired
     DataGenerator dataGenerator;
-
-    ////////////////////////////////////////////////////////
-    //// TEST CODE /////////////////////////////////////////
-    ////////////////////////////////////////////////////////
-
-    @GetMapping("/test")
-    public List<Test> getAll(){
-        return testService.getAll();
-    }
-
-    @PostMapping(value = "/add")
-    public String add(@RequestBody Test t){
-        testService.insert(t);
-        return "THANKS FOR POSTING " + t.text;
-    }
 
     ////////////////////////////////////////////////////////
     //// REAL CODE /////////////////////////////////////////
@@ -132,7 +116,7 @@ public class Controller {
 
     */
     @PostMapping("/posts")
-    public void addPost(@RequestBody PostDataBodyMapping ids) {
+    public void addPost(@RequestBody PostRequestBodyMapping ids) {
         //TODO: TRY CATCH
         GroupMember gm = groupMemberService.getGroupMembership(ids.getUserId(), ids.getGroupId());
         Category c = categoryService.getById(ids.getCategoryId());

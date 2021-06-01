@@ -3,7 +3,7 @@ package com.cs334.project3.service;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
 import com.cs334.project3.repo.PostRepository;
-import com.cs334.project3.repo.PostResultSetMapping;
+import com.cs334.project3.repo.resultset.PostResultSetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
