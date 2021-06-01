@@ -132,7 +132,7 @@ public class Controller {
         return postService.postIdExists(postId);
     }
 
-    @GetMapping("/posts/{postId}")
+    @GetMapping("/posts/{postId})
     public Post findPostById(@PathVariable Long postId) {
         return postService.getPostByID(postId);
     }
