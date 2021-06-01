@@ -62,12 +62,12 @@ public class Controller {
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups")
     public ResponseEntity<Group> createGroup(@RequestBody GroupRequestBodyMapping ids) {
-        UserDTO userDTO = userService.getUserById(ids.getUserId());
-        if (userDTO == null) {
+        User user = userService.getUserByIdForGroup(ids.getUserId());
+        if (user == null) {
             throw new ResourceNotFoundException("No user with user ID "+ids.getUserId()+" exists");
         } else {
             try {
-                User user = userService.getUserByIdForGroup(ids.getUserId());
+                //User user = userService.getUserByIdForGroup(ids.getUserId());
                 Group g = new Group(ids.getGroupName());
                 GroupMember gm = new GroupMember(g, user, true);
                 groupService.saveGroup(g);
@@ -95,20 +95,20 @@ public class Controller {
     }
 
     ////////////////////Controller for groupmembers//////////////
-    @PostMapping("/groupmember")
-    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody Long userId, Long groupId, boolean admin){
-        UserDTO userDTO = userService.getUserById(userId);
-        if (userDTO == null){
-            throw new ResourceNotFoundException("No user with user ID "+userId+" exists");
-        } else {
-            try{
-                GroupMembersDTO gmdto = groupService.joinGroup(groupId, userId, admin);
-                return new ResponseEntity<>(gmdto, HttpStatus.OK);
-            } catch(Exception e){
-                throw new MethodNotAllowedException("User "+userId+" could not be added to the group");
-            }
-        }
-    }
+//    @PostMapping("/groupmember")
+//    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody Long userId, Long groupId, boolean admin){
+//        UserDTO userDTO = userService.getUserById(userId);
+//        if (userDTO == null){
+//            throw new ResourceNotFoundException("No user with user ID "+userId+" exists");
+//        } else {
+//            try{
+//                GroupMembersDTO gmdto = groupService.joinGroup(groupId, userId, admin);
+//                return new ResponseEntity<>(gmdto, HttpStatus.OK);
+//            } catch(Exception e){
+//                throw new MethodNotAllowedException("User "+userId+" could not be added to the group");
+//            }
+//        }
+//    }
 
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
