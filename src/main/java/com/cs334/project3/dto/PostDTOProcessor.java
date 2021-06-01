@@ -20,6 +20,8 @@ public class PostDTOProcessor {
             PostResultSetMapping post = it.next();
             if(post.getReplyId() == null) {
                 PostDTO dto = new PostDTO(post);
+                if (hashMap.containsKey(post.getPostId()))
+                    System.out.println("ERROR");
                 hashMap.put(post.getPostId(), dto);
                 dtos.add(dto);
                 it.remove();
@@ -33,7 +35,7 @@ public class PostDTOProcessor {
                     PostDTO reply = new PostDTO(post);
                     PostDTO root = hashMap.get(post.getReplyId());
                     root.addReply(reply);
-                    hashMap.put(reply.getPostId(), reply);
+                    hashMap.put(post.getPostId(), reply);
                     it.remove();
                 }
             }

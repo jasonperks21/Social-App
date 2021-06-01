@@ -15,7 +15,6 @@ public class PostResultSetMapping {
     private Long postId;
     private Long replyId;
     private String message;
-    private ZonedDateTime timeStamp;
 
     //user stuff
     private String userDisplayName;

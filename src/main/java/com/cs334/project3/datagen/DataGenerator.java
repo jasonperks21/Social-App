@@ -102,6 +102,9 @@ public class DataGenerator {
         for(int i = 0; i < (int)((float)size*1.5f); i++){
             User u = randElem(users);
             Group g = randElem(groups);
+            for(GroupMember m : u.getMemberships()){
+                if(m.getGroup() == g) continue;
+            }
             GroupMember gm = u.addGroupMembership(g, rand.nextBoolean());
             members.add(gm);
         }

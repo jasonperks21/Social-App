@@ -15,7 +15,9 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.timestamp, p.member.user.displayName, p.member.user.user_id, gm.member_id, c.categoryName)\n" +
+    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, p.timestamp," +
+            "p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
+            "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
             "gm.group.group_id = pg.group_id and\n" +
@@ -25,7 +27,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "order by p.post_id")
     public List<PostResultSetMapping> getAllPostsToDisplayForUser(@Param("uid") Long userId);
 
-    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.timestamp, p.member.user.displayName, p.member.user.user_id, gm.member_id, c.categoryName)\n" +
+    @Query(value = "SELECT new com.cs334.project3.repo.PostResultSetMapping(p.group.groupName, " +
+            "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
+            "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
             "gm.group.group_id = pg.group_id and\n" +
