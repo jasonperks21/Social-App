@@ -3,6 +3,7 @@ package com.cs334.project3.api;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
+import com.cs334.project3.requestbody.GroupRequestBodyMapping;
 import com.cs334.project3.requestbody.PostRequestBodyMapping;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.PostRemove;
 import java.util.List;
 
 @RestController
@@ -19,7 +21,6 @@ public class Controller {
     ////////////////////////////////////////////////////////
     //// AUTOWIRED SERVICES ////////////////////////////////
     ////////////////////////////////////////////////////////
-
 
     @Autowired
     BasicDisplayService basicDisplayService;
@@ -57,8 +58,18 @@ public class Controller {
     public GroupsThatUserIsMemberOfDTO getGroupsForUser(@PathVariable Long userId){
         return groupMemberService.getGroupsWhereUserIsMember(userId);
     }
-    /*
+
     ////////////////////Controller for groups/////////////////////
+    @PostMapping("/groups")
+    public void addGroup(@RequestBody GroupRequestBodyMapping ids) {
+        User user = userService.getUserById(ids.getUserId());
+        Group g = new Group(ids.getGroupName());
+        GroupMember gm = new GroupMember(g, user, true);
+        groupService.save(g);
+        groupMemberService.save(gm);
+    }
+
+    /*
     @PostMapping("/groups/{group}")
     public void addGroup(@PathVariable Group group) {
         groupService.createGroup(group);
@@ -176,16 +187,16 @@ public class Controller {
 
     */
     ////////////////////Controller for users/////////////////////
-    @GetMapping(value="/users", params="uid")
-    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
-        UserDTO userDTO;
-        try{
-            userDTO = userService.getUserById(uid);
-            return new ResponseEntity<>(userDTO, HttpStatus.OK);
-        } catch(Exception e){
-            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
-        }
-    }
+//    @GetMapping(value="/users", params="uid")
+//    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
+//        UserDTO userDTO;
+//        try{
+//            userDTO = userService.getUserById(uid);
+//            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+//        } catch(Exception e){
+//            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
+//        }
+//    }
 
     @GetMapping(value="/users", params="uname")
     public ResponseEntity<UserDTO> getUserByUsername(@RequestParam String uname){
@@ -202,18 +213,18 @@ public class Controller {
         return exists;
     }
 
-    @DeleteMapping(value="/users", params="uid")
-    public ResponseEntity<String> deleteUserById(@RequestParam Long uid){
-        if(userIdExists(uid)){
-            UserDTO userDTO = userService.getUserById(uid);
-            String dispname = userDTO.getDisplayName();
-            userService.deleteUserById(uid);
-            return new ResponseEntity<>("Successfully deleted user "+dispname+" from the database", HttpStatus.OK);
-        } else {
-            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
-        }
-
-    }
+//    @DeleteMapping(value="/users", params="uid")
+//    public ResponseEntity<String> deleteUserById(@RequestParam Long uid){
+//        if(userIdExists(uid)){
+//            UserDTO userDTO = userService.getUserById(uid);
+//            String dispname = userDTO.getDisplayName();
+//            userService.deleteUserById(uid);
+//            return new ResponseEntity<>("Successfully deleted user "+dispname+" from the database", HttpStatus.OK);
+//        } else {
+//            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
+//        }
+//
+//    }
 
     @PostMapping(value="/users")
     @ResponseStatus(HttpStatus.CREATED)

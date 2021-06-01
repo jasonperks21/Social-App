@@ -1,6 +1,7 @@
 package com.cs334.project3.service;
 
 import com.cs334.project3.dto.*;
+import com.cs334.project3.model.Post;
 import com.cs334.project3.repo.GroupMemberRepository;
 import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.UserRepository;
@@ -24,6 +25,9 @@ public class GroupMemberService {
     @Autowired
     private UserRepository userRepository;
 
+    public void save(GroupMember groupMember) {
+        groupMemberRepository.save(groupMember);
+    }
 
     /*
     // Get group admin

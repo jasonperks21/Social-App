@@ -23,7 +23,7 @@ public class GroupService {
      * Create a new group.
      * @param group
      */
-    public void createGroup(Group group) {
+    public void save(Group group) {
         groupRepository.save(group);
     }
 
