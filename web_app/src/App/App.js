@@ -26,11 +26,14 @@ class App extends React.Component {
                 <Login />
             </Route>
             <Route exact path="/">
-                <Home userId={this.state.userId}/>
+                <Home />
             </Route>
             <Route exact path="/groups">
                 <Groups userId={this.state.userId}/>
             </Route>
+            <route path="/profile/:username">
+
+            </route>
             <Route component={NotFound} />
             </Switch>
         </BrowserRouter>);
