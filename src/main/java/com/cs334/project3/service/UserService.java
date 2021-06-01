@@ -30,10 +30,16 @@ public class UserService {
     }
 
     // Get user by ID
-    public UserDTO getUserById(Long userID){
-        User user = userRepository.findById(userID).get();
-        UserDTO userDTO = new UserDTO(user, false);
-        return userDTO;
+    public UserTransferObjectDTO getUserById(Long userId){
+        UserTransferObjectDTO dto = new UserTransferObjectDTO();
+        try{
+            User user = userRepository.findById(userId).get();
+            dto.setData(new UserDTO(user, false));
+            dto.ok();
+        } catch(Exception e){
+            dto.error();
+        }
+        return dto;
     }
 
     /*

@@ -23,10 +23,12 @@ public class GroupMemberService {
 
     @Autowired
     private UserRepository userRepository;
-
+    /*
     // Get all group members of group
     public GroupMembersDTO getAllGroupMembersByGroupId(Long groupId){
         GroupMembersDTO dto = new GroupMembersDTO();
+        //Group group = groupRepository.getGroupById(groupId);
+        //List<User> members = group.getMembers();
         //TODO: DB : Implement findAllGroupMembersByGroupId in groupMemberRepository that returns List<User>
         List<User> userList = groupMemberRepository.findAllGroupMembersByGroupId(groupId);
         List<User> adminList = groupMemberRepository.findAllAdminsByGroupId(groupId);
@@ -87,7 +89,7 @@ public class GroupMemberService {
         //TODO: DB : Implement groupMemberCount in groupMemberRepository; counts amount of members in group
         return groupMemberRepository.groupMemberCount(groupId);
     }
-
+    */
     // Get groups that user is a member of
     public GroupsThatUserIsMemberOfDTO getGroupsWhereUserIsMember(Long userId) {
         //get from repo
@@ -107,6 +109,5 @@ public class GroupMemberService {
 
         return dto;
     }
-    */
 
 }
