@@ -68,24 +68,16 @@ public class GroupMemberService {
     }
     */
     // Get groups that user is a member of
-    //TODO: MARCO CLEAN BASEDTO SHIT
-    public GroupsThatUserIsMemberOfDTO getGroupsWhereUserIsMember(Long userId) {
+
+    public List<GroupDTO> getGroupsWhereUserIsMember(Long userId) {
         //get from repo
         GroupsThatUserIsMemberOfDTO dto = new GroupsThatUserIsMemberOfDTO();
         List<Group> groupList = groupRepository.getALlGroupsThatUserIsMemberOf(userId);
-        try {
-            //format data
-            List<GroupDTO> groupDTOList = new ArrayList<>();
-            for (Group g : groupList) {
-                groupDTOList.add(new GroupDTO(g, userId));
-            }
-            dto.setData(groupDTOList);
-            dto.ok();
-        } catch (Exception e){
-            dto.error();
+        List<GroupDTO> groupDTOList = new ArrayList<>();
+        for (Group g : groupList) {
+            groupDTOList.add(new GroupDTO(g, userId));
         }
-
-        return dto;
+        return groupDTOList;
     }
 
     public GroupMember getGroupMembership(Long userId, Long groupId){

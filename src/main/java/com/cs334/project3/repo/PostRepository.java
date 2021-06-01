@@ -117,9 +117,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "p.group.group_id = pg.group_id and\n" +
             "gm.user.user_id = :uid and\n" +
             "c.category_id = p.category.category_id and\n" +
-            "within(p.location, :circ) = true " +
+            "within(p.location, :rad) = true " +
             "order by p.timestamp")
-    public List<PostResultSetMapping> getAllPostsBeforeSpecifiedTimeToDisplayForUser(@Param("uid") Long userId, @Param("circ")Geometry circle);
+    public List<PostResultSetMapping> getAllPostsBeforeSpecifiedTimeToDisplayForUser(@Param("uid") Long userId, @Param("rad")Geometry sector);
 
 
 

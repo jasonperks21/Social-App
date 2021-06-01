@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
@@ -54,6 +56,7 @@ public class Post {
     @Column
     private ZonedDateTime timestamp;
 
+    @Setter
     @Column
     private Point location;
 
@@ -97,6 +100,7 @@ public class Post {
         this.timestamp = ZonedDateTime.now();
         this.replied = replyingOn;
     }
+
 
     private void addReply(Post reply){
         replies.add(reply);

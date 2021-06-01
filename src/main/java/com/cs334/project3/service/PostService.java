@@ -10,6 +10,8 @@ import com.cs334.project3.repo.resultset.PostResultSetMapping;
 import com.cs334.project3.requestbody.PostRequestBody;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.util.GeometricShapeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,11 +114,22 @@ public class PostService {
     }
 
 
-    private Geometry createCircle(double x, double y, double radius) {
-        GeometricShapeFactory shapeFactory = new GeometricShapeFactory();
-        shapeFactory.setNumPoints(32);
-        shapeFactory.setCentre(new Coordinate(x, y));
-        shapeFactory.setSize(radius * 2);
-        return shapeFactory.createCircle();
+//    private Geometry createSector(double radius, Point center) {
+//        GeometricShapeFactory shapeFactory = new GeometricShapeFactory();
+//        shapeFactory.setNumPoints(32);
+//        shapeFactory.setCentre(new Coordinate(x, y));
+//        shapeFactory.setSize(radius * 2);
+//        return shapeFactory.createCircle();
+//    }
+//
+    private Geometry LLAtoCart(double lon, double lat, double alt){
+        double earthRadiusKm = 6371.0 + alt;
+        double lonrad = Math.toRadians(lon);
+        double latrad = Math.toRadians(lat);
+        GeometryFactory factory = new GeometryFactory();
+        double x = earthRadiusKm * Math.cos(latrad) * Math.cos(lonrad);
+        double y = earthRadiusKm * Math.cos(latrad) * Math.sin(lonrad);
+        double z = earthRadiusKm * Math.sin(latrad);
+        return factory.createPoint(new Coordinate(x, y, z));
     }
 }
