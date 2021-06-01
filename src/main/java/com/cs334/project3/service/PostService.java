@@ -8,6 +8,9 @@ import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.PostRepository;
 import com.cs334.project3.repo.resultset.PostResultSetMapping;
 import com.cs334.project3.requestbody.PostRequestBody;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.util.GeometricShapeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,5 +109,14 @@ public class PostService {
                 p.getTimestamp(), p.getGroup().getGroup_id(), p.getPost_id(),
                 params.getReplyId(), params.getMessage(),gm.getUser().getDisplayName(),
                 gm.getUser().getUser_id(),gm.getMember_id(),c.getCategoryName(),c.getCategory_id()));
+    }
+
+
+    private Geometry createCircle(double x, double y, double radius) {
+        GeometricShapeFactory shapeFactory = new GeometricShapeFactory();
+        shapeFactory.setNumPoints(32);
+        shapeFactory.setCentre(new Coordinate(x, y));
+        shapeFactory.setSize(radius * 2);
+        return shapeFactory.createCircle();
     }
 }
