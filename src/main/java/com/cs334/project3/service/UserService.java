@@ -30,8 +30,9 @@ public class UserService {
     }
 
     // Get user by ID
-    public User getUserById(Long userId){
-        return userRepository.getById(userId);
+    public UserDTO getUserById(Long userId){
+        User user = userRepository.getById(userId);
+        return new UserDTO(user);
     }
 
     // Get user by username

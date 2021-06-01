@@ -125,6 +125,25 @@ public class Controller {
         groupService.joinGroup(group_id,user_id);
     }
     */
+    ////////////////////Controller for groupmembers//////////////
+    @PostMapping("/groupmember")
+    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody Long userId, Long groupId, boolean admin){
+        UserDTO userDTO = userService.getUserById(userId);
+        if (userDTO == null){
+            throw new ResourceNotFoundException("No user with user ID "+userId+" exists");
+        } else {
+            try{
+                GroupMembersDTO gmdto = groupService.joinGroup(groupId, userId, admin);
+                return new ResponseEntity<>(gmdto, HttpStatus.OK);
+            } catch(Exception e){
+                throw new MethodNotAllowedException("User "+userId+" could not be added to the group");
+            }
+        }
+    }
+
+
+
+
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
     public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){

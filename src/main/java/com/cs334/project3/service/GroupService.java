@@ -1,6 +1,7 @@
 package com.cs334.project3.service;
 
 import com.cs334.project3.dto.GroupDTO;
+import com.cs334.project3.dto.GroupMembersDTO;
 import com.cs334.project3.model.Group;
 import com.cs334.project3.model.GroupMember;
 import com.cs334.project3.model.User;
@@ -58,12 +59,12 @@ public class GroupService {
      * @param user_id
      * @return
      */
-    /*
+
     public GroupDTO getGroupById(Long group_id, Long user_id) {
         Group group = groupRepository.findById(group_id).get();
         GroupDTO groupDTO = new GroupDTO(group, user_id);
         return groupDTO;
-    }*/
+    }
     /*
     /**
      * Find group by the groups name.
@@ -85,10 +86,17 @@ public class GroupService {
      * @param group_id
      * @param user_id
      */
-    /*
-    public void joinGroup(Long group_id, Long user_id) {
-        //TODO: DB: Implement addNewMember in GroupRepository
-        groupRepository.addNewMember(group_id, user_id);
+
+    public GroupMembersDTO joinGroup(Long group_id, Long user_id, boolean admin) {
+        User user = userRepository.getById(user_id);
+        Group group;
+        GroupMember gm;
+        if(user==null){
+            throw new NullPointerException();
+        } else {
+            group = groupRepository.getById(group_id);
+            gm = user.addGroupMembership(group, admin);
+            return new GroupMembersDTO(gm);
+        }
     }
-    */
 }
