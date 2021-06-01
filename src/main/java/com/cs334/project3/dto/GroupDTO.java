@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class GroupDTO extends BaseDTO<List<UserDTO>>{
+public class GroupDTO{
     private Long groupId;
     private String groupName;
     private boolean isAdminOnThisGroup = false;

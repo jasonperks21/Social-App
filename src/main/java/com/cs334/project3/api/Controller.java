@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -36,6 +35,9 @@ public class Controller {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Autowired
     DataGenerator dataGenerator;
@@ -66,6 +68,7 @@ public class Controller {
     }
 
     @GetMapping("/groups/{userId}")
+    //TODO: update to response entity MARCO
     public GroupsThatUserIsMemberOfDTO getGroupsForUser(@PathVariable Long userId){
         return groupMemberService.getGroupsWhereUserIsMember(userId);
     }
@@ -105,22 +108,43 @@ public class Controller {
     public void addMemberToGroup(@PathVariable Long group_id, Long user_id) {
         groupService.joinGroup(group_id,user_id);
     }
-
+    */
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
-    public PostsToDisplayForUserDTO getPostsForUser(@PathVariable Long userId){
-        return postService.getAllPostsToDisplayForUser(userId);
+    public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
+        //TODO: Exception handling
+        List<PostDTO> dto = postService.getAllPostsToDisplayForUser(userId);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @GetMapping("/posts/{userId}/{groupId}")
+    public ResponseEntity<List<PostDTO>> getPostsOfSpecificGroupForUser(@PathVariable Long userId,@PathVariable Long groupId){
+        //TODO: Exception handling
+        List<PostDTO> dto = postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+/*
     @GetMapping("/posts/{userId}/{groupId}")
     public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
         return postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
     }
-    
-    @PostMapping("/posts/{post}")
-    public void addPost(@PathVariable Post post) {
-        postService.createPost(post);
+
+    */
+    @PostMapping("/posts")
+    public void addPost(@RequestBody PostDataBodyMapping ids) {
+        //TODO: TRY CATCH
+        GroupMember gm = groupMemberService.getGroupMembership(ids.getUserId(), ids.getGroupId());
+        Category c = categoryService.getById(ids.getCategoryId());
+        Post p;
+        if(ids.getReplyId() == null){
+            p = gm.postToGroup(c, ids.getMessage());
+        } else{
+            p = gm.replyToPost(postService.getPostByID(ids.getReplyId()), ids.getMessage());
+        }
+        System.out.println("ID: " + p.getPost_id() + "MESSAGE: " + p.getMessage());
+        postService.save(p);
     }
+    /*
 
     @DeleteMapping("/posts/{post}")
     public void deletePost(@PathVariable Post post) {

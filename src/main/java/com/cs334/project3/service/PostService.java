@@ -7,7 +7,6 @@ import com.cs334.project3.repo.PostResultSetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -89,11 +88,6 @@ public class PostService {
         return postDTO;
     }
     */
-    /**
-     * Find post by group.
-     * @param group
-     * @return
-     */
     /*
     public PostDTO getPostByGroup(Group group) {
         //TODO: DB: implement findAllByGroup in PostRepository
@@ -114,34 +108,23 @@ public class PostService {
     }
     */
     // Get posts to display for user
-    /*
-    public PostsToDisplayForUserDTO getAllPostsToDisplayForUser(Long userId){
-        PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
-        try {
+
+    public List<PostDTO>  getAllPostsToDisplayForUser(Long userId){
             List<PostResultSetMapping> posts = postRepository.getAllPostsToDisplayForUser(userId);
-            System.out.println(posts);
-            pdto.createRecursiveDTOStructure(posts);
-            pdto.ok();
-        } catch(Exception e){
-            e.printStackTrace();
-            pdto.error();
-        }
-        return pdto;
+            //System.out.println(posts);
+            List<PostDTO> dto = PostDTOProcessor.createRecursiveDTOStructure(posts);
+        return dto;
     }
-    */
+
     //Get all the posts from a group to display for the user:
-    /*
-    public PostsToDisplayForUserDTO getAllPostsOfGroupToDisplayForUser(Long userId, Long groupId){
-        PostsToDisplayForUserDTO pdto = new PostsToDisplayForUserDTO();
-        try {
-            List<PostResultSetMapping> posts = postRepository.getAllPostsOfGroupToDisplayForUser(userId, groupId);
-            System.out.println(posts);
-            pdto.createRecursiveDTOStructure(posts);
-            pdto.ok();
-        } catch(Exception e){
-            e.printStackTrace();
-            pdto.error();
-        }
-        return pdto;
-    }*/
+    public List<PostDTO> getAllPostsOfGroupToDisplayForUser(Long userId, Long groupId){
+        List<PostResultSetMapping> posts = postRepository.getAllPostsOfGroupToDisplayForUser(userId, groupId);
+        //System.out.println(posts);
+        List<PostDTO> dto = PostDTOProcessor.createRecursiveDTOStructure(posts);
+        return dto;
+    }
+
+    public void save(Post p){
+        postRepository.save(p);
+    }
 }

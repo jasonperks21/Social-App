@@ -1,3 +1,18 @@
+CONTROLLER
+routes to CREATE, READ, UPDATE, DELETE (CRUD)
+Posts for a specific user
+Groups for a specific user
+Friends for a specific user
+Users
+Membership for group memberships
+
+
+update
+
+get by id
+use setter to change values
+repo.save()
+
 -----------------------------------------------------------------------------------
 route: /posts
 Note that this covers both the routes
@@ -22,12 +37,12 @@ method: delete
 -----------------------------------------------------------------------------------
 route: /membership
 
-ADDING TO MEMBERS TO GROUPS
+ADDING MEMBERS TO GROUPS
 method: post
 @RequestBody: userId (JWT later), groupId
-	get user by userId
-	get group by groupId
-	GroupMember gm <- User.addGroupMembership
+	get User u by userId
+	get Group g by groupId
+	GroupMember gm <- u.addGroupMembership(g)
 	repo.save(gm)
 
 CHANGE ADMIN
@@ -36,6 +51,7 @@ method: update
 	get GroupMember from repo using userId and groupId (Custom Query)
 	GroupMember.setAdmin(admin)
 	repo.save(gm)
+
 
 GETTING POSTS AND GROUPS IS ALREADY DONE BY MARCO (method: get)
 -----------------------------------------------------------------------------------

@@ -9,16 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class PostsToDisplayForUserDTO extends BaseDTO<List<PostDTO>>{
+public class PostDTOProcessor {
 
-    private HashMap<Long, PostDTO> hashMap= new HashMap<>();
-
-    public PostsToDisplayForUserDTO(){
-        super(new ArrayList<>());
-    }
-
-
-    public void createRecursiveDTOStructure(List<PostResultSetMapping> posts){
+    public static List<PostDTO> createRecursiveDTOStructure(List<PostResultSetMapping> posts){
+        HashMap<Long, PostDTO> hashMap= new HashMap<>();
         List<PostDTO> dtos = new ArrayList<>();
         Iterator<PostResultSetMapping> it = posts.iterator();
         int size = posts.size();
@@ -44,6 +38,6 @@ public class PostsToDisplayForUserDTO extends BaseDTO<List<PostDTO>>{
                 }
             }
         }
-        data = dtos;
+        return dtos;
     }
 }

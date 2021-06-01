@@ -23,32 +23,9 @@ public class GroupMemberService {
 
     @Autowired
     private UserRepository userRepository;
-    /*
-    // Get all group members of group
-    public GroupMembersDTO getAllGroupMembersByGroupId(Long groupId){
-        GroupMembersDTO dto = new GroupMembersDTO();
-        //Group group = groupRepository.getGroupById(groupId);
-        //List<User> members = group.getMembers();
-        //TODO: DB : Implement findAllGroupMembersByGroupId in groupMemberRepository that returns List<User>
-        List<User> userList = groupMemberRepository.findAllGroupMembersByGroupId(groupId);
-        List<User> adminList = groupMemberRepository.findAllAdminsByGroupId(groupId);
-        try {
-            List<UserDTO> userDTOList = new ArrayList<>();
-            for (User u : userList){
-                boolean admin = false;
-                if(adminList.contains(u)){
-                    admin = true;
-                }
-                userDTOList.add(new UserDTO(u, admin));
-            }
-            dto.setData(userDTOList);
-            dto.ok();
-        } catch(Exception e){
-            dto.error();
-        }
-        return dto;
-    }
 
+
+    /*
     // Get group admin
     public GroupMembersDTO getGroupAdminsByGroupId(Long groupId){
         GroupMembersDTO dto = new GroupMembersDTO();
@@ -91,6 +68,7 @@ public class GroupMemberService {
     }
     */
     // Get groups that user is a member of
+    //TODO: MARCO CLEAN BASEDTO SHIT
     public GroupsThatUserIsMemberOfDTO getGroupsWhereUserIsMember(Long userId) {
         //get from repo
         GroupsThatUserIsMemberOfDTO dto = new GroupsThatUserIsMemberOfDTO();
@@ -108,6 +86,10 @@ public class GroupMemberService {
         }
 
         return dto;
+    }
+
+    public GroupMember getGroupMembership(Long userId, Long groupId){
+        return groupMemberRepository.getUserGroupMembership(userId,groupId);
     }
 
 }
