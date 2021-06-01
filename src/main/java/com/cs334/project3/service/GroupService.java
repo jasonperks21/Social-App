@@ -58,24 +58,26 @@ public class GroupService {
      * @param user_id
      * @return
      */
+    /*
     public GroupDTO getGroupById(Long group_id, Long user_id) {
         Group group = groupRepository.findById(group_id).get();
         GroupDTO groupDTO = new GroupDTO(group, user_id);
         return groupDTO;
-    }
-
+    }*/
+    /*
     /**
      * Find group by the groups name.
      * @param groupName
      * @return
      */
+    /*
     public GroupDTO getGroupByName(String groupName, Long user_id) {
         //TODO: DB: Implement findGroupByName in GroupRepository that returns type Optional<Group>
         Group group = groupRepository.findGroupByName(groupName).get();
         GroupDTO groupDTO = new GroupDTO(group, user_id);
         return groupDTO;
     }
-
+    */
 
     //TODO: Fix.
     /**
@@ -83,8 +85,10 @@ public class GroupService {
      * @param group_id
      * @param user_id
      */
+    /*
     public void joinGroup(Long group_id, Long user_id) {
         //TODO: DB: Implement addNewMember in GroupRepository
         groupRepository.addNewMember(group_id, user_id);
     }
+    */
 }
