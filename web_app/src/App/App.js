@@ -14,8 +14,23 @@ class App extends React.Component {
 
         this.state = {
           loggedIn : true,
-          userId : '1'
+          userId : '1',
+          coords: null
         };
+        this.success = this.success.bind(this);
+      }
+
+    success(position) {
+            this.setState({coords: {lat:position.coords.latitude,lon:position.coords.longitude }})
+            console.log(this.state.coords)
+            }
+    componentDidMount(){
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(this.success)
+        }
+        else {
+            console.log('geolocation is not enabled on this browser');
+            }
       }
 
     render() {
@@ -39,5 +54,5 @@ class App extends React.Component {
         </BrowserRouter>);
       }
 }
-
 export default App;
+
