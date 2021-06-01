@@ -1,13 +1,12 @@
 package com.cs334.project3.api;
 
 import com.cs334.project3.datagen.DataGenerator;
-import com.cs334.project3.dto.GroupDTO;
-import com.cs334.project3.dto.GroupsThatUserIsMemberOfDTO;
-import com.cs334.project3.dto.PostDTO;
-import com.cs334.project3.dto.PostsToDisplayForUserDTO;
+import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -165,4 +164,40 @@ public class Controller {
     public void comment(@PathVariable Post post) {
         postService.addComment(post);
     }
+
+
+    ////////////////////Controller for users/////////////////////
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId){
+        UserTransferObjectDTO dto = userService.getUserById(userId);
+        if (dto.getStatus().equals("ok")){
+            return new ResponseEntity<>(dto.getData(), HttpStatus.OK);
+        } else {
+            throw new ResourceNotFoundException();
+        }
+    }
+
+    @GetMapping("/users/exists/{userId}")
+    public ResponseEntity<Boolean> userIdExists(@PathVariable Long userId){
+        boolean exists = userService.userIdExists(userId);
+        return new ResponseEntity<>(exists, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long userId){
+        userService.deleteUserById(userId);
+        return new ResponseEntity<>("Successfully deleted user with ID "+userId, HttpStatus.OK);
+    }
+
+    @PostMapping(value="/users")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> addUser(@RequestBody User user){
+        userService.addUser(user);
+        return new ResponseEntity<>("Successfully added "+user.getUsername(),HttpStatus.CREATED);
+    }
+}
+
+// This class extends RuntimeException and is used to return 404.
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
+class ResourceNotFoundException extends RuntimeException{
 }
