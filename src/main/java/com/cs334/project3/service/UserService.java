@@ -35,6 +35,11 @@ public class UserService {
         return new UserDTO(user);
     }
 
+    public User getUserByIdForGroup(Long userId){
+        User user = userRepository.getById(userId);
+        return user;
+    }
+
     // Get user by username
     public UserDTO getUserByUsername(String uname){
         UserDTO userDTO;
