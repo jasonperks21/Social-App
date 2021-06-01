@@ -13,6 +13,7 @@ public class PostDTO {
     private String groupName;
     private Long groupId;
     private Long postId;
+    private Long categoryId;
     @Setter
     private List<PostDTO> replies;
     @Setter
@@ -32,6 +33,7 @@ public class PostDTO {
         userDisplayName = post.getUserDisplayName();
         timePosted = post.getTimePosted();
         groupName = post.getGroupName();
+        categoryId = post.getCategoryId();
     }
 
     public void addReply(PostDTO dto){

@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class GroupMembersDTO extends BaseDTO<List<UserDTO>>{
+public class GroupMembersDTO extends BaseDTO<List<UserDTOForPost>>{
     
 }

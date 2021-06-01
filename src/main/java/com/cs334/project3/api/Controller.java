@@ -3,7 +3,7 @@ package com.cs334.project3.api;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
-import com.cs334.project3.requestbody.PostRequestBodyMapping;
+import com.cs334.project3.requestbody.PostRequestBody;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -97,14 +97,14 @@ public class Controller {
     @GetMapping("/posts/{userId}")
     public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
         //TODO: Exception handling
-        List<PostDTO> dto = postService.getAllPostsToDisplayForUser(userId);
+        List<PostDTO> dto = postService.getAllPostsForUser(userId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{userId}/{groupId}")
     public ResponseEntity<List<PostDTO>> getPostsOfSpecificGroupForUser(@PathVariable Long userId,@PathVariable Long groupId){
         //TODO: Exception handling
-        List<PostDTO> dto = postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
+        List<PostDTO> dto = postService.getAllPostsForUserByGroup(userId, groupId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 /*
@@ -115,18 +115,9 @@ public class Controller {
 
     */
     @PostMapping("/posts")
-    public void addPost(@RequestBody PostRequestBodyMapping ids) {
+    public void addPost(@RequestBody PostRequestBody ids) {
         //TODO: TRY CATCH
-        GroupMember gm = groupMemberService.getGroupMembership(ids.getUserId(), ids.getGroupId());
-        Category c = categoryService.getById(ids.getCategoryId());
-        Post p;
-        if(ids.getReplyId() == null){
-            p = gm.postToGroup(c, ids.getMessage());
-        } else{
-            p = gm.replyToPost(postService.getPostByID(ids.getReplyId()), ids.getMessage());
-        }
-        System.out.println("ID: " + p.getPost_id() + "MESSAGE: " + p.getMessage());
-        postService.save(p);
+
     }
     /*
 
@@ -175,34 +166,34 @@ public class Controller {
 
     */
     ////////////////////Controller for users/////////////////////
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId){
-        UserTransferObjectDTO dto = userService.getUserById(userId);
-        if (dto.getStatus().equals("ok")){
-            return new ResponseEntity<>(dto.getData(), HttpStatus.OK);
-        } else {
-            throw new ResourceNotFoundException();
-        }
-    }
-
-    @GetMapping("/users/exists/{userId}")
-    public ResponseEntity<Boolean> userIdExists(@PathVariable Long userId){
-        boolean exists = userService.userIdExists(userId);
-        return new ResponseEntity<>(exists, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/users/{userId}")
-    public ResponseEntity<String> deleteUserById(@PathVariable Long userId){
-        userService.deleteUserById(userId);
-        return new ResponseEntity<>("Successfully deleted user with ID "+userId, HttpStatus.OK);
-    }
-
-    @PostMapping(value="/users")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addUser(@RequestBody User user){
-        userService.addUser(user);
-        return new ResponseEntity<>("Successfully added "+user.getUsername(),HttpStatus.CREATED);
-    }
+//    @GetMapping("/users/{userId}")
+//    public ResponseEntity<UserDTOForPost> getUserById(@PathVariable Long userId){
+//        UserTransferObjectDTO dto = userService.getUserById(userId);
+//        if (dto.getStatus().equals("ok")){
+//            return new ResponseEntity<>(dto.getData(), HttpStatus.OK);
+//        } else {
+//            throw new ResourceNotFoundException();
+//        }
+//    }
+//
+//    @GetMapping("/users/exists/{userId}")
+//    public ResponseEntity<Boolean> userIdExists(@PathVariable Long userId){
+//        boolean exists = userService.userIdExists(userId);
+//        return new ResponseEntity<>(exists, HttpStatus.OK);
+//    }
+//
+//    @DeleteMapping("/users/{userId}")
+//    public ResponseEntity<String> deleteUserById(@PathVariable Long userId){
+//        userService.deleteUserById(userId);
+//        return new ResponseEntity<>("Successfully deleted user with ID "+userId, HttpStatus.OK);
+//    }
+//
+//    @PostMapping(value="/users")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ResponseEntity<String> addUser(@RequestBody User user){
+//        userService.addUser(user);
+//        return new ResponseEntity<>("Successfully added "+user.getUsername(),HttpStatus.CREATED);
+//    }
 }
 
 // This class extends RuntimeException and is used to return 404.
