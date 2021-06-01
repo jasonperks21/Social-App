@@ -61,12 +61,22 @@ public class Controller {
 
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups")
-    public void addGroup(@RequestBody GroupRequestBodyMapping ids) {
+    public void createGroup(@RequestBody GroupRequestBodyMapping ids) {
         User user = userService.getUserById(ids.getUserId());
         Group g = new Group(ids.getGroupName());
         GroupMember gm = new GroupMember(g, user, true);
         groupService.save(g);
         groupMemberService.save(gm);
+    }
+
+    @DeleteMapping("/groups")
+    public void deleteGroup(@RequestBody GroupRequestBodyMapping ids) {
+        GroupMember gm = groupMemberService.getGroupMembership(ids.getUserId(), ids.getGroupId());
+
+        if (gm.getAdmin()) {
+            Group g = gm.getGroup();
+            groupService.deleteGroup(g);
+        }
     }
 
     /*

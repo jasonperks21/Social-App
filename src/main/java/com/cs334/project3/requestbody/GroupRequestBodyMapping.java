@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class GroupRequestBodyMapping {
-    private Long userId;
+    private Long userId, groupId;
     private String groupName;
 }
