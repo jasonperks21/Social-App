@@ -7,6 +7,7 @@ import com.cs334.project3.requestbody.PostRequestBody;
 import com.cs334.project3.requestbody.GroupRequestBodyMapping;
 import com.cs334.project3.requestbody.FriendRequestBody;
 import com.cs334.project3.service.*;
+import com.cs334.project3.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -241,39 +242,4 @@ public class Controller {
     }
     */
 
-}
-
-
-
-// 404 NOT FOUND Error
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-class ResourceNotFoundException extends ResponseStatusException{
-    public ResourceNotFoundException(){
-        super(HttpStatus.NOT_FOUND);
-    }
-    public ResourceNotFoundException(String message){
-        super(HttpStatus.NOT_FOUND, message);
-    }
-}
-
-// 405 METHOD NOT ALLOWED Error
-@ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
-class MethodNotAllowedException extends ResponseStatusException {
-    public MethodNotAllowedException(){
-        super(HttpStatus.METHOD_NOT_ALLOWED);
-    }
-    public MethodNotAllowedException(String message){
-        super(HttpStatus.METHOD_NOT_ALLOWED, message);
-    }
-}
-
-// 500 INTERNAL SERVER ERROR Error
-@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-class InternalServerErrorException extends ResponseStatusException {
-    public InternalServerErrorException(){
-        super(HttpStatus.METHOD_NOT_ALLOWED);
-    }
-    public InternalServerErrorException(String message){
-        super(HttpStatus.METHOD_NOT_ALLOWED, message);
-    }
 }
