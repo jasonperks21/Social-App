@@ -46,16 +46,16 @@ public class FriendService {
     }
 
     public List<FriendDTO> getFriendsByUserId(Long userId) {
-        Friend friend = friendRepository.getById(userId);
-        List<Friend> friendList = friend.getUser().getFriends();
+        User u = userRepository.getById(userId);
+        List<Friend> friendList = u.getFriends();
         List<FriendDTO> friendDTOList;
 
         if (friendList == null) {
             throw new NullPointerException();
         } else {
             friendDTOList = new ArrayList<>();
-            for (Friend test:friendList) {
-                friendDTOList.add(new FriendDTO(test));
+            for (Friend friend:friendList) {
+                friendDTOList.add(new FriendDTO(friend));
             }
         }
         return friendDTOList;
