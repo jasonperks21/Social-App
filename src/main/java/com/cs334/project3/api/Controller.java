@@ -155,6 +155,17 @@ public class Controller {
         }
     }
 
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void removeFriend(@RequestBody FriendRequestBody ids) {
+        try {
+            Friend friend = friendService.getFriendById(ids.getUserId(), ids.getFriendId());
+            friendService.deleteFriend(friend);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Exception raised trying to delete friend");
+        }
+    }
+
 
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
