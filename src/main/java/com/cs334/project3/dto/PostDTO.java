@@ -3,6 +3,7 @@ package com.cs334.project3.dto;
 import com.cs334.project3.repo.resultset.PostResultSetMapping;
 import lombok.Data;
 import lombok.Setter;
+import org.springframework.data.geo.Point;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class PostDTO {
     private String groupName;
     private Long groupId;
     private Long postId;
+    private Long categoryId;
     @Setter
     private List<PostDTO> replies;
     @Setter
@@ -21,6 +23,7 @@ public class PostDTO {
     private Long postUserId;
     private String userDisplayName;
     private ZonedDateTime timePosted;
+
 
     public PostDTO(PostResultSetMapping post){
         groupId = post.getGroupId();
@@ -32,6 +35,7 @@ public class PostDTO {
         userDisplayName = post.getUserDisplayName();
         timePosted = post.getTimePosted();
         groupName = post.getGroupName();
+        categoryId = post.getCategoryId();
     }
 
     public void addReply(PostDTO dto){

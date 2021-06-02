@@ -1,20 +1,20 @@
 package com.cs334.project3.dto;
 
 import com.cs334.project3.model.User;
-import com.cs334.project3.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-public class UserDTO{
-    private Long id;
+public class UserDTO {
+    private Long userId;
     private String displayName;
-    private boolean admin;
+    private String userName;
+    private String email;
 
-    public UserDTO(User user, boolean admin){
-        id = user.getUser_id();
-        displayName = user.getDisplayName();
-        this.admin = admin;
+    public UserDTO(User u){
+        userId=u.getUser_id();
+        displayName=u.getDisplayName();
+        userName=u.getUsername();
+        email=u.getEmail();
     }
 }

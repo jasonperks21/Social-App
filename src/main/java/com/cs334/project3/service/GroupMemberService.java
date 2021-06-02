@@ -1,6 +1,7 @@
 package com.cs334.project3.service;
 
 import com.cs334.project3.dto.*;
+import com.cs334.project3.model.Post;
 import com.cs334.project3.repo.GroupMemberRepository;
 import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.UserRepository;
@@ -24,68 +25,61 @@ public class GroupMemberService {
     @Autowired
     private UserRepository userRepository;
 
-
-    /*
-    // Get group admin
-    public GroupMembersDTO getGroupAdminsByGroupId(Long groupId){
-        GroupMembersDTO dto = new GroupMembersDTO();
-        //TODO: DB : Implement findAllAdminsByGroupId in groupMemberRepository that returns List<User>
-        List<User> adminList = groupMemberRepository.findAllAdminsByGroupId(groupId);
-        try{
-            List<UserDTO> adminDTOList = new ArrayList<>();
-            for (User a : adminList){
-                adminDTOList.add(new UserDTO(a, true));
-            }
-            dto.setData(adminDTOList);
-        } catch(Exception e){
-            dto.error();
-        }
-        return dto;
+    public void saveMember(GroupMember groupMember) {
+        groupMemberRepository.save(groupMember);
     }
-    /*
-    COMMENTING THESE OUT SO I CAN FIX THEM ONE AT A TIME
-    // See if user is group admin
-    public boolean userIdIsGroupAdmin(Long userId, Long groupId){
-        User user = userRepository.findById(userId).get();
-        List <User> adminList = groupMemberRepository.findAllAdminsByGroupId(groupId);
-        if (adminList.contains(user)){
-            return true;
+
+    public List<GroupMembersDTO> getGroupMembersByGroupId(Long gid){
+        Group group = groupRepository.getById(gid);
+        List<GroupMember> gmList = group.getMembers();
+        List<GroupMembersDTO> gmDTOList;
+        if(gmList == null){
+            throw new NullPointerException();
         } else {
-            return false;
+            gmDTOList = new ArrayList<>();
+            for(GroupMember gm:gmList){
+                gmDTOList.add(new GroupMembersDTO(gm.getUser().getUser_id(), gm.getGroup().getGroup_id(), gm.getAdmin()));
+            }
+            return gmDTOList;
+        }
+    }
+    /*
+    // Update group admin
+    public GroupMembersDTO updateGroupAdminByUserId(Long userId, Long groupId, boolean admin){
+        //TODO: DB: Implement getGroupMemberById(groupId, userId) in GroupMemberRepository
+        GroupMember gm = groupMemberRepository.getGroupMemberById(groupId, userId);
+        if(gm==null){
+            //TODO: Dom: Write more creative exceptions
+            throw new NullPointerException();
+        } else{
+            gm.setAdmin(admin);
+            groupMemberRepository.save(gm);
+            return new GroupMembersDTO(userId, groupId, admin);
         }
     }
 
-    // Set group admin
-    public void updateGroupAdminByUserId(Long userId, Long groupId, boolean admin){
-        //TODO: DB : Implement updateGroupMembersAdmin in groupMemberRepository; sets/removes an admin
-        groupMemberRepository.updateGroupMembersAdmin(userId, groupId, admin);
-    }
-
-    // Get group member count
-    public Long getAmountOfGroupMembers(Long groupId){
-        //TODO: DB : Implement groupMemberCount in groupMemberRepository; counts amount of members in group
-        return groupMemberRepository.groupMemberCount(groupId);
+    // Delete groupmember
+    public GroupMembersDTO deleteGroupMemberById(Long userId, Long groupId){
+        GroupMember gm = groupMemberRepository.getGroupMemberById(groupId, userId);
+        if(gm==null){
+            throw new NullPointerException();
+        } else{
+            groupMemberRepository.deleteById(gm.getMember_id());
+            return new GroupMembersDTO(gm.getUser().getUser_id(), gm.getGroup().getGroup_id(), gm.getAdmin());
+        }
     }
     */
     // Get groups that user is a member of
-    //TODO: MARCO CLEAN BASEDTO SHIT
-    public GroupsThatUserIsMemberOfDTO getGroupsWhereUserIsMember(Long userId) {
+
+    public List<GroupDTO> getGroupsWhereUserIsMember(Long userId) {
         //get from repo
         GroupsThatUserIsMemberOfDTO dto = new GroupsThatUserIsMemberOfDTO();
         List<Group> groupList = groupRepository.getALlGroupsThatUserIsMemberOf(userId);
-        try {
-            //format data
-            List<GroupDTO> groupDTOList = new ArrayList<>();
-            for (Group g : groupList) {
-                groupDTOList.add(new GroupDTO(g, userId));
-            }
-            dto.setData(groupDTOList);
-            dto.ok();
-        } catch (Exception e){
-            dto.error();
+        List<GroupDTO> groupDTOList = new ArrayList<>();
+        for (Group g : groupList) {
+            groupDTOList.add(new GroupDTO(g, userId));
         }
-
-        return dto;
+        return groupDTOList;
     }
 
     public GroupMember getGroupMembership(Long userId, Long groupId){

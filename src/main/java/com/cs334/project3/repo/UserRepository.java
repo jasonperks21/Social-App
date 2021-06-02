@@ -13,11 +13,17 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select u from User u where u.username = :uname")
-    public Optional<User> findUserByUsername(@Param("uname") String userName);
+    public List<User> findUserByUsername(@Param("uname") String userName);
 
     @Query(value = "select u from User u where u.displayName = :dispname")
-    public Optional<User> findUserByDispname(@Param("dispname") String displayName);
+    public List<User> findUserByDispname(@Param("dispname") String displayName);
 
     @Query(value = "select u from User u where u.email = :email")
-    public Optional<User> findUserByEmail(@Param("email") String email);
+    public List<User> findUserByEmail(@Param("email") String email);
+
+    @Query("select u from User u " +
+            "where lower(u.displayName) like concat('%', concat(lower(:s),'%')) or " +
+            "lower(u.username) like concat('%', concat(lower(:s),'%')) or " +
+            "lower(u.email) like concat('%', concat(lower(:s),'%'))")
+    public List<User> searchForUser(@Param("s") String search);
 }

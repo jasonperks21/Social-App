@@ -1,5 +1,6 @@
 package com.cs334.project3.repo.resultset;
 
+import com.cs334.project3.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -23,4 +24,5 @@ public class PostResultSetMapping {
 
     //category stuff
     private String category;
+    private Long categoryId;
 }

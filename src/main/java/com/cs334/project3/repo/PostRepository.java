@@ -2,6 +2,7 @@ package com.cs334.project3.repo;
 
 import com.cs334.project3.model.Post;
 import com.cs334.project3.repo.resultset.PostResultSetMapping;
+import org.geolatte.geom.Geometry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +21,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, p.timestamp," +
             "p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
-            "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
+            "p.member.user.user_id, gm.member_id, c.categoryName, c.category_id)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
             "gm.group.group_id = pg.group_id and\n" +
@@ -38,7 +39,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
             "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
-            "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
+            "p.member.user.user_id, gm.member_id, c.categoryName, c.category_id)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
             "gm.group.group_id = pg.group_id and\n" +
@@ -57,7 +58,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
             "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
-            "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
+            "p.member.user.user_id, gm.member_id, c.categoryName, c.category_id)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
             "gm.group.group_id = pg.group_id and\n" +
@@ -76,7 +77,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
             "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
-            "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
+            "p.member.user.user_id, gm.member_id, c.categoryName, c.category_id)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
             "gm.group.group_id = pg.group_id and\n" +
@@ -95,7 +96,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
             "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
-            "p.member.user.user_id, gm.member_id, c.categoryName)\n" +
+            "p.member.user.user_id, gm.member_id, c.categoryName, c.category_id)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
             "gm.group.group_id = pg.group_id and\n" +
@@ -105,6 +106,20 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "p.timestamp < :time\n" +
             "order by p.timestamp")
     public List<PostResultSetMapping> getAllPostsBeforeSpecifiedTimeToDisplayForUser(@Param("uid") Long userId, @Param("time")ZonedDateTime time);
+
+
+    @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
+            "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
+            "p.member.user.user_id, gm.member_id, c.categoryName, c.category_id)\n" +
+            "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
+            "where u.user_id = gm.user.user_id and\n" +
+            "gm.group.group_id = pg.group_id and\n" +
+            "p.group.group_id = pg.group_id and\n" +
+            "gm.user.user_id = :uid and\n" +
+            "c.category_id = p.category.category_id and\n" +
+            "within(p.location, :rad) = true " +
+            "order by p.timestamp")
+    public List<PostResultSetMapping> getAllPostsBeforeSpecifiedTimeToDisplayForUser(@Param("uid") Long userId, @Param("rad")Geometry sector);
 
 
 
