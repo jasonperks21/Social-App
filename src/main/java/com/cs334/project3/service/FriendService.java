@@ -31,4 +31,14 @@ public class FriendService {
         }
         return new FriendDTO(friend);
     }
+
+    public Friend getFriendById(Long userId, Long friendID) {
+        return friendRepository.getFriendshipBetweenUsers(userId, friendID);
+    }
+
+    public void deleteFriend(Friend friend) {
+        if (friendRepository.doesFriendshipExist(friend.getUser().getUser_id(), friend.getFriend().getUser_id())) {
+            friendRepository.delete(friend);
+        }
+    }
 }
