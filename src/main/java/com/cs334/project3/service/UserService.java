@@ -3,10 +3,12 @@ package com.cs334.project3.service;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.repo.UserRepository;
 import com.cs334.project3.model.User;
+import com.cs334.project3.requestbody.CreateUserRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,12 +16,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // Add new user
-    public void addUser(User user){
-        userRepository.save(user);
-    }
-
-    // Delete a user by ID
+    /**
+     * Delete the user. Probably never necessary.
+     * @param userID The user ID.
+     */
     public void deleteUserById(Long userID){
         userRepository.deleteById(userID);
     }
@@ -44,38 +44,45 @@ public class UserService {
         } catch(Exception e){
             e.printStackTrace();
             userDTO = null;
-        }
-        return userDTO;
-    }
-    /*
-    // Get user by display name
-    public UserTransferObjectDTO getUserByDispname(String dispname){
-        //TODO: DB : Implement findUserByDispname in userRepository that returns type Optional<User>
-        UserTransferObjectDTO dto = new UserTransferObjectDTO();
-        try{
-            User user = userRepository.findUserByDispname(dispname).get();
-            UserDTO userDTO = new UserDTO(user, false);
-            dto.setData(userDTO);
-            dto.ok();
-        } catch(Exception e){
-            dto.error();
+    /**
+     * Search for a user by email, display name or user name.
+     * @param search The search string.
+     * @return A list of users matching the search.
+     */
+    public List<UserDTO> searchForUser(String search){
+        List<User> users = userRepository.searchForUser(search);
+        List<UserDTO> dto = new ArrayList<>();
+        for(User u : users){
+            dto.add(new UserDTO(u));
         }
         return dto;
     }
 
-    // Get user by email
-    public UserTransferObjectDTO getUserByEmail(String email){
-        //TODO: DB : Implement findUserByDispname in userRepository that returns type Optional<User>
-        UserTransferObjectDTO dto = new UserTransferObjectDTO();
-        try{
-            User user = userRepository.findUserByEmail(email).get();
-            UserDTO userDTO = new UserDTO(user, false);
-            dto.setData(userDTO);
-            dto.ok();
-        } catch(Exception e){
-            dto.error();
-        }
-        return dto;
+    /**
+     * Attempt to create a user.
+     * @param params The request body parameters.
+     * @return The status of creation, containing all possible errors. Errors include invalid password, invalid email or
+     * username already taken It also includes the UserDTO. UserDTO will be null if there is an error.
+     */
+    public CreateUserStatus createUser(CreateUserRequestBody params){
+        boolean unameError = !userRepository.findUserByUsername(params.getUsername()).isEmpty();
+        boolean emailError = !userRepository.findUserByEmail(params.getEmail()).isEmpty(); //TODO email validation
+        boolean passwordError = false; //TODO password validation
+        if(unameError | emailError | passwordError) return new CreateUserStatus(unameError, emailError, passwordError, null);
+        User u = new User(params.getDisplayname(), params.getEmail(), params.getUsername(), params.getPassword());
+        userRepository.save(u);
+        return new CreateUserStatus(unameError, emailError, passwordError, new UserDTO(u));
+    }
+
+    /**
+     * Update a user's display name. This is the only thing a user may update.
+     * @param userId The user ID.
+     * @param displayName The new display name.
+     */
+    public void updateUser(Long userId, String displayName){
+        User u = userRepository.getById(userId);
+        u.setDisplayName(displayName);
+        userRepository.save(u);
     }
 
     */

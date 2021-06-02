@@ -3,7 +3,6 @@ package com.cs334.project3.api;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
-import com.cs334.project3.requestbody.GroupRequestBodyMapping;
 import com.cs334.project3.requestbody.PostRequestBodyMapping;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ public class Controller {
     ////////////////////////////////////////////////////////
     //// AUTOWIRED SERVICES ////////////////////////////////
     ////////////////////////////////////////////////////////
+
 
     @Autowired
     BasicDisplayService basicDisplayService;
@@ -148,14 +148,14 @@ public class Controller {
     @GetMapping("/posts/{userId}")
     public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
         //TODO: Exception handling
-        List<PostDTO> dto = postService.getAllPostsToDisplayForUser(userId);
+        List<PostDTO> dto = postService.getAllPostsForUser(userId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{userId}/{groupId}")
     public ResponseEntity<List<PostDTO>> getPostsOfSpecificGroupForUser(@PathVariable Long userId,@PathVariable Long groupId){
         //TODO: Exception handling
-        List<PostDTO> dto = postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
+        List<PostDTO> dto = postService.getAllPostsForUserByGroup(userId, groupId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 /*
@@ -166,18 +166,9 @@ public class Controller {
 
     */
     @PostMapping("/posts")
-    public void addPost(@RequestBody PostRequestBodyMapping ids) {
+    public void addPost(@RequestBody PostRequestBody ids) {
         //TODO: TRY CATCH
-        GroupMember gm = groupMemberService.getGroupMembership(ids.getUserId(), ids.getGroupId());
-        Category c = categoryService.getById(ids.getCategoryId());
-        Post p;
-        if(ids.getReplyId() == null){
-            p = gm.postToGroup(c, ids.getMessage());
-        } else{
-            p = gm.replyToPost(postService.getPostByID(ids.getReplyId()), ids.getMessage());
-        }
-        System.out.println("ID: " + p.getPost_id() + "MESSAGE: " + p.getMessage());
-        postService.save(p);
+
     }
     /*
 
