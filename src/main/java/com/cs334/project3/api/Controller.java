@@ -167,6 +167,17 @@ public class Controller {
         }
     }
 
+    @GetMapping(value="/friends", params="userId")
+    public ResponseEntity<List<FriendDTO>> getFriendsOfUser(@RequestParam Long userId) {
+        List<FriendDTO> friendDTOList;
+        try {
+            friendDTOList = friendService.getFriendsByUserId(userId);
+            return new ResponseEntity<>(friendDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Friends for " + userId + " could not be retrieved");
+        }
+    }
+
 
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
