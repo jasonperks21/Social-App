@@ -117,6 +117,8 @@ public class GroupService {
         } else {
             group = groupRepository.getById(group_id);
             gm = user.addGroupMembership(group, admin);
+            groupRepository.save(group);
+            groupMemberRepository.save(gm);
             return new GroupMembersDTO(gm);
         }
     }

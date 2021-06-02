@@ -52,9 +52,11 @@ public class Controller {
     }
 
     @GetMapping("/groups/{userId}")
-    //TODO: update to response entity MARCO
-    public GroupsThatUserIsMemberOfDTO getGroupsForUser(@PathVariable Long userId){
-        return groupMemberService.getGroupsWhereUserIsMember(userId);
+    //TODO: Marco: update to response entity
+    public ResponseEntity<List<GroupDTO>> getGroupsForUser(@PathVariable Long userId){
+        //TODO: Dom: Error checking
+        List<GroupDTO> gDTOList = groupMemberService.getGroupsWhereUserIsMember(userId);
+        return new ResponseEntity<>(gDTOList, HttpStatus.OK);
     }
 
     ////////////////////Controller for groups/////////////////////
@@ -85,42 +87,6 @@ public class Controller {
         }
     }
 
-    /*
-    @PostMapping("/groups/{group}")
-    public void addGroup(@PathVariable Group group) {
-        groupService.createGroup(group);
-    }
-
-    @DeleteMapping("/groups/{group}")
-    public void removeGroup(@PathVariable Group group) {
-        groupService.deleteGroup(group);
-    }
-
-    @DeleteMapping("/groups/{group}")
-    public void removeGroupById(@PathVariable Long group_id) {
-        groupService.deleteGroupById(group_id);
-    }
-
-    @GetMapping("/groups/{groupId}")
-    public boolean groupExists(@PathVariable Long groupId) {
-        return groupService.groupIdExists(groupId);
-    }
-
-    @GetMapping("/groups/{groupId}")
-    public GroupDTO findGroupById(@PathVariable Long groupId, Long user_id) {
-        return groupService.getGroupById(groupId, user_id);
-    }
-
-    @GetMapping("/groups/{groupName}")
-    public GroupDTO findGroupByName(@PathVariable String groupName, Long user_id) {
-        return groupService.getGroupByName(groupName, user_id);
-    }
-
-    @PutMapping("/groups/{member}")
-    public void addMemberToGroup(@PathVariable Long group_id, Long user_id) {
-        groupService.joinGroup(group_id,user_id);
-    }
-    */
     ////////////////////Controller for groupmembers//////////////
     @PostMapping("/groupmember")
     public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody GroupRequestBodyMapping grbm){
@@ -130,7 +96,7 @@ public class Controller {
         } else {
             try{
                 GroupMembersDTO gmdto = groupService.joinGroup(grbm.getGroupId(), grbm.getUserId(), grbm.isAdmin());
-                return new ResponseEntity<>(gmdto, HttpStatus.OK);
+                return new ResponseEntity<>(gmdto, HttpStatus.CREATED);
             } catch(Exception e){
                 throw new MethodNotAllowedException("User "+grbm.getUserId()+" could not be added to the group");
             }
@@ -144,21 +110,46 @@ public class Controller {
             gmDTOList = groupMemberService.getGroupMembersByGroupId(gid);
             return new ResponseEntity<>(gmDTOList, HttpStatus.OK);
         } catch(Exception e){
+            //TODO: Dom: Distinguish exception types
             throw new InternalServerErrorException("Group members for group "+gid+" could not be retrieved");
         }
     }
+    /*
+    @PutMapping("/groupmember")
+    public ResponseEntity<GroupMembersDTO> updateGroupAdminByUser(@RequestBody GroupRequestBodyMapping grbm){
+        GroupMembersDTO gmDTO;
+        try{
+            gmDTO = groupMemberService.updateGroupAdminByUserId(grbm.getUserId(), grbm.getGroupId(), grbm.isAdmin());
+            return new ResponseEntity<>(gmDTO, HttpStatus.OK);
+        } catch(Exception e){
+            //TODO: Dom: Distinguish exception types
+            throw new InternalServerErrorException("Something went wrong, could not update admin");
+        }
+    }
 
+    @DeleteMapping(value="/groupmember",params={"uid","gid"})
+    public ResponseEntity<GroupMembersDTO> deleteGroupMemberById(@RequestParam Long uid, Long gid){
+        GroupMembersDTO gmDTO;
+        try{
+            gmDTO = groupMemberService.deleteGroupMemberById(uid, gid);
+            return new ResponseEntity<>(gmDTO, HttpStatus.OK);
+        } catch(Exception e){
+            //TODO: Dom: Distinguish exception types
+            throw new InternalServerErrorException("Something went wrong, could not delete groupmember");
+        }
+    }
+    */
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
     public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
-        //TODO: Exception handling
+        //TODO: Dom: Exception handling
         List<PostDTO> dto = postService.getAllPostsForUser(userId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{userId}/{groupId}")
     public ResponseEntity<List<PostDTO>> getPostsOfSpecificGroupForUser(@PathVariable Long userId,@PathVariable Long groupId){
-        //TODO: Exception handling
+        //TODO: Dom: Exception handling
         List<PostDTO> dto = postService.getAllPostsForUserByGroup(userId, groupId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
@@ -171,55 +162,11 @@ public class Controller {
     */
     @PostMapping("/posts")
     public void addPost(@RequestBody PostRequestBody ids) {
-        //TODO: TRY CATCH
+        //TODO: Dom: Error checking
+        //TODO: Marco: Try catch
 
     }
-    /*
 
-    @DeleteMapping("/posts/{post}")
-    public void deletePost(@PathVariable Post post) {
-        postService.deletePost(post);
-    }
-
-    @GetMapping("/posts/{postId}")
-    public boolean postExists(@PathVariable Long postId) {
-        return postService.postIdExists(postId);
-    }
-
-    @GetMapping("/posts/{postId})
-    public Post findPostById(@PathVariable Long postId) {
-        return postService.getPostByID(postId);
-    }
-
-    @GetMapping("/posts/{category}")
-    public PostDTO findPostByCategory(@PathVariable Category category) {
-        return postService.getPostByCategory(category);
-    }
-
-    @GetMapping("/posts/{member}")
-    public PostDTO findPostByMember(@PathVariable GroupMember member) {
-        return postService.getPostByMember(member);
-    }
-
-    @GetMapping("/posts/{timestamp}")
-    public PostDTO findPostByTime(@PathVariable ZonedDateTime timestamp) {
-        return postService.getPostByTime(timestamp);
-    }
-
-    @GetMapping("/posts/{group}")
-    public PostDTO findPostByGroup(@PathVariable Group group) {
-        return postService.getPostByGroup(group);
-    }
-
-    //Find post by location:
-    //TODO: later
-
-    @PutMapping("/posts/{post}")
-    public void comment(@PathVariable Post post) {
-        postService.addComment(post);
-    }
-
-    */
     ////////////////////Controller for users/////////////////////
 //    @GetMapping(value="/users", params="uid")
 //    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
@@ -231,7 +178,6 @@ public class Controller {
 //            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
 //        }
 //    }
-    //TODO: Marco: Implement your user search function here
     /*
     @GetMapping(value="/users", params="uname")
     public ResponseEntity<UserDTO> getUserByUsername(@RequestParam String uname){
