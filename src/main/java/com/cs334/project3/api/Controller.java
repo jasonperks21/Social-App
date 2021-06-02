@@ -156,7 +156,7 @@ public class Controller {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/friends")
     @ResponseStatus(HttpStatus.OK)
     public void removeFriend(@RequestBody FriendRequestBody ids) {
         try {
