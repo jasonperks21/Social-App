@@ -23,7 +23,6 @@ public class Controller {
     //// AUTOWIRED SERVICES ////////////////////////////////
     ////////////////////////////////////////////////////////
 
-
     @Autowired
     BasicDisplayService basicDisplayService;
 
@@ -246,7 +245,7 @@ public class Controller {
             throw new ResourceNotFoundException("No user with username "+uname+" exists");
         }
     }
-    */
+
     public Boolean userIdExists(Long userId){
         boolean exists = userService.userIdExists(userId);
         return exists;
@@ -264,7 +263,7 @@ public class Controller {
 //        }
 //
 //    }
-    /*
+
     @PostMapping(value="/users")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> addUser(@RequestBody User user){
@@ -278,6 +277,8 @@ public class Controller {
     */
 
 }
+
+
 
 // 404 NOT FOUND Error
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
