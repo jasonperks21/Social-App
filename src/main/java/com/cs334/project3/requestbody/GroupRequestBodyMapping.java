@@ -6,4 +6,5 @@ import lombok.Data;
 public class GroupRequestBodyMapping {
     private Long userId, groupId;
     private String groupName;
+    private boolean admin = false;
 }

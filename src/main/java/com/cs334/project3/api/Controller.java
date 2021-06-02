@@ -3,8 +3,8 @@ package com.cs334.project3.api;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
+import com.cs334.project3.requestbody.PostRequestBody;
 import com.cs334.project3.requestbody.GroupRequestBodyMapping;
-import com.cs334.project3.requestbody.PostRequestBodyMapping;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.PostRemove;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -61,20 +62,14 @@ public class Controller {
 
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupRequestBodyMapping ids) {
-        UserDTO userDTO = userService.getUserById(ids.getUserId());
-        if (userDTO != null) {
-                User user = userService.getUserByIdForGroup(ids.getUserId());
-                Group g = new Group(ids.getGroupName());
-                GroupMember gm = new GroupMember(g, user, true);
-                groupService.saveGroup(g);
-                groupMemberService.saveMember(gm);
-
-                GroupDTO groupDTO = new GroupDTO(g, ids.getUserId());
-
-                return new ResponseEntity<>(groupDTO, HttpStatus.CREATED);
-        } else {
-            throw new ResourceNotFoundException("No user with username "+ids.getUserId()+" exists");
+        GroupDTO groupDTO;
+        try {
+            groupDTO = groupService.createGroup(ids);
+            return new ResponseEntity<>(groupDTO, HttpStatus.CREATED);
+        } catch(Exception e) {
+            throw new InternalServerErrorException("Exception raised trying to create group");
         }
     }
 
@@ -93,19 +88,66 @@ public class Controller {
         }
     }
 
+    /*
+    @PostMapping("/groups/{group}")
+    public void addGroup(@PathVariable Group group) {
+        groupService.createGroup(group);
+    }
+
+    @DeleteMapping("/groups/{group}")
+    public void removeGroup(@PathVariable Group group) {
+        groupService.deleteGroup(group);
+    }
+
+    @DeleteMapping("/groups/{group}")
+    public void removeGroupById(@PathVariable Long group_id) {
+        groupService.deleteGroupById(group_id);
+    }
+
+    @GetMapping("/groups/{groupId}")
+    public boolean groupExists(@PathVariable Long groupId) {
+        return groupService.groupIdExists(groupId);
+    }
+
+    @GetMapping("/groups/{groupId}")
+    public GroupDTO findGroupById(@PathVariable Long groupId, Long user_id) {
+        return groupService.getGroupById(groupId, user_id);
+    }
+
+    @GetMapping("/groups/{groupName}")
+    public GroupDTO findGroupByName(@PathVariable String groupName, Long user_id) {
+        return groupService.getGroupByName(groupName, user_id);
+    }
+
+    @PutMapping("/groups/{member}")
+    public void addMemberToGroup(@PathVariable Long group_id, Long user_id) {
+        groupService.joinGroup(group_id,user_id);
+    }
+    */
     ////////////////////Controller for groupmembers//////////////
     @PostMapping("/groupmember")
-    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody Long userId, Long groupId, boolean admin){
-        UserDTO userDTO = userService.getUserById(userId);
+    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody GroupRequestBodyMapping grbm){
+        UserDTO userDTO = userService.getUserById(grbm.getUserId());
         if (userDTO == null){
-            throw new ResourceNotFoundException("No user with user ID "+userId+" exists");
+            throw new ResourceNotFoundException("No user with user ID "+grbm.getUserId()+" exists");
         } else {
             try{
-                GroupMembersDTO gmdto = groupService.joinGroup(groupId, userId, admin);
+                GroupMembersDTO gmdto = groupService.joinGroup(grbm.getGroupId(), grbm.getUserId(), grbm.isAdmin());
                 return new ResponseEntity<>(gmdto, HttpStatus.OK);
             } catch(Exception e){
-                throw new MethodNotAllowedException("User "+userId+" could not be added to the group");
+                throw new MethodNotAllowedException("User "+grbm.getUserId()+" could not be added to the group");
             }
+        }
+    }
+
+    @GetMapping(value="/groupmember", params="gid")
+    public ResponseEntity<List<GroupMembersDTO>> getGroupMembersById(@RequestParam Long gid){
+        List<GroupMembersDTO> gmDTOList;
+        try{
+            gmDTOList = groupMemberService.getGroupMembersByGroupId(gid);
+            return new ResponseEntity<>(gmDTOList, HttpStatus.OK);
+        } catch(Exception e){
+            throw new InternalServerErrorException("Group members for group "+gid+" could not be retrieved");
         }
     }
 
@@ -113,32 +155,74 @@ public class Controller {
     @GetMapping("/posts/{userId}")
     public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
         //TODO: Exception handling
-        List<PostDTO> dto = postService.getAllPostsToDisplayForUser(userId);
+        List<PostDTO> dto = postService.getAllPostsForUser(userId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{userId}/{groupId}")
     public ResponseEntity<List<PostDTO>> getPostsOfSpecificGroupForUser(@PathVariable Long userId,@PathVariable Long groupId){
         //TODO: Exception handling
-        List<PostDTO> dto = postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
+        List<PostDTO> dto = postService.getAllPostsForUserByGroup(userId, groupId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-
-    @PostMapping("/posts")
-    public void addPost(@RequestBody PostRequestBodyMapping ids) {
-        //TODO: TRY CATCH
-        GroupMember gm = groupMemberService.getGroupMembership(ids.getUserId(), ids.getGroupId());
-        Category c = categoryService.getById(ids.getCategoryId());
-        Post p;
-        if(ids.getReplyId() == null){
-            p = gm.postToGroup(c, ids.getMessage());
-        } else{
-            p = gm.replyToPost(postService.getPostByID(ids.getReplyId()), ids.getMessage());
-        }
-        System.out.println("ID: " + p.getPost_id() + "MESSAGE: " + p.getMessage());
-        postService.save(p);
+/*
+    @GetMapping("/posts/{userId}/{groupId}")
+    public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
+        return postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
     }
 
+    */
+    @PostMapping("/posts")
+    public void addPost(@RequestBody PostRequestBody ids) {
+        //TODO: TRY CATCH
+
+    }
+    /*
+
+    @DeleteMapping("/posts/{post}")
+    public void deletePost(@PathVariable Post post) {
+        postService.deletePost(post);
+    }
+
+    @GetMapping("/posts/{postId}")
+    public boolean postExists(@PathVariable Long postId) {
+        return postService.postIdExists(postId);
+    }
+
+    @GetMapping("/posts/{postId})
+    public Post findPostById(@PathVariable Long postId) {
+        return postService.getPostByID(postId);
+    }
+
+    @GetMapping("/posts/{category}")
+    public PostDTO findPostByCategory(@PathVariable Category category) {
+        return postService.getPostByCategory(category);
+    }
+
+    @GetMapping("/posts/{member}")
+    public PostDTO findPostByMember(@PathVariable GroupMember member) {
+        return postService.getPostByMember(member);
+    }
+
+    @GetMapping("/posts/{timestamp}")
+    public PostDTO findPostByTime(@PathVariable ZonedDateTime timestamp) {
+        return postService.getPostByTime(timestamp);
+    }
+
+    @GetMapping("/posts/{group}")
+    public PostDTO findPostByGroup(@PathVariable Group group) {
+        return postService.getPostByGroup(group);
+    }
+
+    //Find post by location:
+    //TODO: later
+
+    @PutMapping("/posts/{post}")
+    public void comment(@PathVariable Post post) {
+        postService.addComment(post);
+    }
+
+    */
     ////////////////////Controller for users/////////////////////
 //    @GetMapping(value="/users", params="uid")
 //    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
@@ -150,7 +234,8 @@ public class Controller {
 //            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
 //        }
 //    }
-
+    //TODO: Marco: Implement your user search function here
+    /*
     @GetMapping(value="/users", params="uname")
     public ResponseEntity<UserDTO> getUserByUsername(@RequestParam String uname){
         UserDTO userDTO = userService.getUserByUsername(uname);
@@ -189,7 +274,11 @@ public class Controller {
             throw new InternalServerErrorException("Exception raised trying to insert user "+user.getUsername()+" - maybe the DB is down?");
         }
     }
+    */
+
 }
+
+
 
 // 404 NOT FOUND Error
 @ResponseStatus(value = HttpStatus.NOT_FOUND)

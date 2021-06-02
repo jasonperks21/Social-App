@@ -6,8 +6,11 @@ import com.cs334.project3.model.Group;
 import com.cs334.project3.model.GroupMember;
 import com.cs334.project3.model.User;
 import com.cs334.project3.repo.GroupRepository;
+import com.cs334.project3.repo.GroupMemberRepository;
 import com.cs334.project3.repo.UserRepository;
+import com.cs334.project3.requestbody.GroupRequestBodyMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,12 +23,30 @@ public class GroupService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private GroupMemberRepository groupMemberRepository;
+
     /**
      * Create a new group.
      * @param group
      */
     public void saveGroup(Group group) {
         groupRepository.save(group);
+    }
+
+    public GroupDTO createGroup(GroupRequestBodyMapping grbm){
+        Group group;
+        GroupMember gm;
+        try {
+            User user = userRepository.getById(grbm.getUserId());
+            group = groupRepository.getById(grbm.getGroupId());
+            gm = new GroupMember(group, user, true);
+            groupRepository.save(group);
+            groupMemberRepository.save(gm);
+        } catch(Exception e){
+            throw new DataAccessResourceFailureException("Something went wrong on our side");
+        }
+        return new GroupDTO(group, grbm.getUserId());
     }
 
     /**
