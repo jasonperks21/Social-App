@@ -5,6 +5,7 @@ import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
 import com.cs334.project3.requestbody.PostRequestBody;
 import com.cs334.project3.requestbody.GroupRequestBodyMapping;
+import com.cs334.project3.requestbody.FriendRequestBody;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,9 @@ public class Controller {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private FriendService friendService;
 
     @Autowired
     private CategoryService categoryService;
@@ -88,42 +92,6 @@ public class Controller {
         }
     }
 
-    /*
-    @PostMapping("/groups/{group}")
-    public void addGroup(@PathVariable Group group) {
-        groupService.createGroup(group);
-    }
-
-    @DeleteMapping("/groups/{group}")
-    public void removeGroup(@PathVariable Group group) {
-        groupService.deleteGroup(group);
-    }
-
-    @DeleteMapping("/groups/{group}")
-    public void removeGroupById(@PathVariable Long group_id) {
-        groupService.deleteGroupById(group_id);
-    }
-
-    @GetMapping("/groups/{groupId}")
-    public boolean groupExists(@PathVariable Long groupId) {
-        return groupService.groupIdExists(groupId);
-    }
-
-    @GetMapping("/groups/{groupId}")
-    public GroupDTO findGroupById(@PathVariable Long groupId, Long user_id) {
-        return groupService.getGroupById(groupId, user_id);
-    }
-
-    @GetMapping("/groups/{groupName}")
-    public GroupDTO findGroupByName(@PathVariable String groupName, Long user_id) {
-        return groupService.getGroupByName(groupName, user_id);
-    }
-
-    @PutMapping("/groups/{member}")
-    public void addMemberToGroup(@PathVariable Long group_id, Long user_id) {
-        groupService.joinGroup(group_id,user_id);
-    }
-    */
     ////////////////////Controller for groupmembers//////////////
     @PostMapping("/groupmember")
     public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody GroupRequestBodyMapping grbm){
@@ -151,6 +119,20 @@ public class Controller {
         }
     }
 
+    ////////////////////Controller for friends//////////////
+    @PostMapping("/friends")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<FriendDTO> addingFriends(@RequestBody FriendRequestBody ids) {
+        FriendDTO friendDTO;
+        try {
+            friendDTO = friendService.addFriend(ids);
+            return new ResponseEntity<>(friendDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Exception raised trying to add friend");
+        }
+    }
+
+
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
     public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
@@ -165,64 +147,13 @@ public class Controller {
         List<PostDTO> dto = postService.getAllPostsForUserByGroup(userId, groupId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-/*
-    @GetMapping("/posts/{userId}/{groupId}")
-    public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
-        return postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
-    }
 
-    */
     @PostMapping("/posts")
     public void addPost(@RequestBody PostRequestBody ids) {
         //TODO: TRY CATCH
 
     }
-    /*
 
-    @DeleteMapping("/posts/{post}")
-    public void deletePost(@PathVariable Post post) {
-        postService.deletePost(post);
-    }
-
-    @GetMapping("/posts/{postId}")
-    public boolean postExists(@PathVariable Long postId) {
-        return postService.postIdExists(postId);
-    }
-
-    @GetMapping("/posts/{postId})
-    public Post findPostById(@PathVariable Long postId) {
-        return postService.getPostByID(postId);
-    }
-
-    @GetMapping("/posts/{category}")
-    public PostDTO findPostByCategory(@PathVariable Category category) {
-        return postService.getPostByCategory(category);
-    }
-
-    @GetMapping("/posts/{member}")
-    public PostDTO findPostByMember(@PathVariable GroupMember member) {
-        return postService.getPostByMember(member);
-    }
-
-    @GetMapping("/posts/{timestamp}")
-    public PostDTO findPostByTime(@PathVariable ZonedDateTime timestamp) {
-        return postService.getPostByTime(timestamp);
-    }
-
-    @GetMapping("/posts/{group}")
-    public PostDTO findPostByGroup(@PathVariable Group group) {
-        return postService.getPostByGroup(group);
-    }
-
-    //Find post by location:
-    //TODO: later
-
-    @PutMapping("/posts/{post}")
-    public void comment(@PathVariable Post post) {
-        postService.addComment(post);
-    }
-
-    */
     ////////////////////Controller for users/////////////////////
 //    @GetMapping(value="/users", params="uid")
 //    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
