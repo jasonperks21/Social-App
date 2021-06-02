@@ -5,6 +5,7 @@ import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
 import com.cs334.project3.requestbody.PostRequestBody;
 import com.cs334.project3.requestbody.GroupRequestBodyMapping;
+import com.cs334.project3.requestbody.FriendRequestBody;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,6 @@ public class Controller {
     //// AUTOWIRED SERVICES ////////////////////////////////
     ////////////////////////////////////////////////////////
 
-
     @Autowired
     BasicDisplayService basicDisplayService;
 
@@ -38,6 +38,9 @@ public class Controller {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private FriendService friendService;
 
     @Autowired
     private CategoryService categoryService;
@@ -139,6 +142,20 @@ public class Controller {
         }
     }
     */
+    ////////////////////Controller for friends//////////////
+    @PostMapping("/friends")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<FriendDTO> addingFriends(@RequestBody FriendRequestBody ids) {
+        FriendDTO friendDTO;
+        try {
+            friendDTO = friendService.addFriend(ids);
+            return new ResponseEntity<>(friendDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Exception raised trying to add friend");
+        }
+    }
+
+
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
     public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
@@ -153,13 +170,7 @@ public class Controller {
         List<PostDTO> dto = postService.getAllPostsForUserByGroup(userId, groupId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-/*
-    @GetMapping("/posts/{userId}/{groupId}")
-    public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
-        return postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
-    }
 
-    */
     @PostMapping("/posts")
     public void addPost(@RequestBody PostRequestBody ids) {
         //TODO: Dom: Error checking
