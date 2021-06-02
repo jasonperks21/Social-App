@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class FriendService {
     @Autowired
@@ -40,5 +43,20 @@ public class FriendService {
         if (friendRepository.doesFriendshipExist(friend.getUser().getUser_id(), friend.getFriend().getUser_id())) {
             friendRepository.delete(friend);
         }
+    }
+
+    public List<FriendDTO> getFriendsByUserId(Long userId) {
+        List<Friend> friendList = friendRepository.getAllFriendsOfUser(userId);
+        List<FriendDTO> friendDTOList;
+
+        if (friendList == null) {
+            throw new NullPointerException();
+        } else {
+            friendDTOList = new ArrayList<>();
+            for (Friend friend:friendList) {
+                friendDTOList.add(new FriendDTO(friend));
+            }
+        }
+        return friendDTOList;
     }
 }

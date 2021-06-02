@@ -156,7 +156,7 @@ public class Controller {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/friends")
     @ResponseStatus(HttpStatus.OK)
     public void removeFriend(@RequestBody FriendRequestBody ids) {
         try {
@@ -164,6 +164,17 @@ public class Controller {
             friendService.deleteFriend(friend);
         } catch (Exception e) {
             throw new InternalServerErrorException("Exception raised trying to delete friend");
+        }
+    }
+
+    @GetMapping(value="/friends", params="userId")
+    public ResponseEntity<List<FriendDTO>> getFriendsOfUser(@RequestParam Long userId) {
+        List<FriendDTO> friendDTOList;
+        try {
+            friendDTOList = friendService.getFriendsByUserId(userId);
+            return new ResponseEntity<>(friendDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Friends for " + userId + " could not be retrieved");
         }
     }
 
