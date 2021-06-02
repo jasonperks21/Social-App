@@ -46,7 +46,8 @@ public class FriendService {
     }
 
     public List<FriendDTO> getFriendsByUserId(Long userId) {
-        List<Friend> friendList = friendRepository.getAllFriendsOfUser(userId);
+        User u = userRepository.getById(userId);
+        List<Friend> friendList = u.getFriends();
         List<FriendDTO> friendDTOList;
 
         if (friendList == null) {
