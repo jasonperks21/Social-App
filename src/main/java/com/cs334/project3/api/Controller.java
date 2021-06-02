@@ -3,7 +3,8 @@ package com.cs334.project3.api;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
-import com.cs334.project3.requestbody.PostRequestBodyMapping;
+import com.cs334.project3.requestbody.PostRequestBody;
+import com.cs334.project3.requestbody.GroupRequestBodyMapping;
 import com.cs334.project3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.PostRemove;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -62,13 +64,11 @@ public class Controller {
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGroup(@RequestBody GroupRequestBodyMapping ids) {
+    public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupRequestBodyMapping ids) {
+        GroupDTO groupDTO;
         try {
-            User user = userService.getUserById(ids.getUserId());
-            Group g = new Group(ids.getGroupName());
-            GroupMember gm = new GroupMember(g, user, true);
-            groupService.saveGroup(g);
-            groupMemberService.saveMember(gm);
+            groupDTO = groupService.createGroup(ids);
+            return new ResponseEntity<>(groupDTO, HttpStatus.CREATED);
         } catch(Exception e) {
             throw new InternalServerErrorException("Exception raised trying to create group");
         }
@@ -127,22 +127,30 @@ public class Controller {
     */
     ////////////////////Controller for groupmembers//////////////
     @PostMapping("/groupmember")
-    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody Long userId, Long groupId, boolean admin){
-        UserDTO userDTO = userService.getUserById(userId);
+    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody GroupRequestBodyMapping grbm){
+        UserDTO userDTO = userService.getUserById(grbm.getUserId());
         if (userDTO == null){
-            throw new ResourceNotFoundException("No user with user ID "+userId+" exists");
+            throw new ResourceNotFoundException("No user with user ID "+grbm.getUserId()+" exists");
         } else {
             try{
-                GroupMembersDTO gmdto = groupService.joinGroup(groupId, userId, admin);
+                GroupMembersDTO gmdto = groupService.joinGroup(grbm.getGroupId(), grbm.getUserId(), grbm.isAdmin());
                 return new ResponseEntity<>(gmdto, HttpStatus.OK);
             } catch(Exception e){
-                throw new MethodNotAllowedException("User "+userId+" could not be added to the group");
+                throw new MethodNotAllowedException("User "+grbm.getUserId()+" could not be added to the group");
             }
         }
     }
 
-
-
+    @GetMapping(value="/groupmember", params="gid")
+    public ResponseEntity<List<GroupMembersDTO>> getGroupMembersById(@RequestParam Long gid){
+        List<GroupMembersDTO> gmDTOList;
+        try{
+            gmDTOList = groupMemberService.getGroupMembersByGroupId(gid);
+            return new ResponseEntity<>(gmDTOList, HttpStatus.OK);
+        } catch(Exception e){
+            throw new InternalServerErrorException("Group members for group "+gid+" could not be retrieved");
+        }
+    }
 
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
@@ -227,7 +235,8 @@ public class Controller {
 //            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
 //        }
 //    }
-
+    //TODO: Marco: Implement your user search function here
+    /*
     @GetMapping(value="/users", params="uname")
     public ResponseEntity<UserDTO> getUserByUsername(@RequestParam String uname){
         UserDTO userDTO = userService.getUserByUsername(uname);
@@ -237,7 +246,7 @@ public class Controller {
             throw new ResourceNotFoundException("No user with username "+uname+" exists");
         }
     }
-
+    */
     public Boolean userIdExists(Long userId){
         boolean exists = userService.userIdExists(userId);
         return exists;
@@ -255,7 +264,7 @@ public class Controller {
 //        }
 //
 //    }
-
+    /*
     @PostMapping(value="/users")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> addUser(@RequestBody User user){
@@ -266,6 +275,8 @@ public class Controller {
             throw new InternalServerErrorException("Exception raised trying to insert user "+user.getUsername()+" - maybe the DB is down?");
         }
     }
+    */
+
 }
 
 // 404 NOT FOUND Error

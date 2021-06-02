@@ -35,15 +35,6 @@ public class UserService {
         return new UserDTO(user);
     }
 
-    // Get user by username
-    public UserDTO getUserByUsername(String uname){
-        UserDTO userDTO;
-        try{
-            User user = userRepository.findUserByUsername(uname).get();
-            userDTO = new UserDTO(user, false);
-        } catch(Exception e){
-            e.printStackTrace();
-            userDTO = null;
     /**
      * Search for a user by email, display name or user name.
      * @param search The search string.
@@ -84,6 +75,4 @@ public class UserService {
         u.setDisplayName(displayName);
         userRepository.save(u);
     }
-
-    */
 }

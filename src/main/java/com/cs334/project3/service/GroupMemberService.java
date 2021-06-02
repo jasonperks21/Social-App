@@ -29,6 +29,20 @@ public class GroupMemberService {
         groupMemberRepository.save(groupMember);
     }
 
+    public List<GroupMembersDTO> getGroupMembersByGroupId(Long gid){
+        Group group = groupRepository.getById(gid);
+        List<GroupMember> gmList = group.getMembers();
+        List<GroupMembersDTO> gmDTOList;
+        if(gmList == null){
+            throw new NullPointerException();
+        } else {
+            gmDTOList = new ArrayList<>();
+            for(GroupMember gm:gmList){
+                gmDTOList.add(new GroupMembersDTO(gm.getUser().getUser_id(), gm.getGroup().getGroup_id(), gm.getAdmin()));
+            }
+            return gmDTOList;
+        }
+    }
     /*
     // Get group admin
     public GroupMembersDTO getGroupAdminsByGroupId(Long groupId){
