@@ -3,9 +3,7 @@ package com.cs334.project3.api;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
-import com.cs334.project3.requestbody.PostRequestBody;
-import com.cs334.project3.requestbody.GroupRequestBodyMapping;
-import com.cs334.project3.requestbody.FriendRequestBody;
+import com.cs334.project3.requestbody.*;
 import com.cs334.project3.service.*;
 import com.cs334.project3.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,55 +199,59 @@ public class Controller {
     }
 
     ////////////////////Controller for users/////////////////////
-//    @GetMapping(value="/users", params="uid")
-//    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
-//        UserDTO userDTO;
-//        try{
-//            userDTO = userService.getUserById(uid);
-//            return new ResponseEntity<>(userDTO, HttpStatus.OK);
-//        } catch(Exception e){
-//            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
-//        }
-//    }
-    /*
-    @GetMapping(value="/users", params="uname")
-    public ResponseEntity<UserDTO> getUserByUsername(@RequestParam String uname){
-        UserDTO userDTO = userService.getUserByUsername(uname);
-        if (userDTO!=null){
+    @GetMapping(value="/users", params="uid")
+    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
+        UserDTO userDTO;
+        try{
+            userDTO = userService.getUserById(uid);
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
-        } else {
-            throw new ResourceNotFoundException("No user with username "+uname+" exists");
+        } catch(Exception e){
+            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
         }
     }
 
-    public Boolean userIdExists(Long userId){
-        boolean exists = userService.userIdExists(userId);
-        return exists;
+    @GetMapping(value="/users", params="q")
+    public ResponseEntity<List<UserDTO>> searchForUser(@RequestParam String q){
+        try{
+            List<UserDTO> userDTOList = userService.searchForUser(q);
+            return new ResponseEntity<>(userDTOList,HttpStatus.OK);
+        } catch(Exception e) {
+            throw new InternalServerErrorException("Something went wrong on our side");
+        }
     }
 
-//    @DeleteMapping(value="/users", params="uid")
-//    public ResponseEntity<String> deleteUserById(@RequestParam Long uid){
-//        if(userIdExists(uid)){
-//            UserDTO userDTO = userService.getUserById(uid);
-//            String dispname = userDTO.getDisplayName();
-//            userService.deleteUserById(uid);
-//            return new ResponseEntity<>("Successfully deleted user "+dispname+" from the database", HttpStatus.OK);
-//        } else {
-//            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
-//        }
-//
-//    }
+    @DeleteMapping(value="/users", params="uid")
+    public ResponseEntity<UserDTO> deleteUserById(@RequestParam Long uid){
+        try{
+            UserDTO userDTO = userService.deleteUserById(uid);
+            return new ResponseEntity<>(userDTO,HttpStatus.OK);
+        } catch(Exception e){
+            throw new ResourceNotFoundException("No user with ID "+uid+" exists");
+        }
+    }
 
     @PostMapping(value="/users")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addUser(@RequestBody User user){
+    public ResponseEntity<CreateUserStatus> addUser(@RequestBody CreateUserRequestBody params){
         try{
-            userService.addUser(user);
-            return new ResponseEntity<>("Successfully added "+user.getDisplayName(),HttpStatus.CREATED);
+            CreateUserStatus cus = userService.createUser(params);
+            if(cus.getUser()==null){
+                return new ResponseEntity<>(cus, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(cus, HttpStatus.CREATED);
+            }
         } catch(Exception e){
-            throw new InternalServerErrorException("Exception raised trying to insert user "+user.getUsername()+" - maybe the DB is down?");
+            throw new InternalServerErrorException("Something went wrong - maybe the DB is down?");
         }
     }
-    */
 
+    @PutMapping(value="/users")
+    public ResponseEntity<UserDTO> updateDispname(@RequestBody UpdateDispnameRequestBody udrb){
+        try{
+            UserDTO userDTO = userService.updateDispname(udrb);
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        } catch(Exception e){
+            throw new ResourceNotFoundException("No such user exists");
+        }
+    }
 }
