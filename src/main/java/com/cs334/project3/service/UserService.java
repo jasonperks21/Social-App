@@ -4,6 +4,7 @@ import com.cs334.project3.dto.*;
 import com.cs334.project3.repo.UserRepository;
 import com.cs334.project3.model.User;
 import com.cs334.project3.requestbody.CreateUserRequestBody;
+import com.cs334.project3.requestbody.UpdateDispnameRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
@@ -18,10 +19,16 @@ public class UserService {
 
     /**
      * Delete the user. Probably never necessary.
-     * @param userID The user ID.
+     * @param userId The user ID.
      */
-    public void deleteUserById(Long userID){
-        userRepository.deleteById(userID);
+    public UserDTO deleteUserById(Long userId){
+        User user = userRepository.getById(userId);
+        if(user!=null){
+            userRepository.delete(user);
+            return new UserDTO(user);
+        }else{
+            throw new NullPointerException("No such user exists");
+        }
     }
 
     // Determine if user exists
@@ -80,5 +87,17 @@ public class UserService {
         User u = userRepository.getById(userId);
         u.setDisplayName(displayName);
         userRepository.save(u);
+    }
+
+    /**
+     * Update a user's display name. This is the only thing a user may update.
+     * @param udrb UpdateDispnameRequestBody containing user ID and new displayname
+     * @return UserDTO of updated user
+     */
+    public UserDTO updateDispname(UpdateDispnameRequestBody udrb){
+        User u = userRepository.getById(udrb.getUserid());
+        u.setDisplayName(udrb.getDispname());
+        userRepository.save(u);
+        return new UserDTO(u);
     }
 }

@@ -3,9 +3,9 @@ package com.cs334.project3.api;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
-import com.cs334.project3.requestbody.PostRequestBody;
-import com.cs334.project3.requestbody.GroupRequestBodyMapping;
+import com.cs334.project3.requestbody.*;
 import com.cs334.project3.service.*;
+import com.cs334.project3.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,6 @@ public class Controller {
     //// AUTOWIRED SERVICES ////////////////////////////////
     ////////////////////////////////////////////////////////
 
-
     @Autowired
     BasicDisplayService basicDisplayService;
 
@@ -38,6 +37,9 @@ public class Controller {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private FriendService friendService;
 
     @Autowired
     private CategoryService categoryService;
@@ -139,6 +141,55 @@ public class Controller {
         }
     }
     */
+
+    ////////////////////Controller for categories/////////////////////
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        List<CategoryDTO> categoryDTOList;
+        try {
+            categoryDTOList = categoryService.getCategories();
+            return new ResponseEntity<>(categoryDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Categories could not be retrieved");
+        }
+    }
+
+
+    ////////////////////Controller for friends//////////////
+    @PostMapping("/friends")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<FriendDTO> addingFriends(@RequestBody FriendRequestBody ids) {
+        FriendDTO friendDTO;
+        try {
+            friendDTO = friendService.addFriend(ids);
+            return new ResponseEntity<>(friendDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Exception raised trying to add friend");
+        }
+    }
+
+    @DeleteMapping("/friends")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeFriend(@RequestBody FriendRequestBody ids) {
+        try {
+            Friend friend = friendService.getFriendById(ids.getUserId(), ids.getFriendId());
+            friendService.deleteFriend(friend);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Exception raised trying to delete friend");
+        }
+    }
+
+    @GetMapping(value="/friends", params="userId")
+    public ResponseEntity<List<FriendDTO>> getFriendsOfUser(@RequestParam Long userId) {
+        List<FriendDTO> friendDTOList;
+        try {
+            friendDTOList = friendService.getFriendsByUserId(userId);
+            return new ResponseEntity<>(friendDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Friends for " + userId + " could not be retrieved");
+        }
+    }
+
     ////////////////////Controller for posts/////////////////////
     @GetMapping("/posts/{userId}")
     public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
@@ -153,13 +204,7 @@ public class Controller {
         List<PostDTO> dto = postService.getAllPostsForUserByGroup(userId, groupId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-/*
-    @GetMapping("/posts/{userId}/{groupId}")
-    public PostsToDisplayForUserDTO getPostsOfGroupForUser(@PathVariable Long userId, @PathVariable Long groupId){
-        return postService.getAllPostsOfGroupToDisplayForUser(userId, groupId);
-    }
 
-    */
     @PostMapping("/posts")
     public void addPost(@RequestBody PostRequestBody ids) {
         //TODO: Dom: Error checking
@@ -168,90 +213,59 @@ public class Controller {
     }
 
     ////////////////////Controller for users/////////////////////
-//    @GetMapping(value="/users", params="uid")
-//    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
-//        UserDTO userDTO;
-//        try{
-//            userDTO = userService.getUserById(uid);
-//            return new ResponseEntity<>(userDTO, HttpStatus.OK);
-//        } catch(Exception e){
-//            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
-//        }
-//    }
-    /*
-    @GetMapping(value="/users", params="uname")
-    public ResponseEntity<UserDTO> getUserByUsername(@RequestParam String uname){
-        UserDTO userDTO = userService.getUserByUsername(uname);
-        if (userDTO!=null){
+    @GetMapping(value="/users", params="uid")
+    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
+        UserDTO userDTO;
+        try{
+            userDTO = userService.getUserById(uid);
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
-        } else {
-            throw new ResourceNotFoundException("No user with username "+uname+" exists");
+        } catch(Exception e){
+            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
         }
     }
 
-    public Boolean userIdExists(Long userId){
-        boolean exists = userService.userIdExists(userId);
-        return exists;
+    @GetMapping(value="/users", params="q")
+    public ResponseEntity<List<UserDTO>> searchForUser(@RequestParam String q){
+        try{
+            List<UserDTO> userDTOList = userService.searchForUser(q);
+            return new ResponseEntity<>(userDTOList,HttpStatus.OK);
+        } catch(Exception e) {
+            throw new InternalServerErrorException("Something went wrong on our side");
+        }
     }
 
-//    @DeleteMapping(value="/users", params="uid")
-//    public ResponseEntity<String> deleteUserById(@RequestParam Long uid){
-//        if(userIdExists(uid)){
-//            UserDTO userDTO = userService.getUserById(uid);
-//            String dispname = userDTO.getDisplayName();
-//            userService.deleteUserById(uid);
-//            return new ResponseEntity<>("Successfully deleted user "+dispname+" from the database", HttpStatus.OK);
-//        } else {
-//            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
-//        }
-//
-//    }
+    @DeleteMapping(value="/users", params="uid")
+    public ResponseEntity<UserDTO> deleteUserById(@RequestParam Long uid){
+        try{
+            UserDTO userDTO = userService.deleteUserById(uid);
+            return new ResponseEntity<>(userDTO,HttpStatus.OK);
+        } catch(Exception e){
+            throw new ResourceNotFoundException("No user with ID "+uid+" exists");
+        }
+    }
 
     @PostMapping(value="/users")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addUser(@RequestBody User user){
+    public ResponseEntity<CreateUserStatus> addUser(@RequestBody CreateUserRequestBody params){
         try{
-            userService.addUser(user);
-            return new ResponseEntity<>("Successfully added "+user.getDisplayName(),HttpStatus.CREATED);
+            CreateUserStatus cus = userService.createUser(params);
+            if(cus.getUser()==null){
+                return new ResponseEntity<>(cus, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(cus, HttpStatus.CREATED);
+            }
         } catch(Exception e){
-            throw new InternalServerErrorException("Exception raised trying to insert user "+user.getUsername()+" - maybe the DB is down?");
+            throw new InternalServerErrorException("Something went wrong - maybe the DB is down?");
         }
     }
-    */
 
-}
-
-
-
-// 404 NOT FOUND Error
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-class ResourceNotFoundException extends ResponseStatusException{
-    public ResourceNotFoundException(){
-        super(HttpStatus.NOT_FOUND);
-    }
-    public ResourceNotFoundException(String message){
-        super(HttpStatus.NOT_FOUND, message);
-    }
-}
-
-// 405 METHOD NOT ALLOWED Error
-@ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
-class MethodNotAllowedException extends ResponseStatusException {
-    public MethodNotAllowedException(){
-        super(HttpStatus.METHOD_NOT_ALLOWED);
-    }
-    public MethodNotAllowedException(String message){
-        super(HttpStatus.METHOD_NOT_ALLOWED, message);
-    }
-}
-
-// 500 INTERNAL SERVER ERROR Error
-@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-class InternalServerErrorException extends ResponseStatusException {
-    public InternalServerErrorException(){
-        super(HttpStatus.METHOD_NOT_ALLOWED);
-    }
-    public InternalServerErrorException(String message){
-        super(HttpStatus.METHOD_NOT_ALLOWED, message);
+    @PutMapping(value="/users")
+    public ResponseEntity<UserDTO> updateDispname(@RequestBody UpdateDispnameRequestBody udrb){
+        try{
+            UserDTO userDTO = userService.updateDispname(udrb);
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        } catch(Exception e){
+            throw new ResourceNotFoundException("No such user exists");
+        }
     }
 }

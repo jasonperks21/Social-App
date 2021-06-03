@@ -12,8 +12,6 @@ import com.cs334.project3.requestbody.GroupRequestBodyMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Service
 public class GroupService {
@@ -39,8 +37,9 @@ public class GroupService {
         GroupMember gm;
         try {
             User user = userRepository.getById(grbm.getUserId());
-            group = groupRepository.getById(grbm.getGroupId());
+            group = new Group(grbm.getGroupName());
             gm = new GroupMember(group, user, true);
+
             groupRepository.save(group);
             groupMemberRepository.save(gm);
         } catch(Exception e){
