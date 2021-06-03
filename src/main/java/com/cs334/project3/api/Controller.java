@@ -76,14 +76,10 @@ public class Controller {
 
     @DeleteMapping("/groups")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteGroup(@RequestBody GroupRequestBodyMapping ids) {
+    public ResponseEntity<GroupDTO> deleteGroup(@RequestBody GroupRequestBodyMapping ids) {
         try {
-            GroupMember gm = groupMemberService.getGroupMembership(ids.getUserId(), ids.getGroupId());
-
-            if (gm.getAdmin()) {
-                Group g = gm.getGroup();
-                groupService.deleteGroup(g);
-            }
+            GroupDTO gDTO = groupService.deleteGroup(ids);
+            return new ResponseEntity<>(gDTO, HttpStatus.OK);
         } catch(Exception e) {
             throw new InternalServerErrorException("Exception raised trying to delete group");
         }
@@ -100,7 +96,7 @@ public class Controller {
                 GroupMembersDTO gmdto = groupService.joinGroup(grbm.getGroupId(), grbm.getUserId(), grbm.isAdmin());
                 return new ResponseEntity<>(gmdto, HttpStatus.CREATED);
             } catch(Exception e){
-                throw new MethodNotAllowedException("User "+grbm.getUserId()+" could not be added to the group");
+                throw new InternalServerErrorException("User "+grbm.getUserId()+" could not be added to the group");
             }
         }
     }
