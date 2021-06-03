@@ -200,5 +200,12 @@ RESPONSES:
 
 ------------------------------------------------------
 ---------------------------
-*CATEGORIES ROUTE: coming soon
+*CATEGORIES ROUTE: /app/categories
 ---------------------------
+GET ALL CATEGORIES
+METHEOD: GET
+PARAM TYPE: NONE
+PARAMS: NONE
+RESPONSES:
+200 OK
+500 INTERNAL SERVER ERROR
