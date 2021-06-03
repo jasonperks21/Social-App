@@ -2,6 +2,7 @@ import "./groupList.css";
 import React, { useEffect, useState } from 'react';
 import WithLoading from '../sidebar/WithGroupLoading'
 import GroupMsg from "../groupMsg/groupMsg";
+import Share from "../share/Share";
 
 export default function GroupList(ids) {
   let gId = new URLSearchParams(window.location.search).get("gid");
@@ -47,15 +48,14 @@ export default function GroupList(ids) {
   );
 }
 
-async function deleteFunc(groupId, userId){
+async function deleteFunc(groupInfo, userId){
   // Simple POST request with a JSON body using fetch
   const requestOptions = {
       method: 'DELETE',
-      mode: 'cors', 
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({userId: userId, groupId: groupId})
+      body: JSON.stringify({userId: parseInt(userId), groupId: groupInfo.groupId})
   };
-  await fetch('/app/groups/', requestOptions)
+  await fetch('/app/groups', requestOptions)
       .then(response => {
           console.log(requestOptions.body)
           console.log(response);
@@ -67,7 +67,7 @@ async function deleteFunc(groupId, userId){
 function deleteGroup(groupInfo, userId){
   let isExecuted = window.confirm("Are you want to delete "+groupInfo.groupName+"?");
   if(isExecuted){
-    deleteFunc(groupInfo.groupId, userId);
+    deleteFunc(groupInfo, userId);
   }
   else{
     alert("Action aborted");
