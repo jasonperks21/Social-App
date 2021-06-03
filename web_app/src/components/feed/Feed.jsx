@@ -11,7 +11,7 @@ useEffect(()=>{
   const fetchPosts = async() => {
     const res = await axios.get("/app/posts/1");
     //console.log(res);
-    setPosts(res.data.data);
+    setPosts(res.data);
   }
   fetchPosts();
 })

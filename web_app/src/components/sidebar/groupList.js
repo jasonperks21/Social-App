@@ -6,7 +6,7 @@ const GroupList = (props) => {
   if (!groups || groups.length === 0) return <p>No groups, sorry</p>;
 
   function role(bool){
-    console.log(bool)
+    //console.log(bool)
     if(bool){
       return <span className="listBottomText">Admin</span>;
     }
