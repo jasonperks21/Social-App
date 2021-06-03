@@ -2,6 +2,7 @@ package com.cs334.project3.service;
 
 import com.cs334.project3.dto.GroupDTO;
 import com.cs334.project3.dto.GroupMembersDTO;
+import com.cs334.project3.exceptions.MethodNotAllowedException;
 import com.cs334.project3.model.Group;
 import com.cs334.project3.model.GroupMember;
 import com.cs334.project3.model.User;
@@ -50,10 +51,21 @@ public class GroupService {
 
     /**
      * Delete a group.
-     * @param group
+     * @param ids GroupRequestBodyMapping object
      */
-    public void deleteGroup(Group group) {
-        groupRepository.delete(group);
+    public GroupDTO deleteGroup(GroupRequestBodyMapping ids) {
+        GroupMember gm = groupMemberRepository.getUserGroupMembership(ids.getUserId(),ids.getGroupId());
+        try{
+            if (gm.getAdmin()){
+                Group g = gm.getGroup();
+                groupRepository.delete(g);
+                return new GroupDTO(g, ids.getUserId());
+            } else{
+                throw new MethodNotAllowedException();
+            }
+        } catch(Exception e){
+            throw new NullPointerException();
+        }
     }
 
     /**

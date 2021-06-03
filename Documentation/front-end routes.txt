@@ -1,0 +1,211 @@
+For the front-end guys
+---------------------------
+
+------------------------------------------------------
+---------------------------
+*NOTES
+---------------------------
+
+---------------------------
+*PARAM TYPES
+---------------------------
+BODY: Make sure the type is raw JSON, e.g:
+{
+    userid: 15,
+    dispname: "Jontie"
+}
+
+QUERY: Put this in the URL, e.g: /app/user/?q=Gert or /app/user/?uid=3&gid=15
+
+PATH VARIABLE: Also in the URL, e.g: /app/groups/15 (userId=15)
+
+---------------------------
+*RESPONSE TYPES
+---------------------------
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+
+------------------------------------------------------
+
+
+------------------------------------------------------
+---------------------------
+*USER ROUTE: /app/users
+---------------------------
+CREATE NEW USER
+METHOD: POST
+PARAM TYPE: BODY
+PARAMS: username, displayname, email, password
+RESPONSES:
+200 OK (Accepted, but can't save due to validation error)
+201 CREATED (Accepted and created)
+500 INTERNAL SERVER ERROR (Donno something else went wrong)
+
+GET USER BY ID
+METHOD: GET
+PARAM TYPE: QUERY
+PARAMS: uid
+RESPONSES:
+200 OK (User found)
+404 RESOURCE NOT FOUND (User not found)
+
+SEARCH FOR USER BY USERNAME, DISPLAYNAME, EMAIL
+METHOD: GET
+PARAM TYPE: QUERY
+PARAMS: q (q= returns all users)
+RESPONSES:
+200 OK
+500 INTERNAL SERVER ERROR
+
+UPDATE USER DISPLAY NAME
+METHOD: PUT
+PARAM TYPE: BODY
+PARAMS: userid, dispname
+RESPONSES:
+200 OK
+404 RESOURCE NOT FOUND
+
+DELETE USER BY ID
+METHOD: DELETE
+PARAM TYPE: QUERY
+PARAMS: uid
+RESPONSES:
+200 OK
+404 RESOURCE NOT FOUND
+
+------------------------------------------------------
+
+------------------------------------------------------
+---------------------------
+*GROUPS ROUTE: /app/groups
+---------------------------
+GET GROUPS FOR USER
+METHOD: GET
+PARAM TYPE: PATH VARIABLE
+PARAMS: userId
+RESPONSES:
+200 OK
+// We'll refine this hopefully
+
+CREATE NEW GROUP
+METHOD: POST
+PARAM TYPE: BODY
+PARAMS: userId, groupName
+RESPONSES:
+201 CREATED
+500 INTERNAL SERVER ERROR
+
+DELETE GROUP
+METHOD: DELETE
+PARAM TYPE: BODY
+PARAMS: userId, groupId
+RESPONSES:
+200 OK
+500 INTERNAL SERVER ERROR
+
+------------------------------------------------------
+
+------------------------------------------------------
+---------------------------
+*GROUPMEMBER ROUTE: /app/groupmember
+---------------------------
+ADD USER TO GROUP
+METHOD: POST
+PARAM TYPE: BODY
+PARAMS: userId, groupId, admin (boolean)
+RESPONSES:
+201 CREATED
+404 RESOURCE NOT FOUND
+500 INTERNAL SERVER ERROR
+
+GET ALL MEMBERS OF GROUP
+METHOD: GET
+PARAM TYPE: QUERY
+PARAMS: gid
+RESPONSES:
+200 OK
+500 INTERNAL SERVER ERROR
+
+// NOT WORKING YET, WATCH THIS SPACE
+UPDATE ADMIN PRIVILEGE OF USER
+METHOD: PUT
+PARAM TYPE: BODY
+PARAMS: userId, groupId, admin (boolean)
+RESPONSES:
+200 OK
+500 INTERNAL SERVER ERROR
+
+// NOT WORKING YET, WATCH THIS SPACE
+REMOVE USER FROM GROUP
+METHOD: DELETE
+PARAM TYPE: QUERY
+PARAMS: uid, gid
+RESPONSES:
+200 OK
+500 INTERNAL SERVER ERROR
+
+------------------------------------------------------
+
+------------------------------------------------------
+---------------------------
+*POSTS ROUTE: /app/posts
+---------------------------
+GET ALL POSTS FOR USER
+METHOD: GET
+PARAM TYPE: PATH VARIABLE
+PARAMS: userId
+RESPONSES:
+200 OK
+
+GET POSTS OF SPECIFIC GROUP FOR USER
+METHOD: GET
+PARAM TYPE: PATH VARIABLE
+PARAMS: userId, groupId (/app/posts/userId/groupId)
+RESPONSES:
+200 OK
+
+ADD POST
+// NOT IMPLEMENTED YET! REQUEST IF URGENT
+
+------------------------------------------------------
+
+------------------------------------------------------
+---------------------------
+*FRIENDS ROUTE: /app/friends
+---------------------------
+ADD NEW FRIEND
+METHOD: POST
+PARAM TYPE: BODY
+PARAMS: userId, friendId
+RESPONSES:
+201 CREATED
+500 INTERNAL SERVER ERROR
+
+GET FRIENDS OF USER
+METHOD: GET
+PARAM TYPE: QUERY
+PARAMS: userId
+RESPONSES:
+200 OK
+500 INTERNAL SERVER ERROR
+
+REMOVE FRIEND
+METHOD: DELETE
+PARAM TYPE: BODY
+PARAMS: userId, friendId
+RESPONSES:
+200 OK
+? idk we need to fix this method
+
+------------------------------------------------------
+
+------------------------------------------------------
+---------------------------
+*CATEGORIES ROUTE: /app/categories
+---------------------------
+GET ALL CATEGORIES
+METHEOD: GET
+PARAM TYPE: NONE
+PARAMS: NONE
+RESPONSES:
+200 OK
+500 INTERNAL SERVER ERROR
