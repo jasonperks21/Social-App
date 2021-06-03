@@ -137,6 +137,20 @@ public class Controller {
         }
     }
     */
+
+    ////////////////////Controller for categories/////////////////////
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        List<CategoryDTO> categoryDTOList;
+        try {
+            categoryDTOList = categoryService.getCategories();
+            return new ResponseEntity<>(categoryDTOList, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Categories could not be retrieved");
+        }
+    }
+
+
     ////////////////////Controller for friends//////////////
     @PostMapping("/friends")
     @ResponseStatus(HttpStatus.CREATED)
