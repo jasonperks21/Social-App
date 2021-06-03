@@ -20,12 +20,23 @@ public class GroupDTO{
         this.groupId = group.getGroup_id();
         this.groupName = group.getGroupName();
         List<GroupMember> groupMemberList = group.getMembers();
-        for(GroupMember gm : groupMemberList) {
-            UserDTOForPost udto = new UserDTOForPost(gm.getUser(), gm.getAdmin());
-            users.add(udto);
-            if(userId == gm.getMember_id() && gm.getAdmin()){
-                isAdminOnThisGroup = true;
+
+        if (groupMemberList.size() == 1) {
+            for (GroupMember gm : groupMemberList) {
+                UserDTOForPost udto = new UserDTOForPost(gm.getUser(), gm.getAdmin());
+                users.add(udto);
+            }
+            isAdminOnThisGroup = true;
+        } else {
+            for (GroupMember gm : groupMemberList) {
+                UserDTOForPost udto = new UserDTOForPost(gm.getUser(), gm.getAdmin());
+                users.add(udto);
+                if (userId == gm.getMember_id() && gm.getAdmin()) {
+                    isAdminOnThisGroup = true;
+                }
             }
         }
     }
+
+
 }

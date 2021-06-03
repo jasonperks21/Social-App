@@ -39,6 +39,7 @@ public class GroupService {
             User user = userRepository.getById(grbm.getUserId());
             group = new Group(grbm.getGroupName());
             gm = new GroupMember(group, user, true);
+
             groupRepository.save(group);
             groupMemberRepository.save(gm);
         } catch(Exception e){
