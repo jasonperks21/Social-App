@@ -2,7 +2,7 @@ import "./groupList.css";
 import React, { useEffect, useState } from 'react';
 import WithLoading from '../sidebar/WithGroupLoading'
 import GroupMsg from "../groupMsg/groupMsg";
-import Share from "../share/Share";
+//import Share from "../share/Share";
 
 export default function GroupList(ids) {
   let gId = new URLSearchParams(window.location.search).get("gid");
@@ -59,7 +59,7 @@ async function deleteFunc(groupInfo, userId){
       .then(response => {
           console.log(requestOptions.body)
           console.log(response);
-          //window.location.reload(false);
+          window.location.replace('/');
       });
 }
 

@@ -20,10 +20,17 @@ export default function GroupMembers(userId) {
       .then((res) => res.json())
       .then((members) => {
         setAppState({ loading: false, members: members});
-        console.log(members);
+       
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setAppState]);
+  if(!gId){
+    return(<div className="feed">
+      <div className="feedWrapper">
+      <h2>Choose a group</h2>
+      </div>
+    </div>);
+  }
   return (<div className='Groups'>
           <ListLoading isLoading={appState.loading} members={appState.members} />
           </div>);
@@ -31,8 +38,9 @@ export default function GroupMembers(userId) {
 
 const MemberList = (props) =>{
   const { members } = props;
-  if (!members || members.length === 0) return <p>No Members Yet</p>;
-
+  if(members === null) return <p>Please select group</p>
+  if (!members|| members.length === 0) return <p>No Members Yet</p>;
+  if(members.error !== null) return <p>Please select group</p>
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">
