@@ -53,9 +53,9 @@ public class Controller {
         return "GENERATED SOME TEST DATA";
     }
 
-    @GetMapping("/groups/{userId}")
+    @GetMapping(value="/groups", params= "userId")
     //TODO: Marco: update to response entity
-    public ResponseEntity<List<GroupDTO>> getGroupsForUser(@PathVariable Long userId){
+    public ResponseEntity<List<GroupDTO>> getGroupsForUser(@RequestParam Long userId){
         //TODO: Dom: Error checking
         List<GroupDTO> gDTOList = groupMemberService.getGroupsWhereUserIsMember(userId);
         return new ResponseEntity<>(gDTOList, HttpStatus.OK);
@@ -101,15 +101,15 @@ public class Controller {
         }
     }
 
-    @GetMapping(value="/groupmember", params="gid")
-    public ResponseEntity<List<GroupMembersDTO>> getGroupMembersById(@RequestParam Long gid){
+    @GetMapping(value="/groupmember", params="groupId")
+    public ResponseEntity<List<GroupMembersDTO>> getGroupMembersById(@RequestParam Long groupId){
         List<GroupMembersDTO> gmDTOList;
         try{
-            gmDTOList = groupMemberService.getGroupMembersByGroupId(gid);
+            gmDTOList = groupMemberService.getGroupMembersByGroupId(groupId);
             return new ResponseEntity<>(gmDTOList, HttpStatus.OK);
         } catch(Exception e){
             //TODO: Dom: Distinguish exception types
-            throw new InternalServerErrorException("Group members for group "+gid+" could not be retrieved");
+            throw new InternalServerErrorException("Group members for group "+groupId+" could not be retrieved");
         }
     }
     /*
@@ -205,18 +205,17 @@ public class Controller {
     public void addPost(@RequestBody PostRequestBody ids) {
         //TODO: Dom: Error checking
         //TODO: Marco: Try catch
-
     }
 
     ////////////////////Controller for users/////////////////////
-    @GetMapping(value="/users", params="uid")
-    public ResponseEntity<UserDTO> getUserById(@RequestParam Long uid){
+    @GetMapping(value="/users", params="userId")
+    public ResponseEntity<UserDTO> getUserById(@RequestParam Long userId){
         UserDTO userDTO;
         try{
-            userDTO = userService.getUserById(uid);
+            userDTO = userService.getUserById(userId);
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } catch(Exception e){
-            throw new ResourceNotFoundException("No user with user ID "+uid+" exists");
+            throw new ResourceNotFoundException("No user with user ID "+userId+" exists");
         }
     }
 
@@ -230,13 +229,13 @@ public class Controller {
         }
     }
 
-    @DeleteMapping(value="/users", params="uid")
-    public ResponseEntity<UserDTO> deleteUserById(@RequestParam Long uid){
+    @DeleteMapping(value="/users", params="userId")
+    public ResponseEntity<UserDTO> deleteUserById(@RequestParam Long userId){
         try{
-            UserDTO userDTO = userService.deleteUserById(uid);
+            UserDTO userDTO = userService.deleteUserById(userId);
             return new ResponseEntity<>(userDTO,HttpStatus.OK);
         } catch(Exception e){
-            throw new ResourceNotFoundException("No user with ID "+uid+" exists");
+            throw new ResourceNotFoundException("No user with ID "+userId+" exists");
         }
     }
 
