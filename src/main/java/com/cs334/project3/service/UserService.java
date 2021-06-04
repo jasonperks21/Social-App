@@ -5,7 +5,6 @@ import com.cs334.project3.repo.UserRepository;
 import com.cs334.project3.model.User;
 import com.cs334.project3.requestbody.CreateUserRequestBody;
 import com.cs334.project3.requestbody.UpdateDispnameRequestBody;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
@@ -18,6 +17,20 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Delete the user. Probably never necessary.
+     * @param userId The user ID.
+     */
+    public UserDTO deleteUserById(Long userId){
+        User user = userRepository.getById(userId);
+        if(user!=null){
+            userRepository.delete(user);
+            return new UserDTO(user);
+        }else{
+            throw new NullPointerException("No such user exists");
+        }
+    }
+
     // Determine if user exists
     public boolean userIdExists(Long userID){
         return userRepository.existsById(userID);
@@ -26,12 +39,13 @@ public class UserService {
     // Get user by ID
     public UserDTO getUserById(Long userId){
         User user = userRepository.getById(userId);
-        if(user!=null){
-            return new UserDTO(user);
-        }else{
-            throw new NullPointerException("No such user exists");
-        }
+        return new UserDTO(user);
+    }
 
+    // Get user by ID
+    public User getUserByIdForGroup(Long userId){
+        User user = userRepository.getById(userId);
+        return user;
     }
 
     /**
@@ -58,25 +72,21 @@ public class UserService {
         boolean unameError = !userRepository.findUserByUsername(params.getUsername()).isEmpty();
         boolean emailError = !userRepository.findUserByEmail(params.getEmail()).isEmpty(); //TODO email validation
         boolean passwordError = false; //TODO password validation
-        if(unameError || emailError || passwordError) return new CreateUserStatus(unameError, emailError, passwordError, null);
+        if(unameError | emailError | passwordError) return new CreateUserStatus(unameError, emailError, passwordError, null);
         User u = new User(params.getDisplayname(), params.getEmail(), params.getUsername(), params.getPassword());
         userRepository.save(u);
         return new CreateUserStatus(unameError, emailError, passwordError, new UserDTO(u));
     }
 
     /**
-     * Attempt to delete a usr.
-     * @param userId Long value containing user ID
-     * @return The UserDTO of the deleted user. Will throw an exception if the user does not exist.
+     * Update a user's display name. This is the only thing a user may update.
+     * @param userId The user ID.
+     * @param displayName The new display name.
      */
-    public UserDTO deleteUserById(Long userId){
-        User user = userRepository.getById(userId);
-        if(user!=null){
-            userRepository.delete(user);
-            return new UserDTO(user);
-        }else{
-            throw new NullPointerException("No such user exists");
-        }
+    public void updateUser(Long userId, String displayName){
+        User u = userRepository.getById(userId);
+        u.setDisplayName(displayName);
+        userRepository.save(u);
     }
 
     /**
