@@ -89,7 +89,7 @@ RESPONSES:
 CREATE NEW GROUP
 METHOD: POST
 PARAM TYPE: BODY
-PARAMS: userId, groupId, groupName
+PARAMS: userId, groupName
 RESPONSES:
 201 CREATED
 500 INTERNAL SERVER ERROR
@@ -97,7 +97,7 @@ RESPONSES:
 DELETE GROUP
 METHOD: DELETE
 PARAM TYPE: BODY
-PARAMS: userId, groupId, groupName
+PARAMS: userId, groupId
 RESPONSES:
 200 OK
 500 INTERNAL SERVER ERROR
@@ -200,5 +200,12 @@ RESPONSES:
 
 ------------------------------------------------------
 ---------------------------
-*CATEGORIES ROUTE: coming soon
+*CATEGORIES ROUTE: /app/categories
 ---------------------------
+GET ALL CATEGORIES
+METHOD: GET
+PARAM TYPE: NONE
+PARAMS: NONE
+RESPONSES:
+200 OK
+500 INTERNAL SERVER ERROR
