@@ -22,4 +22,6 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
             "gm.group.group_id = :gid ")
 
     public GroupMember getUserGroupMembership(@Param("uid") Long userId, @Param("gid") Long groupId);
+
+
 }

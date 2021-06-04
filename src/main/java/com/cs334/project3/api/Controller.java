@@ -78,8 +78,8 @@ public class Controller {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GroupDTO> deleteGroup(@RequestBody GroupRequestBodyMapping ids) {
         try {
-            GroupDTO gDTO = groupService.deleteGroup(ids);
-            return new ResponseEntity<>(gDTO, HttpStatus.OK);
+            groupService.deleteGroup(ids);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch(Exception e) {
             throw new InternalServerErrorException("Exception raised trying to delete group");
         }
@@ -139,6 +139,21 @@ public class Controller {
     */
 
     ////////////////////Controller for categories/////////////////////
+
+
+
+    @GetMapping("/testfilter")
+    public ResponseEntity filter() {
+        List<CategoryDTO> categoryDTOList;
+        try {
+            postService.filterPosts();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException("Categories could not be retrieved");
+        }
+    }
+
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> categoryDTOList;

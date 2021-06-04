@@ -4,15 +4,19 @@ import com.cs334.project3.model.Post;
 import com.cs334.project3.repo.resultset.PostResultSetMapping;
 import org.geolatte.geom.Geometry;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryFilter {
+
+
 
     /**
      * Get all posts for a user to see where the user is a member on the groups..
@@ -122,5 +126,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     public List<PostResultSetMapping> getAllPostsBeforeSpecifiedTimeToDisplayForUser(@Param("uid") Long userId, @Param("rad")Geometry sector);
 
 
+    @Transactional
+    @Modifying
+    @Query("delete from Post p where " +
+            "p.group.group_id = :gid")
+    public void deleteAllPostsOnGroup(@Param("gid") Long groupId);
 
 }
