@@ -264,4 +264,13 @@ public class Controller {
             throw new ResourceNotFoundException("No such user exists");
         }
     }
+
+    ////////////////////Registration/////////////////////
+    @GetMapping("/register")
+    public ResponseEntity<String> showRegistrationForm(){
+        return new ResponseEntity<>("signup_form", HttpStatus.OK);
+    }
+
+    ////////////////////Login/////////////////////
+
 }
