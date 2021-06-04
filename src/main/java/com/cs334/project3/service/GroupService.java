@@ -37,13 +37,13 @@ public class GroupService {
         Group group;
         GroupMember gm;
         try {
-            if (userRepository.existsById(grbm.getUserId())) {
+            if(userRepository.existsById(grbm.getUserId())) {
                 User user = userRepository.getById(grbm.getUserId());
                 group = new Group(grbm.getGroupName());
                 gm = new GroupMember(group, user, true);
                 groupRepository.save(group);
                 groupMemberRepository.save(gm);
-            } else {
+            }else{
                 throw new NullPointerException();
             }
         } catch(Exception e){
