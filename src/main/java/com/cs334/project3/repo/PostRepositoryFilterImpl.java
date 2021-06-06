@@ -15,33 +15,52 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
     private EntityManager em;
 
     @Override
-    public List<PostResultSetMapping> filter(Long userId, Long filterUserId, Long groupId, ZonedDateTime time, boolean after, Double radius, Point loc) {
-        String ufilt = filterUserId == null ? null : "pu.user_id = " + filterUserId;
-        String gfilt = groupId == null ? null : "pg.group_id = " + groupId;
-        String tfilt = time == null ? null : "p.timestamp" + (after?" > ":" < ") + "?1";
-        String rfilt = radius == null ? null : "ST_Distance_Sphere(?2, p.location) < " + radius;
+    public List filter(Long userId, Long filterUserId, Long groupId, ZonedDateTime time, Boolean after, Double radiusKm, Point loc) {
+        String ufilt = filterUserId == null ? "" : "gm.user_id = " + filterUserId;
+        String gfilt = groupId == null ? "" : "p.group_id = " + groupId;
+        String tfilt = time == null ? "" : "p.timestamp" + (after?" >= ":" <= ") + "?1";
+        String rfilt = radiusKm == null ? "" : "ST_Distance_Sphere(?2, p.location)/1000 <= " + radiusKm;
         String[] filt = {ufilt, gfilt, tfilt, rfilt};
-        String sqlfilter = "";
+        String filterCriteria = "";
         for(int i = 0; i < 4; i++){
             String s = filt[i];
-            if(s != null){
-                sqlfilter = sqlfilter + " and " + s;
+            if(s != ""){
+                filterCriteria = filterCriteria + " and " + s;
             }
         }
-        String sql = "select group_name as groupName,\n" +
-                "timestamp as timePosted, pg.group_id as groupId, p.post_id as postId, p.replied_post_id as replyId, message,\n" +
-                "pu.display_name as userDisplayName, pu.user_id as userId,\n" +
-                "pgm.member_id as groupMemberId, category_name as category, c.category_id as categoryId\n" +
-                "FROM posts p, postgroups pg, group_members gm, group_members pgm, users u, users pu, categories c\n" +
-                "where u.user_id = gm.user_id and\n" +
-                "gm.group_id = pg.group_id and\n" +
-                "p.group_id = pg.group_id and\n" +
-                "gm.user_id = "+ userId + " and\n" +
-                "pu.user_id = pgm.user_id and\n" +
-                "pgm.member_id = p.member_id and\n" +
-                "c.category_id = p.category_id" +
-                 sqlfilter + " order by timePosted desc";
+        String filterSQL = "-- find root posts\n" +
+                "(select p.post_id as root_id\n" +
+                "from posts p\n" +
+                "inner join group_members gm on p.member_id=gm.member_id\n" +
+                "inner join postgroups pg on p.group_id=pg.group_id\n" +
+                "inner join group_members mem on p.group_id = mem.group_id\n" +
+                "inner join categories c on p.category_id=c.category_id\n" +
+                "left join posts pr on p.root_post_id = pr.post_id\n" +
+                "-- find membership of current user and get root posts matching criteria\n" +
+                "where mem.user_id = " + userId + " and\n" +
+                "p.root_post_id is null\n" +
+                "-- criteria\n" +
+                 filterCriteria +
+                ") \n" +
+                "-- join root post comments\n" +
+                "as pf on (pf.root_id = p.post_id or pf.root_id = p.root_post_id)";
+
+        String sql = "select group_name as groupName, p.timestamp as timePosted, pg.group_id as groupId, \n" +
+                "p.post_id as postId, p.replied_post_id as replyId, message,\n" +
+                "u.display_name as userDisplayName, u.user_id as userId,\n" +
+                "gm.member_id as groupMemberId, category_name as category, c.category_id as categoryId\n" +
+                " from posts p right join\n" +
+                filterSQL +
+                "-- retrieve relevant data of root posts and comments\n" +
+                "inner join group_members gm on p.member_id=gm.member_id\n" +
+                "inner join postgroups pg on p.group_id=pg.group_id\n" +
+                "inner join users u on u.user_id=gm.user_id\n" +
+                "inner join categories c on p.category_id=c.category_id\n" +
+                "order by p.timestamp desc";
         Query q = em.createNativeQuery(sql,"postResult");
-        return q.getResultList();
+        if (tfilt != "") q.setParameter(1, time);
+        if (rfilt != "") q.setParameter(2, loc);
+        List<PostResultSetMapping> l =  (List<PostResultSetMapping>)q.getResultList();
+        return l;
     }
 }

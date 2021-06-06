@@ -1,5 +1,6 @@
 package com.cs334.project3.dto;
 
+import com.cs334.project3.exceptions.InternalServerErrorException;
 import com.cs334.project3.repo.resultset.PostResultSetMapping;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class PostDTOProcessor {
             if(post.getReplyId() == null) {
                 PostDTO dto = new PostDTO(post);
                 if (hashMap.containsKey(post.getPostId()))
-                    System.out.println("ERROR");
+                    throw new InternalServerErrorException("Recursive replies could not be constructed. Post ID " + post.getPostId() + " appeared twice in the query results.");
                 hashMap.put(post.getPostId(), dto);
                 dtos.add(dto);
                 it.remove();
@@ -28,6 +29,7 @@ public class PostDTOProcessor {
         }
         while(hashMap.size() != size){
             it = posts.iterator();
+            if(!it.hasNext()) throw new InternalServerErrorException("Recursive replies could not be constructed. The reply list did not contain the expected amount of replies.");
             while (it.hasNext()) {
                 PostResultSetMapping post =  it.next();
                 if(hashMap.containsKey(post.getReplyId())){

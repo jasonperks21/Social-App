@@ -7,5 +7,5 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface PostRepositoryFilter {
-    List<PostResultSetMapping> filter(Long userId, Long filterUserId, Long groupId, ZonedDateTime time, boolean after, Double radius, Point loc);
+    List<PostResultSetMapping> filter(Long userId, Long filterUserId, Long groupId, ZonedDateTime time, Boolean after, Double radius, Point loc);
 }

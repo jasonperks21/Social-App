@@ -16,15 +16,13 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryFilter {
 
-
-
     /**
      * Get all posts for a user to see where the user is a member on the groups..
      * @param userId The ID of the user to display for.
      * @return All the posts.
      */
-    @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, p.timestamp," +
-            "p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
+    @Query(value = "SELECT new com.cs334.project3.repo.resultset.PostResultSetMapping(p.group.groupName, " +
+            "p.timestamp,p.group.group_id,p.post_id, p.replied.post_id, p.message, p.member.user.displayName, " +
             "p.member.user.user_id, gm.member_id, c.categoryName, c.category_id)\n" +
             "FROM Post p, Group pg, GroupMember gm, User u, Category c\n" +
             "where u.user_id = gm.user.user_id and\n" +
@@ -32,7 +30,8 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
             "p.group.group_id = pg.group_id and\n" +
             "gm.user.user_id = :uid and\n" +
             "c.category_id = p.category.category_id\n" +
-            "order by p.timestamp")
+            "order by p.timestamp"
+    )
     public List<PostResultSetMapping> getAllPostsToDisplayForUser(@Param("uid") Long userId);
 
     /**

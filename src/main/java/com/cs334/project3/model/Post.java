@@ -56,6 +56,8 @@ public class Post {
             name = "native",
             strategy = "native"
     )
+
+    @Setter
     private Long post_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -86,6 +88,11 @@ public class Post {
     @Column
     private Point location;
 
+    @ManyToOne
+    private Post root;
+
+    @OneToMany(mappedBy = "root")
+    private List<Post> rootOf;
 
 
     /**
@@ -105,6 +112,8 @@ public class Post {
         this.replies = new ArrayList<>();
         this.message = message.substring(0, Math.min(4096, message.length())); //protect against long messages
         this.timestamp = ZonedDateTime.now();
+        this.root = null;
+        this.rootOf = new ArrayList<>();
     }
 
     /**
@@ -125,6 +134,13 @@ public class Post {
         replyingOn.addReply(this);
         this.timestamp = ZonedDateTime.now();
         this.replied = replyingOn;
+        this.rootOf = new ArrayList<>();
+        if(replyingOn.getRoot() == null){
+            this.root = replyingOn;
+        } else{
+            this.root = replyingOn.getRoot();
+        }
+        replyingOn.rootOf.add(this);
     }
 
 

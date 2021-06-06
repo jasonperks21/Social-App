@@ -7,12 +7,11 @@ import com.cs334.project3.repo.GroupMemberRepository;
 import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.PostRepository;
 import com.cs334.project3.repo.resultset.PostResultSetMapping;
+import com.cs334.project3.requestbody.FilterPostsRequestBody;
 import com.cs334.project3.requestbody.PostRequestBody;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.util.GeometricShapeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,8 +112,12 @@ public class PostService {
                 gm.getUser().getUser_id(),gm.getMember_id(),c.getCategoryName(),c.getCategory_id()));
     }
 
-    public void filterPosts(){
-        List<PostResultSetMapping> l = postRepository.filter(1L, 44L, 1L, null, false, null, null);
+    public List<PostDTO> filterPosts(FilterPostsRequestBody criteria){
+        GeometryFactory factory = new GeometryFactory();
+        Point loc = (criteria.getRadiusKm() == null) ? null : factory.createPoint(new Coordinate(criteria.getLongitude(), criteria.getLatitude()));
+        List<PostResultSetMapping> l = postRepository.filter(criteria.getUserId(), criteria.getFilterUserId(),
+                criteria.getGroupId(), criteria.getTime(), criteria.getAfter(), criteria.getRadiusKm(), loc);
+        return PostDTOProcessor.createRecursiveDTOStructure(l);
     }
 
 

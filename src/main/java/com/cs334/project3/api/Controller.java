@@ -142,15 +142,14 @@ public class Controller {
 
 
 
-    @GetMapping("/testfilter")
-    public ResponseEntity filter() {
-        List<CategoryDTO> categoryDTOList;
+    @GetMapping("/posts")
+    public ResponseEntity filter(@RequestBody FilterPostsRequestBody criteria) {
         try {
-            postService.filterPosts();
-            return new ResponseEntity<>(HttpStatus.OK);
+            List<PostDTO> posts = postService.filterPosts(criteria);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new InternalServerErrorException("Categories could not be retrieved");
+            throw new InternalServerErrorException("Posts could not be retrieved");
         }
     }
 
