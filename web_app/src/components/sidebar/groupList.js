@@ -3,7 +3,9 @@ import { Group, PermIdentity} from "@material-ui/icons"; //Person
 
 const GroupList = (props) => {
   const { groups } = props;
-  if (!groups || groups.length === 0) return <p>No groups, sorry</p>;
+  //console.log(groups);
+  if (groups===null|| groups.length === 0) return <p>No groups, sorry</p>;
+  if (groups.status===404){return <p>No groups, sorry</p>;}
 
   function role(bool){
     //console.log(bool)

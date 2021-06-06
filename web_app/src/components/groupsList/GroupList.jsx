@@ -18,16 +18,19 @@ export default function GroupList(ids) {
   useEffect(() => {
     setAppState({ loading: true });
     const apiUrl = '/app/posts/'+id+'/'+gId;
-    const apiUrl2 = '/app/groups/'+id;
+    const apiUrl2 = '/app/groups/?userId='+id;
     Promise.all([fetch(apiUrl).then(res => res.json()),
     fetch(apiUrl2).then(res => res.json())])
     .then(([urlOneData, urlTwoData]) => {
         let group =[];
-        urlTwoData.forEach(g => {
-          if(String(g.groupId) === gId){
-            group = g;
-          }
-        }); 
+        if(urlTwoData !== null){
+          if (urlTwoData.status!==404||urlTwoData.status!==400||urlTwoData.status!==405){
+            urlTwoData.forEach(g => {
+              if(String(g.groupId) === gId){
+                group = g;
+              }
+            });}
+        } 
         setAppState({loading:false, messages:urlOneData, groupInfo:group});
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,7 +68,7 @@ async function deleteFunc(groupInfo, userId){
 
 
 function deleteGroup(groupInfo, userId){
-  let isExecuted = window.confirm("Are you want to delete "+groupInfo.groupName+"?");
+  let isExecuted = window.confirm("Are you sure you want to delete "+groupInfo.groupName+"?");
   if(isExecuted){
     deleteFunc(groupInfo, userId);
   }

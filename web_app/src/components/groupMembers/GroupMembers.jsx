@@ -15,10 +15,11 @@ export default function GroupMembers(userId) {
 
   useEffect(() => {
     setAppState({ loading: true });
-    const apiUrl = '/app/groupmember/?gid='+gId;
+    const apiUrl = '/app/groupmember/?groupId='+gId;
     fetch(apiUrl)
       .then((res) => res.json())
       .then((members) => {
+        console.log(members)
         setAppState({ loading: false, members: members});
        
       });
@@ -40,7 +41,7 @@ const MemberList = (props) =>{
   const { members } = props;
   if(members === null) return <p>Please select group</p>
   if (!members|| members.length === 0) return <p>No Members Yet</p>;
-  if(members.error !== null) return <p>Please select group</p>
+  if(members.status === 400||members.status === 404||members.status === 405||members.status === 500) return <p>Please select group</p>
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">
@@ -56,16 +57,26 @@ const MemberList = (props) =>{
                   alt=""
                   className="messageProfileImg"
                 />
-                <span className="sidebarFriendName">{member.userId}</span>
+                <span className="messageUsername">{member.userId}</span>
                 </div>
+                <div className="messageBottom">
+                {checkAdmin(member.admin)}
+              </div>
             </div>
           </li>
             );
           })}     
       </ul>
-
+      <hr className="rightbarHr" />
       </div>
     </div>
   );
 
+}
+
+function checkAdmin(bool){
+  if(bool){
+    return <span className="messageText">Admin</span>;
+  }
+  return <span className="messageText">Member</span>;
 }

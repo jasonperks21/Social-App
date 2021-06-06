@@ -15,10 +15,11 @@ function Groups(userId) {
 
   useEffect(() => {
     setAppState({ loading: true });
-    const apiUrl = '/app/groups/'+id;
+    const apiUrl = '/app/groups/?userId='+id;
     fetch(apiUrl)
       .then((res) => res.json())
       .then((groups) => {
+        
         setAppState({ loading: false, groups: groups});
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
