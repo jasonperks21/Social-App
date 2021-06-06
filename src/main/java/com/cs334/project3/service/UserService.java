@@ -1,10 +1,12 @@
 package com.cs334.project3.service;
 
 import com.cs334.project3.dto.*;
+import com.cs334.project3.exceptions.ResourceNotFoundException;
 import com.cs334.project3.repo.UserRepository;
 import com.cs334.project3.model.User;
 import com.cs334.project3.requestbody.CreateUserRequestBody;
 import com.cs334.project3.requestbody.UpdateDispnameRequestBody;
+import com.cs334.project3.requestbody.UsernamePassword;
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,5 +91,30 @@ public class UserService {
         u.setDisplayName(udrb.getDispname());
         userRepository.save(u);
         return new UserDTO(u);
+    }
+
+    public List<UserDTO> getByUsername(String username) {
+        List<User> uList = userRepository.findUserByUsername(username);
+        if(uList.size() != 0){
+            List<UserDTO> uDTOList = new ArrayList<>();
+            for (User u : uList){
+                uDTOList.add(new UserDTO(u));
+                return uDTOList;
+            }
+        } else {
+            throw new ResourceNotFoundException("No user with username "+username+" exists");
+        }
+        return new ArrayList<>();
+    }
+
+    public UsernamePassword loadUserByUsername(String username){
+        List<User> uList = userRepository.findUserByUsername(username);
+        if(uList.size() == 0){
+            throw new ResourceNotFoundException();
+        } else {
+            // TODO: Change password hash to password
+            UsernamePassword up = new UsernamePassword(uList.get(0).getUsername(), uList.get(0).getPasswordHash().toString());
+            return up;
+        }
     }
 }
