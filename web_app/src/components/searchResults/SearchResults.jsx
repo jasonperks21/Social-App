@@ -82,11 +82,11 @@ class Person extends React.Component{
 
   checkFriend(){
     if(String(this.state.person.userId) === this.state.userId){
-      return <></>;
+      return <p>You </p>;
     }
     if(this.state.buttonPressed){
       if(!this.state.friendAdded){
-        this.setState({friendAdded: true})
+        this.addFriend()
         return <span >Processing</span>
       }
     }
@@ -97,6 +97,29 @@ class Person extends React.Component{
       return <button onClick={this.clicked}>+ Add Friend</button>
     }
   }
+
+  async addFriend(){
+    // Simple POST request with a JSON body using fetch
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({userId: this.state.userId, friendId: String(this.state.person.userId)})
+    };
+    await fetch('/app/friends', requestOptions)
+        .then(response => {
+            console.log(requestOptions.body)
+            console.log(response);
+            if(response.status === 201){
+              this.setState({friendAdded: true})
+            }
+            else{
+              this.setState({buttonPressed: false})
+            }
+            
+        });
+  }
+
+
 
     render(){
       return (
