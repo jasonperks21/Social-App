@@ -1,6 +1,7 @@
 import "./feed.css";
 import { useEffect, useState } from "react";
 import WithLoading from "../sidebar/WithGroupLoading"
+import React from "react";
 
 export default function SearchResults(ids) {
   let q = new URLSearchParams(window.location.search).get("q");
@@ -52,23 +53,7 @@ const DisplayResults = (props) =>{
       <div className="feedWrapper">
         <h2>Users:</h2>
         {results.map((r) => {
-          
-          return (
-            <div className="post">
-              <div className="postWrapper">
-                <div className="postTop">
-                  <div className="postTopLeft">
-                    <span className="postUsername">@{r?.userName}</span>
-                  </div>
-                </div>
-                <div className="postCenter">
-                  <span className="postText">{r?.displayName}</span>
-                </div>
-                <div className="postBottom">       
-                </div>   
-              </div>
-            </div>
-          );
+            return <Person result={r} userId={userId}/>;
           })}
         <hr />
         <h2>Groups:</h2>
@@ -76,3 +61,84 @@ const DisplayResults = (props) =>{
     </div>
   );
 }
+
+
+
+class Person extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+        person: this.props.result,
+        userId: this.props.userId,
+        buttonPressed: false,
+        friendAdded: false
+    }
+    this.clicked = this.clicked.bind(this);
+  }
+
+  clicked(){
+    this.setState({buttonPressed:true});
+  }
+
+  checkFriend(){
+    if(String(this.state.person.userId) === this.state.userId){
+      return <p>You </p>;
+    }
+    if(this.state.buttonPressed){
+      if(!this.state.friendAdded){
+        this.addFriend()
+        return <span >Processing</span>
+      }
+    }
+    if(this.state.friendAdded){
+      return <span id="FriendAdded">Friend Added</span>
+    }
+    else{
+      return <button onClick={this.clicked}>+ Add Friend</button>
+    }
+  }
+
+  async addFriend(){
+    // Simple POST request with a JSON body using fetch
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({userId: this.state.userId, friendId: String(this.state.person.userId)})
+    };
+    await fetch('/app/friends', requestOptions)
+        .then(response => {
+            console.log(requestOptions.body)
+            console.log(response);
+            if(response.status === 201){
+              this.setState({friendAdded: true})
+            }
+            else{
+              this.setState({buttonPressed: false})
+            }
+            
+        });
+  }
+
+
+
+    render(){
+      return (
+        <div className="post">
+          <div className="postWrapper">
+            <div className="postTop">
+              <div className="postTopLeft">
+                <span className="postUsername">@{this.state.person?.userName}</span>
+              </div>
+              {this.checkFriend()}
+            </div>
+            <div className="postCenter">
+              <span className="postText">{this.state.person?.displayName}</span>
+            </div>
+            <div className="postBottom">       
+            </div>   
+          </div>
+        </div>
+      );
+    }
+}
+
