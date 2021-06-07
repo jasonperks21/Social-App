@@ -4,6 +4,7 @@ import Login from '../Login/login';
 import NotFound from '../NotFound/NotFound';
 import Home from "../pages/home/Home"
 import Groups from "../pages/groups/groups"
+import Search from "../pages/Search/Search"
 import "./styles.css";
 
 
@@ -14,7 +15,7 @@ class App extends React.Component {
 
         this.state = {
           loggedIn : true,
-          userId : '301',
+          userId : localStorage.getItem( 'userId' ),
           coords: null
         };
         this.success = this.success.bind(this);
@@ -32,19 +33,29 @@ class App extends React.Component {
             console.log('geolocation is not enabled on this browser');
             }
       }
+    
+    handleUserId = (childData) => {
+        console.log(childData.userId);
+        this.setState({userId: childData.userId});
+        localStorage.setItem( 'userId', childData.userId );
+    }
 
     render() {
+        //console.log(this.state.userId)
         return(
         <BrowserRouter>
             <Switch>
             <Route exact path="/login">
-                <Login />
+                <Login parentCallback = {this.handleUserId}/>
             </Route>
             <Route exact path="/">
                 <Home userId={this.state.userId}/>
             </Route>
             <Route exact path="/groups">
                 <Groups userId={this.state.userId}/>
+            </Route>
+            <Route exact path="/search">
+                <Search userId={this.state.userId}/>
             </Route>
             <route path="/profile/:username">
 

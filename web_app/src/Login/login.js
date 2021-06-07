@@ -2,6 +2,7 @@ import React from 'react';
 import LoginBox from './loginBox';
 import RegisterBox from './registerBox';
 import './login.css';
+//import  { Redirect } from 'react-router-dom';
 
 class Login extends React.Component {
     constructor(props) {
@@ -17,16 +18,20 @@ class Login extends React.Component {
         this.setState({loginNotRegister: b});
     }
 
+    handleUserId = (childData) => {
+        this.props.parentCallback(childData);
+    }
+
     render() {
         let re;
         let bText;
         if(this.state.loginNotRegister){
-            re = <LoginBox/>;
+            re = <LoginBox callBack = {this.handleUserId}/>;
             bText = 'Register';
         }
         else{
             bText = 'Login';
-            re = <RegisterBox />;
+            re = <RegisterBox callBack={this.handleUserId}/>;
         }
         return(
             <div className="box">
