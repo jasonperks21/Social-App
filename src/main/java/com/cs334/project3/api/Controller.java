@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.persistence.PostRemove;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -142,17 +139,6 @@ public class Controller {
 
 
 
-    @GetMapping("/posts")
-    public ResponseEntity filter(@RequestBody FilterPostsRequestBody criteria) {
-        try {
-            List<PostDTO> posts = postService.filterPosts(criteria);
-            return new ResponseEntity<>(posts, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerErrorException("Posts could not be retrieved");
-        }
-    }
-
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> categoryDTOList;
@@ -201,25 +187,38 @@ public class Controller {
     }
 
     ////////////////////Controller for posts/////////////////////
-    @GetMapping("/posts/{userId}")
-    public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
-        //TODO: Dom: Exception handling
-        List<PostDTO> dto = postService.getAllPostsForUser(userId);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
 
-    @GetMapping("/posts/{userId}/{groupId}")
-    public ResponseEntity<List<PostDTO>> getPostsOfSpecificGroupForUser(@PathVariable Long userId,@PathVariable Long groupId){
-        //TODO: Dom: Exception handling
-        List<PostDTO> dto = postService.getAllPostsForUserByGroup(userId, groupId);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+    @GetMapping("/posts")
+    public ResponseEntity filter(@RequestBody FilterPostsRequestBody criteria) {
+        try {
+            List<PostDTO> posts = postService.filterPosts(criteria);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException("Posts could not be retrieved");
+        }
     }
 
     @PostMapping("/posts")
-    public void addPost(@RequestBody PostRequestBody ids) {
-        //TODO: Dom: Error checking
-        //TODO: Marco: Try catch
+    public ResponseEntity<PostDTO> addPost(@RequestBody PostRequestBody ids) {
+        try {
+            PostDTO pdto = postService.createPost(ids);
+            return new ResponseEntity<>(pdto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException("Error in creating post: " + e.getMessage());
+        }
+    }
 
+    @DeleteMapping("/posts")
+    public ResponseEntity deletePost(@RequestBody Long postId){
+        try{
+            postService.deletePost(postId);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new InternalServerErrorException("Error in deleting post: " + e.getMessage());
+        }
     }
 
     ////////////////////Controller for users/////////////////////
