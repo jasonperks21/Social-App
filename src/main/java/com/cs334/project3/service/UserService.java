@@ -113,7 +113,7 @@ public class UserService {
             throw new ResourceNotFoundException();
         } else {
             // TODO: Change password hash to password
-            UsernamePassword up = new UsernamePassword(uList.get(0).getUsername(), uList.get(0).getPasswordHash().toString());
+            UsernamePassword up = new UsernamePassword(uList.get(0).getUsername(), uList.get(0).getPasswordHash());
             return up;
         }
     }

@@ -2,7 +2,6 @@ package com.cs334.project3.service;
 
 import java.util.ArrayList;
 
-import com.cs334.project3.dto.UserDTO;
 import com.cs334.project3.requestbody.UsernamePassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -22,7 +21,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         try{
             UsernamePassword up = userService.loadUserByUsername(username);
             // NOT THE SAME AS THE USER MODEL CLASS !!
-            return new User(up.getUsername(), up.getPassword(), new ArrayList<>());
+            return new User(up.getUsername(), up.getPassword().toString(), new ArrayList<>());
         } catch (Exception e){
             throw new UsernameNotFoundException("User not found with username: "+username);
         }
