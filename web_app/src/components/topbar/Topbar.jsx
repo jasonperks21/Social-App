@@ -67,6 +67,3 @@ export default function Topbar() {
     </div>
   );
 }
-function bar(){
-  
-}
