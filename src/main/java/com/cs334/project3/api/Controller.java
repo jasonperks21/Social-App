@@ -210,8 +210,8 @@ public class Controller {
         }
     }
 
-    @DeleteMapping("/posts")
-    public ResponseEntity deletePost(@RequestBody Long postId){
+    @DeleteMapping(value = "/posts", params = "postId")
+    public ResponseEntity deletePost(@RequestParam Long postId){
         try{
             postService.deletePost(postId);
             return new ResponseEntity(HttpStatus.OK);
