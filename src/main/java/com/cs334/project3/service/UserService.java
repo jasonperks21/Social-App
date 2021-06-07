@@ -44,13 +44,14 @@ public class UserService {
     }
 
     // Get user by ID
-    public UserDTO getUserById(Long userId){
+    public UserDTO getUserById(Long userId) {
         User user = userRepository.getById(userId);
-        if(user!=null){
+        if (user != null) {
             return new UserDTO(user);
-        }else{
+        } else {
             throw new NullPointerException("No such user exists");
         }
+    }
 
     // Get user by ID
     public User getUserByIdForGroup(Long userId){
