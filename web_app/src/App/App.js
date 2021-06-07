@@ -14,7 +14,7 @@ class App extends React.Component {
 
         this.state = {
           loggedIn : true,
-          userId : '2',
+          userId : '301',
           coords: null
         };
         this.success = this.success.bind(this);

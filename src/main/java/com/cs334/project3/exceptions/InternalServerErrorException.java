@@ -8,9 +8,9 @@ import org.springframework.web.server.ResponseStatusException;
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 public class InternalServerErrorException extends ResponseStatusException {
     public InternalServerErrorException(){
-        super(HttpStatus.METHOD_NOT_ALLOWED);
+        super(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     public InternalServerErrorException(String message){
-        super(HttpStatus.METHOD_NOT_ALLOWED, message);
+        super(HttpStatus.INTERNAL_SERVER_ERROR, message);
     }
 }

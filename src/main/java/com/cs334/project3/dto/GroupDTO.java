@@ -10,13 +10,13 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class GroupDTO{
+public class GroupDTO {
     private Long groupId;
     private String groupName;
     private boolean isAdminOnThisGroup = false;
     private List<UserDTOForPost> users = new ArrayList<>();
 
-    public GroupDTO(Group group, Long userId){
+    public GroupDTO(Group group, Long userId) {
         this.groupId = group.getGroup_id();
         this.groupName = group.getGroupName();
         List<GroupMember> groupMemberList = group.getMembers();

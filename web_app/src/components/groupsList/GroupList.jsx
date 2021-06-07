@@ -2,6 +2,7 @@ import "./groupList.css";
 import React, { useEffect, useState } from 'react';
 import WithLoading from '../sidebar/WithGroupLoading'
 import GroupMsg from "../groupMsg/groupMsg";
+//import Share from "../share/Share";
 
 export default function GroupList(ids) {
   let gId = new URLSearchParams(window.location.search).get("gid");
@@ -17,16 +18,19 @@ export default function GroupList(ids) {
   useEffect(() => {
     setAppState({ loading: true });
     const apiUrl = '/app/posts/'+id+'/'+gId;
-    const apiUrl2 = '/app/groups/'+id;
+    const apiUrl2 = '/app/groups/?userId='+id;
     Promise.all([fetch(apiUrl).then(res => res.json()),
     fetch(apiUrl2).then(res => res.json())])
     .then(([urlOneData, urlTwoData]) => {
         let group =[];
-        urlTwoData.forEach(g => {
-          if(String(g.groupId) === gId){
-            group = g;
-          }
-        }); 
+        if(urlTwoData !== null){
+          if (urlTwoData.status!==404||urlTwoData.status!==400||urlTwoData.status!==405){
+            urlTwoData.forEach(g => {
+              if(String(g.groupId) === gId){
+                group = g;
+              }
+            });}
+        } 
         setAppState({loading:false, messages:urlOneData, groupInfo:group});
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,27 +51,26 @@ export default function GroupList(ids) {
   );
 }
 
-async function deleteFunc(groupId, userId){
+async function deleteFunc(groupInfo, userId){
   // Simple POST request with a JSON body using fetch
   const requestOptions = {
       method: 'DELETE',
-      mode: 'cors', 
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({userId: userId, groupId: groupId})
+      body: JSON.stringify({userId: parseInt(userId), groupId: groupInfo.groupId})
   };
-  await fetch('/app/groups/', requestOptions)
+  await fetch('/app/groups', requestOptions)
       .then(response => {
           console.log(requestOptions.body)
           console.log(response);
-          //window.location.reload(false);
+          window.location.replace('/');
       });
 }
 
 
 function deleteGroup(groupInfo, userId){
-  let isExecuted = window.confirm("Are you want to delete "+groupInfo.groupName+"?");
+  let isExecuted = window.confirm("Are you sure you want to delete "+groupInfo.groupName+"?");
   if(isExecuted){
-    deleteFunc(groupInfo.groupId, userId);
+    deleteFunc(groupInfo, userId);
   }
   else{
     alert("Action aborted");
