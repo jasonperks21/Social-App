@@ -9,6 +9,7 @@ import com.cs334.project3.requestbody.UpdateDispnameRequestBody;
 import com.cs334.project3.requestbody.UsernamePassword;
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 
@@ -19,6 +20,9 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Determine if user exists
     public boolean userIdExists(Long userID){
@@ -59,9 +63,10 @@ public class UserService {
     public CreateUserStatus createUser(CreateUserRequestBody params){
         boolean unameError = !userRepository.findUserByUsername(params.getUsername()).isEmpty();
         boolean emailError = !userRepository.findUserByEmail(params.getEmail()).isEmpty(); //TODO email validation
+        String passwordHash = passwordEncoder.encode(params.getPassword());
         boolean passwordError = false; //TODO password validation
         if(unameError || emailError || passwordError) return new CreateUserStatus(unameError, emailError, passwordError, null);
-        User u = new User(params.getDisplayname(), params.getEmail(), params.getUsername(), params.getPassword());
+        User u = new User(params.getDisplayname(), params.getEmail(), params.getUsername(), passwordHash);
         userRepository.save(u);
         return new CreateUserStatus(unameError, emailError, passwordError, new UserDTO(u));
     }

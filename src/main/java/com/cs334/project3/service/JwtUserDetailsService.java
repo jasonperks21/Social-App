@@ -21,7 +21,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         try{
             UsernamePassword up = userService.loadUserByUsername(username);
             // NOT THE SAME AS THE USER MODEL CLASS !!
-            return new User(up.getUsername(), up.getPassword().toString(), new ArrayList<>());
+            return new User(up.getUsername(), up.getPassword(), new ArrayList<>());
         } catch (Exception e){
             throw new UsernameNotFoundException("User not found with username: "+username);
         }

@@ -34,8 +34,8 @@ public class User {
     private String email;
     @Column //TODO: unique
     private String username;
-    @Column
-    private Integer passwordHash;
+    @Column(length = 60)
+    private String passwordHash;
 
     @OneToMany(mappedBy = "user")
     private List<GroupMember> memberships;
@@ -60,13 +60,13 @@ public class User {
      * @param displayName Name to display.
      * @param email       User email address. Must be unique.
      * @param username    Username. Must be unique.
-     * @param password    The password. This class does handles hashing.
+     * @param passwordHash   The password. This class does handles hashing.
      */
-    public User(String displayName, String email, String username, String password) {
+    public User(String displayName, String email, String username, String passwordHash) {
         this.displayName = displayName;
         this.email = email;
         this.username = username;
-        this.passwordHash = password.hashCode();
+        this.passwordHash = passwordHash;
         memberships = new ArrayList<>();
         friends = new ArrayList<>();
         friends_of = new ArrayList<>();
@@ -83,16 +83,5 @@ public class User {
         GroupMember gm = new GroupMember(group, this, admin);
         memberships.add(gm);
         return gm;
-    }
-
-
-    /**
-     * Check whether the password matches the stored hash.
-     *
-     * @param password The password.
-     * @return Whether the password matches the stored hash.
-     */
-    public Boolean checkPassword(String password) {
-        return this.passwordHash == password.hashCode();
     }
 }
