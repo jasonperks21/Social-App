@@ -15,6 +15,7 @@ import javax.persistence.EntityNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService {
@@ -81,10 +82,12 @@ public class UserService {
      */
     public CreateUserStatus createUser(CreateUserRequestBody params){
         boolean unameError = !userRepository.findUserByUsername(params.getUsername()).isEmpty();
-        boolean emailError = !userRepository.findUserByEmail(params.getEmail()).isEmpty(); //TODO email validation
-        String passwordHash = passwordEncoder.encode(params.getPassword());
-        boolean passwordError = false; //TODO password validation
+        boolean emailError = !userRepository.findUserByEmail(params.getEmail()).isEmpty() &&
+                params.getEmail().matches("/^(\\w|[-.])+@\\w+\\.\\w+$/gm");
+        boolean passwordError = params.getPassword().matches("\"^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(.*){6,}$\"gm");
+
         if(unameError || emailError || passwordError) return new CreateUserStatus(unameError, emailError, passwordError, null);
+        String passwordHash = passwordEncoder.encode(params.getPassword());
         User u = new User(params.getDisplayname(), params.getEmail(), params.getUsername(), passwordHash);
         userRepository.save(u);
         return new CreateUserStatus(unameError, emailError, passwordError, new UserDTO(u));
