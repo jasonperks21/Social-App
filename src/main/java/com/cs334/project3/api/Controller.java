@@ -1,5 +1,6 @@
 package com.cs334.project3.api;
 
+import com.cs334.project3.auth.JwtTokenUtil;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
@@ -9,11 +10,17 @@ import com.cs334.project3.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class Controller {
     
     ////////////////////////////////////////////////////////
@@ -40,6 +47,9 @@ public class Controller {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     DataGenerator dataGenerator;
@@ -257,9 +267,7 @@ public class Controller {
         }
     }
 
-    @PostMapping(value="/users")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CreateUserStatus> addUser(@RequestBody CreateUserRequestBody params){
+    public ResponseEntity<CreateUserStatus> addUser(CreateUserRequestBody params){
         try{
             CreateUserStatus cus = userService.createUser(params);
             if(cus.getUser()==null){
@@ -280,6 +288,39 @@ public class Controller {
         } catch(Exception e){
             throw new ResourceNotFoundException("No such user exists");
         }
+    }
+
+    ////////////////////Register, logout/////////////////////
+
+    @PostMapping(value="/register")
+    public ResponseEntity<CreateUserStatus> registerNewUser(@RequestBody CreateUserRequestBody params){
+        try{
+            return addUser(params);
+        } catch(Exception e){
+            throw new InternalServerErrorException("Something went wrong - maybe the DB is down?");
+        }
+    }
+
+    @RequestMapping(value="/logout", method=RequestMethod.GET)
+    public ResponseEntity<String> logoutUser(HttpServletRequest request, HttpServletResponse response){
+        String token = request.getHeader("Authorization");
+        String jwt = null;
+        if(token.startsWith("Bearer ")){
+            jwt = token.substring(7);
+        } else {
+            throw new ResourceNotFoundException();
+        }
+        Long uid = getUserIdFromJWT(jwt);
+        userService.logoutUser(uid);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth!=null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return new ResponseEntity<>("Successfully logged out user ID "+uid, HttpStatus.OK);
+    }
+
+    private Long getUserIdFromJWT(String jwt){
+        return jwtTokenUtil.getUserIdFromToken(jwt);
     }
 
 }
