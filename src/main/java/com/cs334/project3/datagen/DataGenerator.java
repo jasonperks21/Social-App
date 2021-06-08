@@ -4,6 +4,10 @@ import com.cs334.project3.model.*;
 import com.cs334.project3.repo.*;
 import lombok.NoArgsConstructor;
 import org.hibernate.type.ZonedDateTimeType;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +42,7 @@ public class DataGenerator {
     private String[] group_names;
     private Random rand = new Random();
 
-    private static int size = 50;
+    private static int size = 10;
 
     public DataGenerator() {
         readFiles();
@@ -93,17 +97,18 @@ public class DataGenerator {
     private void createGroups(){
         List<String> l = Arrays.asList(group_names);
         Collections.shuffle(l);
-        for(int i = 0; i < size/10; i++){
+        for(int i = 0; i < size/3; i++){
             String name = l.get(i);
             Group g = new Group(name);
             groups.add(g);
         }
 
-        for(int i = 0; i < (int)((float)size*1.5f); i++){
+        outer:
+        for(int i = 0; i < size * 2; i++){
             User u = randElem(users);
             Group g = randElem(groups);
             for(GroupMember m : u.getMemberships()){
-                if(m.getGroup() == g) continue;
+                if(m.getGroup() == g) continue outer;
             }
             GroupMember gm = u.addGroupMembership(g, rand.nextBoolean());
             members.add(gm);
@@ -133,7 +138,7 @@ public class DataGenerator {
             Category cat = randElem(categories);
             Post p = new Post(group, member, cat, mes);
             ZonedDateTime time = ZonedDateTime.now();
-            time.minusDays(10 + rand.nextInt(10));
+            time = time.minusDays(10 + rand.nextInt(60)).minusHours(rand.nextInt(24));
             p.setTimestamp(time);
             posts.add(p);
         }
@@ -145,13 +150,21 @@ public class DataGenerator {
             Post r = randElem(posts);
             String mes = l.get(i);
             ZonedDateTime time = r.getTimestamp();
-            time.plusDays(rand.nextInt(10));
+            time = time.plusDays(rand.nextInt(40));
             if(time.isAfter(ZonedDateTime.now())){
                 time = ZonedDateTime.now();
             }
             Post p = new Post(r, randElem(r.getMember().getGroup().getMembers()), mes);
             p.setTimestamp(time);
             posts.add(p);
+        }
+
+        GeometryFactory factory = new GeometryFactory();
+
+        for (Post p : posts) {
+            p.setLocation(factory.createPoint(
+                    new Coordinate(20.0 + rand.nextDouble() * 10.0,
+                            20.0 + rand.nextDouble() * 10.0)));
         }
 
     }

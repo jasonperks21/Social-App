@@ -7,12 +7,11 @@ import com.cs334.project3.repo.GroupMemberRepository;
 import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.PostRepository;
 import com.cs334.project3.repo.resultset.PostResultSetMapping;
+import com.cs334.project3.requestbody.FilterPostsRequestBody;
 import com.cs334.project3.requestbody.PostRequestBody;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.util.GeometricShapeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,61 +30,7 @@ public class PostService {
     private CategoryRepository categoryRepository;
 
     /**
-     * Get all posts to display for a specific user.
-     * This user is by definition a member of all the groups within the posts.
-     * @param userId The user ID to display for.
-     * @return All posts.
-     */
-    public List<PostDTO> getAllPostsForUser(Long userId){
-        List<PostResultSetMapping> posts = postRepository.getAllPostsToDisplayForUser(userId);
-        List<PostDTO> dto = PostDTOProcessor.createRecursiveDTOStructure(posts);
-        return dto;
-    }
-
-    /**
-     * Get all posts of a specific group to display for specific user.
-     * This user is by definition a member of all the groups within the posts.
-     * @param userId The user ID to display for.
-     * @param groupId The group ID to get.
-     * @return All posts of this group. There will not be any results if a member does not belong to this group.
-     */
-    //Get all the posts from a group to display for the user:
-    public List<PostDTO> getAllPostsForUserByGroup(Long userId, Long groupId){
-        List<PostResultSetMapping> posts = postRepository.getAllPostsOfGroupToDisplayForUser(userId, groupId);
-        List<PostDTO> dto = PostDTOProcessor.createRecursiveDTOStructure(posts);
-        return dto;
-    }
-
-    /**
-     * Get all posts posted after a specific time to display for specific user.
-     * This user is by definition a member of all the groups within the posts.
-     * @param userId The user ID to display for.
-     * @param time The time.
-     * @return All posts that were posted after this time.
-     */
-    //Get all the posts from a group to display for the user:
-    public List<PostDTO> getAllPostsForUserByTimeAfter(Long userId, ZonedDateTime time){
-        List<PostResultSetMapping> posts = postRepository.getAllPostsAfterSpecifiedTimeToDisplayForUser(userId, time);
-        List<PostDTO> dto = PostDTOProcessor.createRecursiveDTOStructure(posts);
-        return dto;
-    }
-
-    /**
-     * Get all posts posted before a specific time to display for specific user.
-     * This user is by definition a member of all the groups within the posts.
-     * @param userId The user ID to display for.
-     * @param time The time.
-     * @return All posts that were posted after this time.
-     */
-    //Get all the posts from a group to display for the user:
-    public List<PostDTO> getAllPostsForUserByTimeBefore(Long userId, ZonedDateTime time){
-        List<PostResultSetMapping> posts = postRepository.getAllPostsBeforeSpecifiedTimeToDisplayForUser(userId, time);
-        List<PostDTO> dto = PostDTOProcessor.createRecursiveDTOStructure(posts);
-        return dto;
-    }
-
-    /**
-     * Delete a post.
+     * Delete a post. This automatically deletes all children.
      * @param postId The post ID.
      */
     public void deletePost(Long postId){
@@ -113,23 +58,19 @@ public class PostService {
                 gm.getUser().getUser_id(),gm.getMember_id(),c.getCategoryName(),c.getCategory_id()));
     }
 
+    /**
+     * Search for posts based off filter criteria. Filter criteria can be null if filtering is not required.
+     * @param criteria The criteria in the request body.
+     * @return A list of DTOs ready for display.
+     */
 
-//    private Geometry createSector(double radius, Point center) {
-//        GeometricShapeFactory shapeFactory = new GeometricShapeFactory();
-//        shapeFactory.setNumPoints(32);
-//        shapeFactory.setCentre(new Coordinate(x, y));
-//        shapeFactory.setSize(radius * 2);
-//        return shapeFactory.createCircle();
-//    }
-//
-    private Geometry LLAtoCart(double lon, double lat, double alt){
-        double earthRadiusKm = 6371.0 + alt;
-        double lonrad = Math.toRadians(lon);
-        double latrad = Math.toRadians(lat);
+    public List<PostDTO> filterPosts(FilterPostsRequestBody criteria){
         GeometryFactory factory = new GeometryFactory();
-        double x = earthRadiusKm * Math.cos(latrad) * Math.cos(lonrad);
-        double y = earthRadiusKm * Math.cos(latrad) * Math.sin(lonrad);
-        double z = earthRadiusKm * Math.sin(latrad);
-        return factory.createPoint(new Coordinate(x, y, z));
+        Point loc = (criteria.getRadiusKm() == null) ? null : factory.createPoint(new Coordinate(criteria.getLongitude(), criteria.getLatitude()));
+        List<PostResultSetMapping> l = postRepository.filter(criteria.getUserId(), criteria.getFilterUserId(),
+                criteria.getGroupId(), criteria.getTime(), criteria.getAfter(), criteria.getRadiusKm(), loc);
+        return PostDTOProcessor.createRecursiveDTOStructure(l);
     }
+
+
 }

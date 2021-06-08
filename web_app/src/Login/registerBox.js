@@ -67,7 +67,10 @@ class RegisterBox extends React.Component {
 
 
   handleSubmit(event) {
-    if(this.state.password === this.state.passwordC){
+    if(this.state.password ==='' || this.state.email === ''|| this.state.username ==='' ||this.state.dispName ===''){
+      this.setState({errorMsg: 'Please fill in all the fields'});
+    }
+    else if(this.state.password === this.state.passwordC){
       if(this.state.password.length>7){
         console.log('Matched!');
         this.addUser();

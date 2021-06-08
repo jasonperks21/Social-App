@@ -1,5 +1,4 @@
 import React from 'react';
-//import { Group, PermIdentity} from "@material-ui/icons"; //Person
 
 const FriendList = (props) => {
   const { friends } = props;
@@ -10,15 +9,29 @@ const FriendList = (props) => {
   return (
     <ul className="sidebarFriendList">
       {friends.map((friend) => {
-          return (
-            <li className="sidebarFriend">
-            <img src="/assets/person/2.jpeg" alt="" className="sidebarFriendImg"/>
-                <span className="sidebarFriendName">{friend.friendId}</span>
-              </li>
-            );
+          return <Friend friend={friend}/>
       })}
     
     </ul>
 );
 };
 export default FriendList;
+
+class Friend extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+        friend: this.props.friend
+    }
+  }
+
+  render(){
+    //console.log(this.state.friend)
+    return (
+      <li className="sidebarFriend">
+      <img src="/assets/person/2.jpeg" alt="" className="sidebarFriendImg"/>
+          <span className="sidebarFriendName">{this.state.friend.friendId}</span>
+        </li>
+      );
+  }
+}

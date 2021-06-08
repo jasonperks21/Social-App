@@ -8,8 +8,9 @@ import com.cs334.project3.model.GroupMember;
 import com.cs334.project3.model.User;
 import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.GroupMemberRepository;
+import com.cs334.project3.repo.PostRepository;
 import com.cs334.project3.repo.UserRepository;
-import com.cs334.project3.requestbody.GroupRequestBodyMapping;
+import com.cs334.project3.requestbody.GroupRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class GroupService {
     @Autowired
     private GroupMemberRepository groupMemberRepository;
 
+    @Autowired
+    PostRepository postRepository;
+
     /**
      * Create a new group.
      * @param group
@@ -33,7 +37,7 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-    public GroupDTO createGroup(GroupRequestBodyMapping grbm){
+    public GroupDTO createGroup(GroupRequestBody grbm){
         Group group;
         GroupMember gm;
         try {
@@ -56,13 +60,12 @@ public class GroupService {
      * Delete a group.
      * @param ids GroupRequestBodyMapping object
      */
-    public GroupDTO deleteGroup(GroupRequestBodyMapping ids) {
+    public void deleteGroup(GroupRequestBody ids) {
         GroupMember gm = groupMemberRepository.getUserGroupMembership(ids.getUserId(),ids.getGroupId());
         try{
             if (gm.getAdmin()){
                 Group g = gm.getGroup();
                 groupRepository.delete(g);
-                return new GroupDTO(g, ids.getUserId());
             } else{
                 throw new MethodNotAllowedException();
             }

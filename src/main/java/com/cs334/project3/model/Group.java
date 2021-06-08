@@ -27,10 +27,10 @@ public class Group {
     )
     private Long group_id;
 
-    @OneToMany(mappedBy = "group", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "group", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
     private List<GroupMember> members;
 
     @Column
