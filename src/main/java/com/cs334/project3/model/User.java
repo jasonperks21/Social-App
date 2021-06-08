@@ -30,12 +30,14 @@ public class User {
 
     @Column
     private String displayName;
-    @Column
+    @Column(unique = true)
     private String email;
-    @Column //TODO: unique
+    @Column(unique = true)
     private String username;
     @Column(length = 60)
     private String passwordHash;
+    @Column
+    private String jwt_token = null;
 
     @OneToMany(mappedBy = "user")
     private List<GroupMember> memberships;
@@ -45,6 +47,8 @@ public class User {
 
     @OneToMany(mappedBy = "friend")
     private List<Friend> friends_of;
+
+
 
     protected void addFriend(Friend friend){
         friends.add(friend);
@@ -60,7 +64,7 @@ public class User {
      * @param displayName Name to display.
      * @param email       User email address. Must be unique.
      * @param username    Username. Must be unique.
-     * @param passwordHash   The password. This class does handles hashing.
+     * @param passwordHash   The password. This class does not handle hashing.
      */
     public User(String displayName, String email, String username, String passwordHash) {
         this.displayName = displayName;
