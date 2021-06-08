@@ -22,7 +22,10 @@ public class PostResultSetMapping {
     private Long userId;
     private Long groupMemberId;
 
+
     //category stuff
     private String category;
     private Long categoryId;
+
+    private String avatar;
 }

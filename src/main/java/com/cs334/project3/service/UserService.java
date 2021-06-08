@@ -89,6 +89,7 @@ public class UserService {
         if(unameError || emailError || passwordError) return new CreateUserStatus(unameError, emailError, passwordError, null);
         String passwordHash = passwordEncoder.encode(params.getPassword());
         User u = new User(params.getDisplayname(), params.getEmail(), params.getUsername(), passwordHash);
+        u.setAvatar_path(params.getAvatar());
         userRepository.save(u);
         return new CreateUserStatus(unameError, emailError, passwordError, new UserDTO(u));
     }

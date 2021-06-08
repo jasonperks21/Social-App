@@ -48,7 +48,7 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
         String sql = "select group_name as groupName, p.timestamp as timePosted, pg.group_id as groupId, \n" +
                 "p.post_id as postId, p.replied_post_id as replyId, message,\n" +
                 "u.display_name as userDisplayName, u.user_id as userId,\n" +
-                "gm.member_id as groupMemberId, category_name as category, c.category_id as categoryId\n" +
+                "gm.member_id as groupMemberId, category_name as category, c.category_id as categoryId, u.avatar_path as avatar\n" +
                 " from posts p right join\n" +
                 filterSQL +
                 "-- retrieve relevant data of root posts and comments\n" +

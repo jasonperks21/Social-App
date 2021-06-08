@@ -37,7 +37,8 @@ import java.util.List;
                                 @ColumnResult(name="userId", type=Long.class),
                                 @ColumnResult(name="groupMemberId", type=Long.class),
                                 @ColumnResult(name="category", type=String.class),
-                                @ColumnResult(name="categoryId", type=Long.class)
+                                @ColumnResult(name="categoryId", type=Long.class),
+                                @ColumnResult(name="avatar", type=String.class)
                         }
                         )
         }

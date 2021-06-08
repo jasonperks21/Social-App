@@ -56,7 +56,7 @@ public class PostService {
         return new PostDTO( new PostResultSetMapping(gm.getGroup().getGroupName(),
                 p.getTimestamp(), p.getGroup().getGroup_id(), p.getPost_id(),
                 params.getReplyId(), params.getMessage(),gm.getUser().getDisplayName(),
-                gm.getUser().getUser_id(),gm.getMember_id(),c.getCategoryName(),c.getCategory_id()));
+                gm.getUser().getUser_id(),gm.getMember_id(),c.getCategoryName(),c.getCategory_id(), null));
     }
 
     /**
