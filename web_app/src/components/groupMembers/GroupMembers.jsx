@@ -46,7 +46,7 @@ export default function GroupMembers(userId) {
 }
 
 const MemberList = (props) =>{
-  const { members, userId, admin } = props;
+  const { members, admin } = props;
   if(members === null) return <p>Please select group</p>
   if (!members|| members.length === 0) return <p>No Members Yet</p>;
   if(members.status === 400||members.status === 404||members.status === 405||members.status === 500) return <p>Please select group</p>
@@ -66,6 +66,7 @@ const MemberList = (props) =>{
                   className="messageProfileImg"
                 />
                 <span className="messageUsername">{member.userId}</span>
+                {removeButton(admin, member)}
                 </div>
                 <div className="messageBottom">
                 {checkAdmin(member.admin)}
@@ -88,3 +89,31 @@ function checkAdmin(bool){
   }
   return <span className="messageText">Member</span>;
 }
+
+function removeButton(bool, member){
+  
+  if(bool){
+    return <button onClick={m => removeMember(member)} id="removeButton">Remove</button>
+  }
+  else{
+    return <> </>;
+  }
+}
+
+async function removeMember(member){
+  // Simple POST request with a JSON body using fetch
+  const requestOptions = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({userId: member.userId, groupId: member.groupId})
+  };
+  await fetch('/app/friends', requestOptions)
+      .then(response => {
+          console.log(requestOptions.body)
+          console.log(response);
+          if(response.status === 200){
+            window.location.reload(false);
+          }         
+      });
+}
+
