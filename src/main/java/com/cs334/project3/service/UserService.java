@@ -113,6 +113,27 @@ public class UserService {
         return new UserDTO(u);
     }
 
+    public void loginUser(String uname, String jwt){
+        User u = userRepository.findUserByUsername(uname).get(0);
+        u.setJwt_token(jwt);
+        userRepository.save(u);
+    }
+
+    public void logoutUser(Long uid){
+        try{
+            User u = userRepository.getById(uid);
+            u.setJwt_token(null);
+            userRepository.save(u);
+        } catch(Exception e){
+            throw new NullPointerException();
+        }
+    }
+
+    public String getJWT(String username){
+        User u = userRepository.findUserByUsername(username).get(0);
+        return u.getJwt_token();
+    }
+
     public List<UserDTO> getByUsername(String username) {
         List<User> uList = userRepository.findUserByUsername(username);
         if(uList.size() != 0){
