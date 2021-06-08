@@ -24,8 +24,8 @@ public class GroupDTO {
             for (GroupMember gm : groupMemberList) {
                 UserDTOForPost udto = new UserDTOForPost(gm.getUser(), gm.getAdmin());
                 users.add(udto);
-                if (userId == udto.getId() && gm.getAdmin()) {
-                    isAdminOnThisGroup = true;
+                if (userId.equals(gm.getUser().getUser_id())) {
+                    isAdminOnThisGroup = gm.getAdmin();
                 }
             }
         }

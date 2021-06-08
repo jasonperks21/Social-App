@@ -126,7 +126,7 @@ public class Controller {
     }
 
     @DeleteMapping(value="/groupmember",params={"uid","gid"})
-    public ResponseEntity<GroupMembersDTO> deleteGroupMemberById(@RequestParam Long uid, Long gid){
+    public ResponseEntity<GroupMembersDTO> deleteGroupMemberById(@RequestParam Long uid,@RequestParam Long gid){
         GroupMembersDTO gmDTO;
         try{
             gmDTO = groupMemberService.deleteGroupMemberById(uid, gid);
