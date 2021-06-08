@@ -10,7 +10,8 @@ export default function GroupMembers(userId) {
   const ListLoading = WithLoading(MemberList);
   const [appState, setAppState] = useState({
     loading: false,
-    members: null
+    members: null,
+    admin: false
   });
 
   useEffect(() => {
@@ -19,8 +20,15 @@ export default function GroupMembers(userId) {
     fetch(apiUrl)
       .then((res) => res.json())
       .then((members) => {
-        console.log(members)
-        setAppState({ loading: false, members: members});
+        let admin = false;
+        members?.forEach(element => {
+          if(element?.userId === parseInt(userId.userId)){ 
+            if(element.admin){
+              admin = true;
+            }
+          }
+        });
+        setAppState({ loading: false, members: members, admin:admin});
        
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -33,12 +41,12 @@ export default function GroupMembers(userId) {
     </div>);
   }
   return (<div className='Groups'>
-          <ListLoading isLoading={appState.loading} members={appState.members} />
+          <ListLoading isLoading={appState.loading} members={appState.members} admin={appState.admin}/>
           </div>);
 }
 
 const MemberList = (props) =>{
-  const { members } = props;
+  const { members, userId, admin } = props;
   if(members === null) return <p>Please select group</p>
   if (!members|| members.length === 0) return <p>No Members Yet</p>;
   if(members.status === 400||members.status === 404||members.status === 405||members.status === 500) return <p>Please select group</p>

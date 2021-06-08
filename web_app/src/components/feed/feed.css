@@ -5,3 +5,13 @@
 .feedWrapper {
   padding: 20px;
 }
+
+#removeButton{
+  border: none;
+  font-size: medium;
+  cursor: pointer;
+  color: red;
+}
+#removeText{
+  color: red;
+}

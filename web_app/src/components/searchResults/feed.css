@@ -9,3 +9,14 @@
 #FriendAdded{
   color: green;
 }
+#removeFriend{
+  border: none;
+  cursor: pointer;
+  color: red;
+}
+
+.removeFriend{
+  border: none;
+  cursor: pointer;
+  color: red;
+}
