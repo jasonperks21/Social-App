@@ -1,9 +1,28 @@
 import "./topbar.css";
 import { Search, Person, Chat, Notifications } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function Topbar() {
+  const [appState, setAppState] = useState({
+    text: '',
+    goto: false
+  });
+  
+  const handleSubmit= (e) => {
+    e.preventDefault();
+    setAppState({text: appState.text, goto:true})
+  }
+  const handleIn = (e) => {
+    setAppState({text: e, goto:false});
+  }
+  if(appState.goto){
+    let link = '/search/?q='+appState.text
+    //setAppState({text:appState.text, goto: false})
+    window.location.replace(link);
+  }
   return (
+
     <div className="topbarContainer">
       <div className="topbarLeft">
 
@@ -14,10 +33,13 @@ export default function Topbar() {
       <div className="topbarCenter">
         <div className="searchbar">
           <Search className="searchIcon" />
-          <input
-            placeholder="find groups, friends or posts..."
-            className="searchInput"
-          />
+          <form onSubmit={ e => {handleSubmit(e)} }>
+            <input
+              placeholder="find groups, friends or posts..."
+              className="searchInput"
+              onChange={e => handleIn(e.target.value)}
+            />
+          </form>
         </div>
       </div>
       <div className="topbarRight">

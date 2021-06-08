@@ -6,12 +6,17 @@
   padding: 20px;
 }
 
-#removeButton{
+#FriendAdded{
+  color: green;
+}
+#removeFriend{
   border: none;
-  font-size: medium;
   cursor: pointer;
   color: red;
 }
-#removeText{
+
+.removeFriend{
+  border: none;
+  cursor: pointer;
   color: red;
 }
