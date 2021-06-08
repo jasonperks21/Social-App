@@ -5,18 +5,15 @@ import com.cs334.project3.dto.GroupMembersDTO;
 import com.cs334.project3.exceptions.MethodNotAllowedException;
 import com.cs334.project3.model.Group;
 import com.cs334.project3.model.GroupMember;
-import com.cs334.project3.model.Post;
 import com.cs334.project3.model.User;
 import com.cs334.project3.repo.GroupRepository;
 import com.cs334.project3.repo.GroupMemberRepository;
 import com.cs334.project3.repo.PostRepository;
 import com.cs334.project3.repo.UserRepository;
-import com.cs334.project3.requestbody.GroupRequestBodyMapping;
+import com.cs334.project3.requestbody.GroupRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class GroupService {
@@ -40,7 +37,7 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-    public GroupDTO createGroup(GroupRequestBodyMapping grbm){
+    public GroupDTO createGroup(GroupRequestBody grbm){
         Group group;
         GroupMember gm;
         try {
@@ -63,7 +60,7 @@ public class GroupService {
      * Delete a group.
      * @param ids GroupRequestBodyMapping object
      */
-    public void deleteGroup(GroupRequestBodyMapping ids) {
+    public void deleteGroup(GroupRequestBody ids) {
         GroupMember gm = groupMemberRepository.getUserGroupMembership(ids.getUserId(),ids.getGroupId());
         try{
             if (gm.getAdmin()){

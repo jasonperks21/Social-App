@@ -15,9 +15,10 @@ left join posts pr on p.root_post_id = pr.post_id
 where mem.user_id = 301 and
 p.root_post_id is null and
 -- criteria
-gm.user_id = 302 and
+gm.user_id is not null and
+p.group_id = 54 and
 c.category_id is not null and
-ST_Distance_Sphere(p.location, Point(25, 25))/1000 <= 1500 and
+ST_Distance_Sphere(p.location, Point(25, 25))/1000 <= 50000 and
 p.timestamp >= '2021-05-01'
 ) 
 -- join root post comments

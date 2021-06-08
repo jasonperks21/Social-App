@@ -51,17 +51,20 @@ public class Controller {
     }
 
     @GetMapping(value="/groups", params= "userId")
-    //TODO: Marco: update to response entity
     public ResponseEntity<List<GroupDTO>> getGroupsForUser(@RequestParam Long userId){
-        //TODO: Dom: Error checking
-        List<GroupDTO> gDTOList = groupMemberService.getGroupsWhereUserIsMember(userId);
-        return new ResponseEntity<>(gDTOList, HttpStatus.OK);
+        try {
+            List<GroupDTO> gDTOList = groupMemberService.getGroupsWhereUserIsMember(userId);
+            return new ResponseEntity<>(gDTOList, HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalServerErrorException("Exception raised trying to retrieve group");
+        }
     }
 
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupRequestBodyMapping ids) {
+    public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupRequestBody ids) {
         GroupDTO groupDTO;
         try {
             groupDTO = groupService.createGroup(ids);
@@ -73,7 +76,7 @@ public class Controller {
 
     @DeleteMapping("/groups")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<GroupDTO> deleteGroup(@RequestBody GroupRequestBodyMapping ids) {
+    public ResponseEntity<GroupDTO> deleteGroup(@RequestBody GroupRequestBody ids) {
         try {
             groupService.deleteGroup(ids);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -84,7 +87,7 @@ public class Controller {
 
     ////////////////////Controller for groupmembers//////////////
     @PostMapping("/groupmember")
-    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody GroupRequestBodyMapping grbm){
+    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody GroupRequestBody grbm){
         UserDTO userDTO = userService.getUserById(grbm.getUserId());
         if (userDTO == null){
             throw new ResourceNotFoundException("No user with user ID "+grbm.getUserId()+" exists");
@@ -109,9 +112,9 @@ public class Controller {
             throw new InternalServerErrorException("Group members for group "+groupId+" could not be retrieved");
         }
     }
-    /*
+
     @PutMapping("/groupmember")
-    public ResponseEntity<GroupMembersDTO> updateGroupAdminByUser(@RequestBody GroupRequestBodyMapping grbm){
+    public ResponseEntity<GroupMembersDTO> updateGroupAdminByUser(@RequestBody GroupRequestBody grbm){
         GroupMembersDTO gmDTO;
         try{
             gmDTO = groupMemberService.updateGroupAdminByUserId(grbm.getUserId(), grbm.getGroupId(), grbm.isAdmin());
@@ -133,13 +136,14 @@ public class Controller {
             throw new InternalServerErrorException("Something went wrong, could not delete groupmember");
         }
     }
-    */
+
 
     ////////////////////Controller for categories/////////////////////
 
 
 
     @GetMapping("/categories")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> categoryDTOList;
         try {

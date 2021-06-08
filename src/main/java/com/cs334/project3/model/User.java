@@ -36,7 +36,7 @@ public class User {
     private String username;
     @Column(length = 60)
     private String passwordHash;
-    @Column
+    @Column(length = 512)
     private String jwt_token = null;
 
     @OneToMany(mappedBy = "user")
@@ -67,7 +67,7 @@ public class User {
      * @param passwordHash   The password. This class does not handle hashing.
      */
     public User(String displayName, String email, String username, String passwordHash) {
-        this.displayName = displayName;
+        this.displayName = displayName == null ? username : displayName;
         this.email = email;
         this.username = username;
         this.passwordHash = passwordHash;

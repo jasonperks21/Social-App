@@ -43,11 +43,11 @@ public class GroupMemberService {
             return gmDTOList;
         }
     }
-    /*
+
     // Update group admin
     public GroupMembersDTO updateGroupAdminByUserId(Long userId, Long groupId, boolean admin){
         //TODO: DB: Implement getGroupMemberById(groupId, userId) in GroupMemberRepository
-        GroupMember gm = groupMemberRepository.getGroupMemberById(groupId, userId);
+        GroupMember gm = groupMemberRepository.getUserGroupMembership(userId, groupId);
         if(gm==null){
             //TODO: Dom: Write more creative exceptions
             throw new NullPointerException();
@@ -60,7 +60,7 @@ public class GroupMemberService {
 
     // Delete groupmember
     public GroupMembersDTO deleteGroupMemberById(Long userId, Long groupId){
-        GroupMember gm = groupMemberRepository.getGroupMemberById(groupId, userId);
+        GroupMember gm = groupMemberRepository.getUserGroupMembership(userId, groupId);
         if(gm==null){
             throw new NullPointerException();
         } else{
@@ -68,7 +68,7 @@ public class GroupMemberService {
             return new GroupMembersDTO(gm.getUser().getUser_id(), gm.getGroup().getGroup_id(), gm.getAdmin());
         }
     }
-    */
+
     // Get groups that user is a member of
 
     public List<GroupDTO> getGroupsWhereUserIsMember(Long userId) {
