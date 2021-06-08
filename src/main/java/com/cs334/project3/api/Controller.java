@@ -61,6 +61,17 @@ public class Controller {
         }
     }
 
+    @GetMapping(value="/groups", params= "q")
+    public ResponseEntity<List<GroupSearchDTO>> searchForGroups(@RequestParam String q){
+        try {
+            List<GroupSearchDTO> gDTOList = groupService.searchForGroup(q);
+            return new ResponseEntity<>(gDTOList, HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalServerErrorException("Exception raised trying to retrieve group");
+        }
+    }
+
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups")
     @ResponseStatus(HttpStatus.CREATED)

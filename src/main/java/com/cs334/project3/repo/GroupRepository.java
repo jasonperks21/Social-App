@@ -1,6 +1,7 @@
 package com.cs334.project3.repo;
 
 import com.cs334.project3.model.Group;
+import com.cs334.project3.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,8 +17,8 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "gm.user.user_id = u.user_id and u.user_id = :uid")
     public List<Group> getALlGroupsThatUserIsMemberOf(@Param("uid") Long userId);
 
-    // group <- groupRepo.getById(groupid)
-    // gm <- group.getMembers()
-    // user <- gm.getUser()
+    @Query("select g from Group g " +
+            "where lower(g.groupName) like concat('%', concat(lower(:s),'%'))")
+    public List<Group> searchForGroup(@Param("s") String search);
 
 }

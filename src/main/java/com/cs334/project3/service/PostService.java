@@ -51,6 +51,7 @@ public class PostService {
         } else {
             p = gm.replyToPost(postRepository.findById(params.getReplyId()).get(), params.getMessage());
         }
+        p.setLocation(params.getLongitude(), params.getLatitude());
         postRepository.save(p);
         return new PostDTO( new PostResultSetMapping(gm.getGroup().getGroupName(),
                 p.getTimestamp(), p.getGroup().getGroup_id(), p.getPost_id(),

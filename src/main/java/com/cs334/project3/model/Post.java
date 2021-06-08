@@ -147,4 +147,9 @@ public class Post {
     private void addReply(Post reply){
         replies.add(reply);
     }
+
+    public void setLocation(double lon, double lat){
+        GeometryFactory factory = new GeometryFactory();
+        this.location = factory.createPoint(new Coordinate(lon, lat));
+    }
 }

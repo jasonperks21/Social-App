@@ -2,6 +2,7 @@ package com.cs334.project3.service;
 
 import com.cs334.project3.dto.GroupDTO;
 import com.cs334.project3.dto.GroupMembersDTO;
+import com.cs334.project3.dto.GroupSearchDTO;
 import com.cs334.project3.exceptions.MethodNotAllowedException;
 import com.cs334.project3.model.Group;
 import com.cs334.project3.model.GroupMember;
@@ -14,6 +15,9 @@ import com.cs334.project3.requestbody.GroupRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class GroupService {
@@ -103,20 +107,16 @@ public class GroupService {
         GroupDTO groupDTO = new GroupDTO(group, user_id);
         return groupDTO;
     }
-    /*
-    /**
-     * Find group by the groups name.
-     * @param groupName
-     * @return
-     */
-    /*
-    public GroupDTO getGroupByName(String groupName, Long user_id) {
-        //TODO: DB: Implement findGroupByName in GroupRepository that returns type Optional<Group>
-        Group group = groupRepository.findGroupByName(groupName).get();
-        GroupDTO groupDTO = new GroupDTO(group, user_id);
-        return groupDTO;
+
+    public List<GroupSearchDTO> searchForGroup(String search){
+        List<Group> gs =  groupRepository.searchForGroup(search);
+        List<GroupSearchDTO> dtos = new ArrayList<>();
+        for(Group g : gs){
+            dtos.add(new GroupSearchDTO(g.getGroup_id(), g.getGroupName()));
+        }
+        return dtos;
     }
-    */
+
 
     //TODO: Fix.
     /**
