@@ -9,11 +9,14 @@ import lombok.Data;
 @AllArgsConstructor
 public class FriendDTO {
     private Long userId, friendId, friendshipId;
+    private String userDisplayName, friendDisplayName;
 
     public FriendDTO(Friend friend) {
         this.userId = friend.getUser().getUser_id();
         this.friendId = friend.getFriend().getUser_id();
         this.friendshipId = friend.getFriendship_id();
+        userDisplayName = friend.getUser().getDisplayName();
+        friendDisplayName = friend.getFriend().getDisplayName();
     }
 
 }
