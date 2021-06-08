@@ -21,6 +21,7 @@ export default function GroupMembers(userId) {
       .then((res) => res.json())
       .then((members) => {
         let admin = false;
+        if(members.status !==401){
         members?.forEach(element => {
           if(element?.userId === parseInt(userId.userId)){ 
             if(element.admin){
@@ -28,6 +29,7 @@ export default function GroupMembers(userId) {
             }
           }
         });
+      }
         setAppState({ loading: false, members: members, admin:admin});
        
       });
@@ -49,7 +51,7 @@ const MemberList = (props) =>{
   const { members, admin } = props;
   if(members === null) return <p>Please select group</p>
   if (!members|| members.length === 0) return <p>No Members Yet</p>;
-  if(members.status === 400||members.status === 404||members.status === 405||members.status === 500) return <p>Please select group</p>
+  if(members.status === 400||members.status === 404||members.status === 405||members.status === 500||members.status === 401) return <p>Please select group</p>
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">

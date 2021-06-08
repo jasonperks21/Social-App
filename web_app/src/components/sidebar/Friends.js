@@ -6,6 +6,7 @@ import WithLoading from './WithGroupLoading';
 
 function Friends(userId) {
   const id = userId.userId;
+  const token = userId.token;
   const ListLoading = WithLoading(FriendList);
   const [appState, setAppState] = useState({
     loading: false,
@@ -14,8 +15,9 @@ function Friends(userId) {
 
   useEffect(() => {
     setAppState({ loading: true });
+    const head = {'headers': {'Authorization': 'Bearer ' + token}}
     const apiUrl = '/app/friends/?userId='+id;
-    fetch(apiUrl)
+    fetch(apiUrl, head)
       .then((res) => res.json())
       .then((friends) => {
         setAppState({ loading: false, friends: friends});

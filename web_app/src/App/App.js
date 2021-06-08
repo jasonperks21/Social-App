@@ -14,8 +14,9 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-          loggedIn : true,
+          loggedIn : false,
           userId : localStorage.getItem( 'userId' ),
+          token : localStorage.getItem( 'token' ),
           coords: null
         };
         this.success = this.success.bind(this);
@@ -41,7 +42,8 @@ class App extends React.Component {
     }
 
     render() {
-        //console.log(this.state.userId)
+        //console.log(this.state.userId);
+        //console.log(this.state.token);
         return(
         <BrowserRouter>
             <Switch>
@@ -49,13 +51,13 @@ class App extends React.Component {
                 <Login parentCallback = {this.handleUserId}/>
             </Route>
             <Route exact path="/">
-                <Home userId={this.state.userId}/>
+                <Home userId={this.state.userId} token={this.state.token}/>
             </Route>
             <Route exact path="/groups">
-                <Groups userId={this.state.userId}/>
+                <Groups userId={this.state.userId} token={this.state.token}/>
             </Route>
             <Route exact path="/search">
-                <Search userId={this.state.userId}/>
+                <Search userId={this.state.userId} token={this.state.token}/>
             </Route>
             <route path="/profile/:username">
 

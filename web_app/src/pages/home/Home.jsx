@@ -9,7 +9,7 @@ export default function Home(userId) {
     <>
       <Topbar />
       <div className="homeContainer">
-        <Sidebar userId = {userId.userId}/>
+        <Sidebar userId = {userId.userId} token = {userId.token}/>
         <Feed />
         <Rightbar />
       </div>

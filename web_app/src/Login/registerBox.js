@@ -14,6 +14,7 @@ class RegisterBox extends React.Component {
       errorMsg: '',
       dispName: '',
       loggedIn: false,
+      token: false, 
       userId: null
     };
     this.handleEmail = this.handleEmail.bind(this);
@@ -54,13 +55,31 @@ class RegisterBox extends React.Component {
               this.setState({errorMsg: 'Email incorrect or already in use'});
             }
             else if(response.passwordError){
-              this.setState({errorMsg: 'Invalid Password!'})
+              this.setState({errorMsg: 'Invalid Password!'});
             }
             else if(response.usernameError){
-              this.setState({errorMsg: 'Username Already in use!'})
+              this.setState({errorMsg: 'Username Already in use!'});
             }
             else{
-              this.setState({loggedIn: true, userId: response.user})
+              console.log(response.user);
+              this.setState({userId: response.user.userId});
+              const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({username: this.state.username, password: this.state.password})
+                };
+              fetch('/app/authenticate', requestOptions)
+              .then((res) => res.json())
+              .then((response) =>  {
+                
+                alert('test')
+                if(response.status === 401){
+                  this.setState({errorMsg: 'Something Went wrong'});
+                }
+                if(response.token){
+                  this.setState({loggedIn:true, token: response.token});  
+                }
+                });
             }   
         });
 }
@@ -71,8 +90,8 @@ class RegisterBox extends React.Component {
       this.setState({errorMsg: 'Please fill in all the fields'});
     }
     else if(this.state.password === this.state.passwordC){
-      if(this.state.password.length>7){
-        console.log('Matched!');
+      if(this.state.password.length>=6){
+        //console.log('Matched!');
         this.addUser();
       }
       else{
@@ -87,7 +106,8 @@ class RegisterBox extends React.Component {
 
   render() {
     if(this.state.loggedIn){
-      this.props.callBack(this.state.userId);
+      localStorage.setItem( 'token',this.state.token);
+      localStorage.setItem( 'userId',this.state.userId );
       return <Redirect to='/'/>;
     }
     return (
