@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import Login from '../Login/login';
 import NotFound from '../NotFound/NotFound';
 import Home from "../pages/home/Home"
@@ -27,6 +27,10 @@ class App extends React.Component {
             console.log(this.state.coords)
             }
     componentDidMount(){
+        if(this.state.token === 'null' || this.state.userId === 'null'|| !this.state.token || !this.state.userId ){
+            this.setState({loggedIn: false});
+            return <Redirect to='/login' />;
+        }
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(this.success)
         }
@@ -42,8 +46,6 @@ class App extends React.Component {
     }
 
     render() {
-        //console.log(this.state.userId);
-        //console.log(this.state.token);
         return(
         <BrowserRouter>
             <Switch>

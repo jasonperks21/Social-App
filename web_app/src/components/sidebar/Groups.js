@@ -24,7 +24,7 @@ function Groups(userId) {
     fetch(apiUrl, head)
       .then((res) => res.json())
       .then((groups) => {
-        console.log(groups)
+        //console.log(groups)
         if(groups.status === 400 || groups.status === 401 || groups.status === 405 || groups.status === 500 || groups.status === 404){
           groups = []
         }

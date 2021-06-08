@@ -1,6 +1,6 @@
 import React from 'react';
 import PasswordStrengthBar from 'react-password-strength-bar';
-import  { Redirect } from 'react-router-dom';
+//import  { Redirect } from 'react-router-dom';
 //Register Box 
 class RegisterBox extends React.Component {
 
@@ -108,7 +108,7 @@ class RegisterBox extends React.Component {
     if(this.state.loggedIn){
       localStorage.setItem( 'token',this.state.token);
       localStorage.setItem( 'userId',this.state.userId );
-      return <Redirect to='/'/>;
+      window.location.replace('/');
     }
     return (
 

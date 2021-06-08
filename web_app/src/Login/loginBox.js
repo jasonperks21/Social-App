@@ -1,5 +1,5 @@
 import React from 'react';
-import  { Redirect } from 'react-router-dom';
+//import  { Redirect } from 'react-router-dom';
 //Login Box
 class LoginBox extends React.Component {
   constructor(props) {
@@ -10,7 +10,8 @@ class LoginBox extends React.Component {
         token: null,
         loggedIn: false,
         checked: true,
-        errorMsg: ''
+        errorMsg: '',
+        userId: null
     };
     this.changeChecked = this.changeChecked.bind(this);
     this.handleUsername = this.handleUsername.bind(this);
@@ -51,17 +52,34 @@ class LoginBox extends React.Component {
       this.setState({errorMsg: 'Wrong username or password'});
      }
      if(response.token){
-      this.setState({loggedIn:true, token: response.token});
+      this.setState({token: response.token});
       localStorage.setItem( 'token', response.token );
       localStorage.setItem( 'rememberMe', this.state.checked );
-      
-     }
-    });
+      const head = {'headers': {'Authorization': 'Bearer ' + response.token}}
+      console.log(response);
+      fetch('/app/users/?q='+this.state.user, head)
+      .then((res) => res.json())
+      .then((response) =>  {
+        if(response.status !== 404 && response.status !== 401 && response.status !== 400 && response.status !== 500){
+          response.forEach(element => {
+            console.log(element)
+            console.log(this.state.user)
+            if(element.userName === this.state.user){
+              this.setState({loggedIn:true, userId: element.userId});  
+            }
+          });
+        }
+      }
+    );
+  }
+  });
 }
 
   render() {
     if(this.state.loggedIn){
-      return <Redirect to='/'/>;
+      localStorage.setItem( 'userId', this.state.userId);
+      localStorage.setItem( 'token', this.state.token);
+      window.location.replace('/');
     }
     return (
 

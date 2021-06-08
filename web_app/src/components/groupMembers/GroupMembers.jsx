@@ -51,7 +51,7 @@ const MemberList = (props) =>{
   const { members, admin } = props;
   if(members === null) return <p>Please select group</p>
   if (!members|| members.length === 0) return <p>No Members Yet</p>;
-  if(members.status === 400||members.status === 404||members.status === 405||members.status === 500||members.status === 401) return <p>Please select group</p>
+  if(members.status === 400||members.status === 404||members.status === 405||members.status === 500||members.status === 401) return <p></p>
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">

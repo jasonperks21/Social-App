@@ -2,11 +2,16 @@ import React from 'react';
 
 const FriendList = (props) => {
   const { friends } = props;
-  //console.log(friends)
+  console.log(friends)
   if (!friends || friends.length === 0) return <p>No Friends Yet</p>;
   if (friends===null) return <p>No Friends, sorry</p>;
   if (friends.status===404||friends.status===405||friends.status===400||friends.status===500){return <p>No Friends, sorry</p>;}
-  if(friends.status===401){return <p>Unauthorized</p>;}
+  if(friends.status===401){
+    console.log('test')
+    localStorage.setItem( 'token', null);
+    localStorage.setItem( 'userId', null);
+    window.location.replace('/login');
+  }
   return (
     <ul className="sidebarFriendList">
       {friends.map((friend) => {
