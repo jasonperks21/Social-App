@@ -71,8 +71,6 @@ public class GroupMemberService {
     // Get groups that user is a member of
 
     public List<GroupDTO> getGroupsWhereUserIsMember(Long userId) {
-        //get from repo
-        GroupsThatUserIsMemberOfDTO dto = new GroupsThatUserIsMemberOfDTO();
         List<Group> groupList = groupRepository.getALlGroupsThatUserIsMemberOf(userId);
         List<GroupDTO> groupDTOList = new ArrayList<>();
         for (Group g : groupList) {

@@ -37,7 +37,8 @@ import java.util.List;
                                 @ColumnResult(name="userId", type=Long.class),
                                 @ColumnResult(name="groupMemberId", type=Long.class),
                                 @ColumnResult(name="category", type=String.class),
-                                @ColumnResult(name="categoryId", type=Long.class)
+                                @ColumnResult(name="categoryId", type=Long.class),
+                                @ColumnResult(name="avatar", type=String.class)
                         }
                         )
         }
@@ -146,5 +147,10 @@ public class Post {
 
     private void addReply(Post reply){
         replies.add(reply);
+    }
+
+    public void setLocation(double lon, double lat){
+        GeometryFactory factory = new GeometryFactory();
+        this.location = factory.createPoint(new Coordinate(lon, lat));
     }
 }

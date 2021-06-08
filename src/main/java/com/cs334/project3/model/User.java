@@ -38,6 +38,8 @@ public class User {
     private String passwordHash;
     @Column(length = 512)
     private String jwt_token = null;
+    @Column
+    private String avatar_path = null;
 
     @OneToMany(mappedBy = "user")
     private List<GroupMember> memberships;

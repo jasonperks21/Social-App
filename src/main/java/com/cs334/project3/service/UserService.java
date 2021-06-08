@@ -89,6 +89,7 @@ public class UserService {
         if(unameError || emailError || passwordError) return new CreateUserStatus(unameError, emailError, passwordError, null);
         String passwordHash = passwordEncoder.encode(params.getPassword());
         User u = new User(params.getDisplayname(), params.getEmail(), params.getUsername(), passwordHash);
+        u.setAvatar_path(params.getAvatar());
         userRepository.save(u);
         return new CreateUserStatus(unameError, emailError, passwordError, new UserDTO(u));
     }
@@ -109,11 +110,33 @@ public class UserService {
      * @param udrb UpdateDispnameRequestBody containing user ID and new displayname
      * @return UserDTO of updated user
      */
-    public UserDTO updateDispname(UpdateDispnameRequestBody udrb){
+    public UserDTO updateUser(UpdateDispnameRequestBody udrb){
         User u = userRepository.getById(udrb.getUserid());
         u.setDisplayName(udrb.getDispname());
+        if(udrb.getAvatar() != null) u.setAvatar_path(udrb.getAvatar());
         userRepository.save(u);
         return new UserDTO(u);
+    }
+
+    public void loginUser(String uname, String jwt){
+        User u = userRepository.findUserByUsername(uname).get(0);
+        u.setJwt_token(jwt);
+        userRepository.save(u);
+    }
+
+    public void logoutUser(Long uid){
+        try{
+            User u = userRepository.getById(uid);
+            u.setJwt_token(null);
+            userRepository.save(u);
+        } catch(Exception e){
+            throw new NullPointerException();
+        }
+    }
+
+    public String getJWT(String username){
+        User u = userRepository.findUserByUsername(username).get(0);
+        return u.getJwt_token();
     }
 
     public List<UserDTO> getByUsername(String username) {

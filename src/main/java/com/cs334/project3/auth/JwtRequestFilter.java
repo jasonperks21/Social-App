@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cs334.project3.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +28,9 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -52,10 +56,9 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
-            System.out.println(userDetails.getUsername());
-            System.out.println(userDetails.getPassword());
-
-            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+            String jwtDB = userService.getJWT(username);
+            // Check if JWT token matches that in the DB for this user
+            if (jwtTokenUtil.validateToken(jwtToken, userDetails) && jwtToken.equals(jwtDB)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );

@@ -44,18 +44,19 @@ public class PostService {
      */
     public PostDTO createPost(PostRequestBody params){
         GroupMember gm = groupMemberRepository.getUserGroupMembership(params.getUserId(), params.getGroupId());
-        Category c = categoryRepository.getById(params.getCategoryId());
+        Category c = categoryRepository.findById(params.getCategoryId()).get();
         Post p;
         if(params.getReplyId() == null){
             p = gm.postToGroup(c, params.getMessage());
         } else {
-            p = gm.replyToPost(postRepository.getById(params.getReplyId()), params.getMessage());
+            p = gm.replyToPost(postRepository.findById(params.getReplyId()).get(), params.getMessage());
         }
+        p.setLocation(params.getLongitude(), params.getLatitude());
         postRepository.save(p);
         return new PostDTO( new PostResultSetMapping(gm.getGroup().getGroupName(),
                 p.getTimestamp(), p.getGroup().getGroup_id(), p.getPost_id(),
                 params.getReplyId(), params.getMessage(),gm.getUser().getDisplayName(),
-                gm.getUser().getUser_id(),gm.getMember_id(),c.getCategoryName(),c.getCategory_id()));
+                gm.getUser().getUser_id(),gm.getMember_id(),c.getCategoryName(),c.getCategory_id(), null));
     }
 
     /**

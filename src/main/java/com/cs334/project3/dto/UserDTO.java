@@ -10,11 +10,13 @@ public class UserDTO {
     private String displayName;
     private String userName;
     private String email;
+    private String avatar;
 
     public UserDTO(User u){
         userId=u.getUser_id();
         displayName=u.getDisplayName();
         userName=u.getUsername();
         email=u.getEmail();
+        avatar = u.getAvatar_path();
     }
 }

@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateUserRequestBody {
-    private String username, displayname, email, password;
+    private String username, displayname, email, password, avatar;
 }
