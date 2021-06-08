@@ -38,7 +38,7 @@ public class GroupMemberService {
         } else {
             gmDTOList = new ArrayList<>();
             for(GroupMember gm:gmList){
-                gmDTOList.add(new GroupMembersDTO(gm.getUser().getUser_id(), gm.getGroup().getGroup_id(), gm.getAdmin()));
+                gmDTOList.add(new GroupMembersDTO(gm));
             }
             return gmDTOList;
         }
@@ -46,7 +46,6 @@ public class GroupMemberService {
 
     // Update group admin
     public GroupMembersDTO updateGroupAdminByUserId(Long userId, Long groupId, boolean admin){
-        //TODO: DB: Implement getGroupMemberById(groupId, userId) in GroupMemberRepository
         GroupMember gm = groupMemberRepository.getUserGroupMembership(userId, groupId);
         if(gm==null){
             //TODO: Dom: Write more creative exceptions
@@ -54,7 +53,7 @@ public class GroupMemberService {
         } else{
             gm.setAdmin(admin);
             groupMemberRepository.save(gm);
-            return new GroupMembersDTO(userId, groupId, admin);
+            return new GroupMembersDTO(gm);
         }
     }
 
@@ -65,7 +64,7 @@ public class GroupMemberService {
             throw new NullPointerException();
         } else{
             groupMemberRepository.deleteById(gm.getMember_id());
-            return new GroupMembersDTO(gm.getUser().getUser_id(), gm.getGroup().getGroup_id(), gm.getAdmin());
+            return new GroupMembersDTO(gm);
         }
     }
 
