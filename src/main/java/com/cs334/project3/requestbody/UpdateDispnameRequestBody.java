@@ -9,4 +9,5 @@ import lombok.Getter;
 public class UpdateDispnameRequestBody {
     private Long userid;
     private String dispname;
+    private String avatar;
 }

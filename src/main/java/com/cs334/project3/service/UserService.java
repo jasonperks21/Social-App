@@ -110,9 +110,10 @@ public class UserService {
      * @param udrb UpdateDispnameRequestBody containing user ID and new displayname
      * @return UserDTO of updated user
      */
-    public UserDTO updateDispname(UpdateDispnameRequestBody udrb){
+    public UserDTO updateUser(UpdateDispnameRequestBody udrb){
         User u = userRepository.getById(udrb.getUserid());
         u.setDisplayName(udrb.getDispname());
+        if(udrb.getAvatar() != null) u.setAvatar_path(udrb.getAvatar());
         userRepository.save(u);
         return new UserDTO(u);
     }

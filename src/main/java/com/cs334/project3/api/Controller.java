@@ -292,9 +292,9 @@ public class Controller {
     }
 
     @PutMapping(value="/users")
-    public ResponseEntity<UserDTO> updateDispname(@RequestBody UpdateDispnameRequestBody udrb){
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UpdateDispnameRequestBody udrb){
         try{
-            UserDTO userDTO = userService.updateDispname(udrb);
+            UserDTO userDTO = userService.updateUser(udrb);
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } catch(Exception e){
             throw new ResourceNotFoundException("No such user exists");
