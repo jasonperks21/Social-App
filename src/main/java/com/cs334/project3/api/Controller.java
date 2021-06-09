@@ -160,9 +160,6 @@ public class Controller {
 
 
     ////////////////////Controller for categories/////////////////////
-
-
-
     @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
@@ -212,7 +209,6 @@ public class Controller {
     }
 
     ////////////////////Controller for posts/////////////////////
-
     @GetMapping("/posts")
     public ResponseEntity filter(@RequestBody FilterPostsRequestBody criteria) {
         try {
@@ -333,5 +329,4 @@ public class Controller {
     private Long getUserIdFromJWT(String jwt){
         return jwtTokenUtil.getUserIdFromToken(jwt);
     }
-
 }
