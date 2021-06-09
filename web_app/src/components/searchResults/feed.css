@@ -1,0 +1,22 @@
+.feed {
+  flex: 5;
+}
+
+.feedWrapper {
+  padding: 20px;
+}
+
+#FriendAdded{
+  color: green;
+}
+#removeFriend{
+  border: none;
+  cursor: pointer;
+  color: red;
+}
+
+.removeFriend{
+  border: none;
+  cursor: pointer;
+  color: red;
+}

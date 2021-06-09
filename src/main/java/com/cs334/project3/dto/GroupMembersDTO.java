@@ -11,10 +11,12 @@ public class GroupMembersDTO{
     Long userId;
     Long groupId;
     boolean admin;
+    String displayName;
 
     public GroupMembersDTO(GroupMember groupMember){
         this.userId = groupMember.getUser().getUser_id();
         this.groupId = groupMember.getGroup().getGroup_id();
         this.admin = groupMember.getAdmin();
+        this.displayName = groupMember.getUser().getDisplayName();
     }
 }

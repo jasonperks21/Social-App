@@ -38,42 +38,39 @@ public class GroupMemberService {
         } else {
             gmDTOList = new ArrayList<>();
             for(GroupMember gm:gmList){
-                gmDTOList.add(new GroupMembersDTO(gm.getUser().getUser_id(), gm.getGroup().getGroup_id(), gm.getAdmin()));
+                gmDTOList.add(new GroupMembersDTO(gm));
             }
             return gmDTOList;
         }
     }
-    /*
+
     // Update group admin
     public GroupMembersDTO updateGroupAdminByUserId(Long userId, Long groupId, boolean admin){
-        //TODO: DB: Implement getGroupMemberById(groupId, userId) in GroupMemberRepository
-        GroupMember gm = groupMemberRepository.getGroupMemberById(groupId, userId);
+        GroupMember gm = groupMemberRepository.getUserGroupMembership(userId, groupId);
         if(gm==null){
             //TODO: Dom: Write more creative exceptions
             throw new NullPointerException();
         } else{
             gm.setAdmin(admin);
             groupMemberRepository.save(gm);
-            return new GroupMembersDTO(userId, groupId, admin);
+            return new GroupMembersDTO(gm);
         }
     }
 
     // Delete groupmember
     public GroupMembersDTO deleteGroupMemberById(Long userId, Long groupId){
-        GroupMember gm = groupMemberRepository.getGroupMemberById(groupId, userId);
+        GroupMember gm = groupMemberRepository.getUserGroupMembership(userId, groupId);
         if(gm==null){
             throw new NullPointerException();
         } else{
             groupMemberRepository.deleteById(gm.getMember_id());
-            return new GroupMembersDTO(gm.getUser().getUser_id(), gm.getGroup().getGroup_id(), gm.getAdmin());
+            return new GroupMembersDTO(gm);
         }
     }
-    */
+
     // Get groups that user is a member of
 
     public List<GroupDTO> getGroupsWhereUserIsMember(Long userId) {
-        //get from repo
-        GroupsThatUserIsMemberOfDTO dto = new GroupsThatUserIsMemberOfDTO();
         List<Group> groupList = groupRepository.getALlGroupsThatUserIsMemberOf(userId);
         List<GroupDTO> groupDTOList = new ArrayList<>();
         for (Group g : groupList) {

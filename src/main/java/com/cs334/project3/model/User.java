@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,12 +30,16 @@ public class User {
 
     @Column
     private String displayName;
-    @Column
+    @Column(unique = true)
     private String email;
-    @Column //TODO: unique
+    @Column(unique = true)
     private String username;
+    @Column(length = 60)
+    private String passwordHash;
+    @Column(length = 512)
+    private String jwt_token = null;
     @Column
-    private Integer passwordHash;
+    private String avatar_path = null;
 
     @OneToMany(mappedBy = "user")
     private List<GroupMember> memberships;
@@ -44,6 +49,8 @@ public class User {
 
     @OneToMany(mappedBy = "friend")
     private List<Friend> friends_of;
+
+
 
     protected void addFriend(Friend friend){
         friends.add(friend);
@@ -59,13 +66,13 @@ public class User {
      * @param displayName Name to display.
      * @param email       User email address. Must be unique.
      * @param username    Username. Must be unique.
-     * @param password    The password. This class does handles hashing.
+     * @param passwordHash   The password. This class does not handle hashing.
      */
-    public User(String displayName, String email, String username, String password) {
-        this.displayName = displayName;
+    public User(String displayName, String email, String username, String passwordHash) {
+        this.displayName = displayName == null ? username : displayName;
         this.email = email;
         this.username = username;
-        this.passwordHash = password.hashCode();
+        this.passwordHash = passwordHash;
         memberships = new ArrayList<>();
         friends = new ArrayList<>();
         friends_of = new ArrayList<>();
@@ -82,16 +89,5 @@ public class User {
         GroupMember gm = new GroupMember(group, this, admin);
         memberships.add(gm);
         return gm;
-    }
-
-
-    /**
-     * Check whether the password matches the stored hash.
-     *
-     * @param password The password.
-     * @return Whether the password matches the stored hash.
-     */
-    public Boolean checkPassword(String password) {
-        return this.passwordHash == password.hashCode();
     }
 }

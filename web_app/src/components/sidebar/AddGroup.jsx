@@ -26,11 +26,11 @@ class AddGroup extends React.Component{
         // Simple POST request with a JSON body using fetch
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token },
             body: JSON.stringify({userId: this.props.userId, groupName: this.state.input})
         };
        fetch('/app/groups', requestOptions)
-            .then(response => {
+            .then(() => {
                 window.location.reload(false);
             });
     }
@@ -42,14 +42,13 @@ class AddGroup extends React.Component{
     }
 
     render(){
-        //console.log(JSON.stringify({userId: this.props.userId, groupName: this.state.input}));
+        //console.log(JSON.stringify({userId: this.props.userId, groupName: this.state.input})); 
         if(!this.state.buttonPressed){
-            return (<button onClick={()=>{this.setState({buttonPressed: true})}}>Create new group</button>);
+            return (<button onClick={()=>{this.setState({buttonPressed: true})}} >Create new group</button>);
         }
         return (
             <form onSubmit={this.handleSubmit}> 
-            
-              <input type="text" value={this.state.input} placeholder="Enter Group Name" onChange={this.handleChange} />
+              <input type="text" value={this.state.input} placeholder="Enter Group Name" onChange={this.handleChange} id="CreateNewGroup"/>
               {this.checkName()}
             </form>
         )

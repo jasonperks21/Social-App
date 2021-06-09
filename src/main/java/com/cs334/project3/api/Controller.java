@@ -1,5 +1,6 @@
 package com.cs334.project3.api;
 
+import com.cs334.project3.auth.JwtTokenUtil;
 import com.cs334.project3.datagen.DataGenerator;
 import com.cs334.project3.dto.*;
 import com.cs334.project3.model.*;
@@ -9,14 +10,17 @@ import com.cs334.project3.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.persistence.PostRemove;
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class Controller {
     
     ////////////////////////////////////////////////////////
@@ -45,6 +49,9 @@ public class Controller {
     private CategoryService categoryService;
 
     @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
     DataGenerator dataGenerator;
 
     @GetMapping("/gendata")
@@ -54,17 +61,31 @@ public class Controller {
     }
 
     @GetMapping(value="/groups", params= "userId")
-    //TODO: Marco: update to response entity
     public ResponseEntity<List<GroupDTO>> getGroupsForUser(@RequestParam Long userId){
-        //TODO: Dom: Error checking
-        List<GroupDTO> gDTOList = groupMemberService.getGroupsWhereUserIsMember(userId);
-        return new ResponseEntity<>(gDTOList, HttpStatus.OK);
+        try {
+            List<GroupDTO> gDTOList = groupMemberService.getGroupsWhereUserIsMember(userId);
+            return new ResponseEntity<>(gDTOList, HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalServerErrorException("Exception raised trying to retrieve group");
+        }
+    }
+
+    @GetMapping(value="/groups", params= "q")
+    public ResponseEntity<List<GroupSearchDTO>> searchForGroups(@RequestParam String q){
+        try {
+            List<GroupSearchDTO> gDTOList = groupService.searchForGroup(q);
+            return new ResponseEntity<>(gDTOList, HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new InternalServerErrorException("Exception raised trying to retrieve group");
+        }
     }
 
     ////////////////////Controller for groups/////////////////////
     @PostMapping("/groups")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupRequestBodyMapping ids) {
+    public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupRequestBody ids) {
         GroupDTO groupDTO;
         try {
             groupDTO = groupService.createGroup(ids);
@@ -76,10 +97,10 @@ public class Controller {
 
     @DeleteMapping("/groups")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<GroupDTO> deleteGroup(@RequestBody GroupRequestBodyMapping ids) {
+    public ResponseEntity<GroupDTO> deleteGroup(@RequestBody GroupRequestBody ids) {
         try {
-            GroupDTO gDTO = groupService.deleteGroup(ids);
-            return new ResponseEntity<>(gDTO, HttpStatus.OK);
+            groupService.deleteGroup(ids);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch(Exception e) {
             throw new InternalServerErrorException("Exception raised trying to delete group");
         }
@@ -87,7 +108,7 @@ public class Controller {
 
     ////////////////////Controller for groupmembers//////////////
     @PostMapping("/groupmember")
-    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody GroupRequestBodyMapping grbm){
+    public ResponseEntity<GroupMembersDTO> addGroupMemberToGroupById(@RequestBody GroupRequestBody grbm){
         UserDTO userDTO = userService.getUserById(grbm.getUserId());
         if (userDTO == null){
             throw new ResourceNotFoundException("No user with user ID "+grbm.getUserId()+" exists");
@@ -112,9 +133,9 @@ public class Controller {
             throw new InternalServerErrorException("Group members for group "+groupId+" could not be retrieved");
         }
     }
-    /*
+
     @PutMapping("/groupmember")
-    public ResponseEntity<GroupMembersDTO> updateGroupAdminByUser(@RequestBody GroupRequestBodyMapping grbm){
+    public ResponseEntity<GroupMembersDTO> updateGroupAdminByUser(@RequestBody GroupRequestBody grbm){
         GroupMembersDTO gmDTO;
         try{
             gmDTO = groupMemberService.updateGroupAdminByUserId(grbm.getUserId(), grbm.getGroupId(), grbm.isAdmin());
@@ -126,7 +147,7 @@ public class Controller {
     }
 
     @DeleteMapping(value="/groupmember",params={"uid","gid"})
-    public ResponseEntity<GroupMembersDTO> deleteGroupMemberById(@RequestParam Long uid, Long gid){
+    public ResponseEntity<GroupMembersDTO> deleteGroupMemberById(@RequestParam Long uid,@RequestParam Long gid){
         GroupMembersDTO gmDTO;
         try{
             gmDTO = groupMemberService.deleteGroupMemberById(uid, gid);
@@ -136,10 +157,14 @@ public class Controller {
             throw new InternalServerErrorException("Something went wrong, could not delete groupmember");
         }
     }
-    */
+
 
     ////////////////////Controller for categories/////////////////////
+
+
+
     @GetMapping("/categories")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> categoryDTOList;
         try {
@@ -187,24 +212,38 @@ public class Controller {
     }
 
     ////////////////////Controller for posts/////////////////////
-    @GetMapping("/posts/{userId}")
-    public ResponseEntity<List<PostDTO>> getPostsForUser(@PathVariable Long userId){
-        //TODO: Dom: Exception handling
-        List<PostDTO> dto = postService.getAllPostsForUser(userId);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
 
-    @GetMapping("/posts/{userId}/{groupId}")
-    public ResponseEntity<List<PostDTO>> getPostsOfSpecificGroupForUser(@PathVariable Long userId,@PathVariable Long groupId){
-        //TODO: Dom: Exception handling
-        List<PostDTO> dto = postService.getAllPostsForUserByGroup(userId, groupId);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+    @GetMapping("/posts")
+    public ResponseEntity filter(@RequestBody FilterPostsRequestBody criteria) {
+        try {
+            List<PostDTO> posts = postService.filterPosts(criteria);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException("Posts could not be retrieved");
+        }
     }
 
     @PostMapping("/posts")
-    public void addPost(@RequestBody PostRequestBody ids) {
-        //TODO: Dom: Error checking
-        //TODO: Marco: Try catch
+    public ResponseEntity<PostDTO> addPost(@RequestBody PostRequestBody ids) {
+        try {
+            PostDTO pdto = postService.createPost(ids);
+            return new ResponseEntity<>(pdto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException("Error in creating post: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping(value = "/posts", params = "postId")
+    public ResponseEntity deletePost(@RequestParam Long postId){
+        try{
+            postService.deletePost(postId);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new InternalServerErrorException("Error in deleting post: " + e.getMessage());
+        }
     }
 
     ////////////////////Controller for users/////////////////////
@@ -239,9 +278,7 @@ public class Controller {
         }
     }
 
-    @PostMapping(value="/users")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CreateUserStatus> addUser(@RequestBody CreateUserRequestBody params){
+    public ResponseEntity<CreateUserStatus> addUser(CreateUserRequestBody params){
         try{
             CreateUserStatus cus = userService.createUser(params);
             if(cus.getUser()==null){
@@ -255,21 +292,46 @@ public class Controller {
     }
 
     @PutMapping(value="/users")
-    public ResponseEntity<UserDTO> updateDispname(@RequestBody UpdateDispnameRequestBody udrb){
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UpdateDispnameRequestBody udrb){
         try{
-            UserDTO userDTO = userService.updateDispname(udrb);
+            UserDTO userDTO = userService.updateUser(udrb);
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } catch(Exception e){
             throw new ResourceNotFoundException("No such user exists");
         }
     }
 
-    ////////////////////Registration/////////////////////
-    @GetMapping("/register")
-    public ResponseEntity<String> showRegistrationForm(){
-        return new ResponseEntity<>("signup_form", HttpStatus.OK);
+    ////////////////////Register, logout/////////////////////
+
+    @PostMapping(value="/register")
+    public ResponseEntity<CreateUserStatus> registerNewUser(@RequestBody CreateUserRequestBody params){
+        try{
+            return addUser(params);
+        } catch(Exception e){
+            throw new InternalServerErrorException("Something went wrong - maybe the DB is down?");
+        }
     }
 
-    ////////////////////Login/////////////////////
+    @RequestMapping(value="/logout", method=RequestMethod.GET)
+    public ResponseEntity<String> logoutUser(HttpServletRequest request, HttpServletResponse response){
+        String token = request.getHeader("Authorization");
+        String jwt = null;
+        if(token.startsWith("Bearer ")){
+            jwt = token.substring(7);
+        } else {
+            throw new ResourceNotFoundException();
+        }
+        Long uid = getUserIdFromJWT(jwt);
+        userService.logoutUser(uid);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth!=null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return new ResponseEntity<>("Successfully logged out user ID "+uid, HttpStatus.OK);
+    }
+
+    private Long getUserIdFromJWT(String jwt){
+        return jwtTokenUtil.getUserIdFromToken(jwt);
+    }
 
 }

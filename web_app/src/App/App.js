@@ -1,9 +1,10 @@
 import React from 'react';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import Login from '../Login/login';
 import NotFound from '../NotFound/NotFound';
 import Home from "../pages/home/Home"
 import Groups from "../pages/groups/groups"
+import Search from "../pages/Search/Search"
 import "./styles.css";
 
 
@@ -13,8 +14,9 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-          loggedIn : true,
-          userId : '2',
+          loggedIn : false,
+          userId : localStorage.getItem( 'userId' ),
+          token : localStorage.getItem( 'token' ),
           coords: null
         };
         this.success = this.success.bind(this);
@@ -25,6 +27,10 @@ class App extends React.Component {
             console.log(this.state.coords)
             }
     componentDidMount(){
+        if(this.state.token === 'null' || this.state.userId === 'null'|| !this.state.token || !this.state.userId ){
+            this.setState({loggedIn: false});
+            return <Redirect to='/login' />;
+        }
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(this.success)
         }
@@ -32,19 +38,28 @@ class App extends React.Component {
             console.log('geolocation is not enabled on this browser');
             }
       }
+    
+    handleUserId = (childData) => {
+        console.log(childData.userId);
+        this.setState({userId: childData.userId});
+        localStorage.setItem( 'userId', childData.userId );
+    }
 
     render() {
         return(
         <BrowserRouter>
             <Switch>
             <Route exact path="/login">
-                <Login />
+                <Login parentCallback = {this.handleUserId}/>
             </Route>
             <Route exact path="/">
-                <Home userId={this.state.userId}/>
+                <Home userId={this.state.userId} token={this.state.token}/>
             </Route>
             <Route exact path="/groups">
-                <Groups userId={this.state.userId}/>
+                <Groups userId={this.state.userId} token={this.state.token}/>
+            </Route>
+            <Route exact path="/search">
+                <Search userId={this.state.userId} token={this.state.token}/>
             </Route>
             <route path="/profile/:username">
 
