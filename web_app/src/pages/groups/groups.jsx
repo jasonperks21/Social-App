@@ -10,7 +10,7 @@ export default function Groups(ids) {
       <Topbar />
       <div className="homeContainer">
         <Sidebar userId = {ids.userId} token = {ids.token}/>
-        <GroupList userId={ids.userId} token = {ids.token}/>
+        <GroupList userId={ids.userId} token = {ids.token} coords={ids.coords}/>
         <GroupMembers userId={ids.userId} token = {ids.token}/>
       </div>
     </>
