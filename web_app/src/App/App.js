@@ -56,7 +56,7 @@ class App extends React.Component {
                 <Home userId={this.state.userId} token={this.state.token}/>
             </Route>
             <Route exact path="/groups">
-                <Groups userId={this.state.userId} token={this.state.token}/>
+                <Groups userId={this.state.userId} token={this.state.token} coords={this.state.coords}/>
             </Route>
             <Route exact path="/search">
                 <Search userId={this.state.userId} token={this.state.token}/>

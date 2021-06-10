@@ -45,7 +45,7 @@ class LoginBox extends React.Component {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: this.state.user, password: this.state.pwd})
     };
-   fetch('/app/authenticate', requestOptions)
+   fetch('/app/login', requestOptions)
    .then((res) => res.json())
    .then((response) =>  {
      if(response.status === 401){

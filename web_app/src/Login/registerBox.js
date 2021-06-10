@@ -48,9 +48,10 @@ class RegisterBox extends React.Component {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: this.state.username, displayname: this.state.dispName, email: this.state.email, password: this.state.password})
     };
-   fetch('/app/users', requestOptions)
+   fetch('/app/register', requestOptions)
    .then((res) => res.json())
    .then((response) =>  {
+            console.log(response)
             if(response.emailError){
               this.setState({errorMsg: 'Email incorrect or already in use'});
             }
@@ -60,6 +61,9 @@ class RegisterBox extends React.Component {
             else if(response.usernameError){
               this.setState({errorMsg: 'Username Already in use!'});
             }
+            else if(response.status === 401){
+              this.setState({errorMsg: 'Something Went wrong'});
+            }
             else{
               console.log(response.user);
               this.setState({userId: response.user.userId});
@@ -68,7 +72,7 @@ class RegisterBox extends React.Component {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({username: this.state.username, password: this.state.password})
                 };
-              fetch('/app/authenticate', requestOptions)
+              fetch('/app/login', requestOptions)
               .then((res) => res.json())
               .then((response) =>  {
                 if(response.status === 401){

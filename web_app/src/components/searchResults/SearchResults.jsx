@@ -152,7 +152,7 @@ class Person extends React.Component{
     // Simple POST request with a JSON body using fetch
     const requestOptions = {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token },
         body: JSON.stringify({userId: this.state.userId, friendId: String(this.state.person.userId)})
     };
     await fetch('/app/friends', requestOptions)
