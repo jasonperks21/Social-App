@@ -1,6 +1,6 @@
 import React from 'react';
 import PasswordStrengthBar from 'react-password-strength-bar';
-import  { Redirect } from 'react-router-dom';
+//import  { Redirect } from 'react-router-dom';
 //Register Box 
 class RegisterBox extends React.Component {
 
@@ -14,6 +14,7 @@ class RegisterBox extends React.Component {
       errorMsg: '',
       dispName: '',
       loggedIn: false,
+      token: false, 
       userId: null
     };
     this.handleEmail = this.handleEmail.bind(this);
@@ -47,20 +48,40 @@ class RegisterBox extends React.Component {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: this.state.username, displayname: this.state.dispName, email: this.state.email, password: this.state.password})
     };
-   fetch('/app/users', requestOptions)
+   fetch('/app/register', requestOptions)
    .then((res) => res.json())
    .then((response) =>  {
+            console.log(response)
             if(response.emailError){
               this.setState({errorMsg: 'Email incorrect or already in use'});
             }
             else if(response.passwordError){
-              this.setState({errorMsg: 'Invalid Password!'})
+              this.setState({errorMsg: 'Invalid Password!'});
             }
             else if(response.usernameError){
-              this.setState({errorMsg: 'Username Already in use!'})
+              this.setState({errorMsg: 'Username Already in use!'});
+            }
+            else if(response.status === 401){
+              this.setState({errorMsg: 'Something Went wrong'});
             }
             else{
-              this.setState({loggedIn: true, userId: response.user})
+              console.log(response.user);
+              this.setState({userId: response.user.userId});
+              const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({username: this.state.username, password: this.state.password})
+                };
+              fetch('/app/login', requestOptions)
+              .then((res) => res.json())
+              .then((response) =>  {
+                if(response.status === 401){
+                  this.setState({errorMsg: 'Something Went wrong'});
+                }
+                if(response.token){
+                  this.setState({loggedIn:true, token: response.token});  
+                }
+                });
             }   
         });
 }
@@ -71,8 +92,8 @@ class RegisterBox extends React.Component {
       this.setState({errorMsg: 'Please fill in all the fields'});
     }
     else if(this.state.password === this.state.passwordC){
-      if(this.state.password.length>7){
-        console.log('Matched!');
+      if(this.state.password.length>=6){
+        //console.log('Matched!');
         this.addUser();
       }
       else{
@@ -87,8 +108,9 @@ class RegisterBox extends React.Component {
 
   render() {
     if(this.state.loggedIn){
-      this.props.callBack(this.state.userId);
-      return <Redirect to='/'/>;
+      localStorage.setItem( 'token',this.state.token);
+      localStorage.setItem( 'userId',this.state.userId );
+      window.location.replace('/');
     }
     return (
 
@@ -97,7 +119,7 @@ class RegisterBox extends React.Component {
       <form onSubmit={this.handleSubmit}>
       <label>
           <p>Email</p>
-          <input type="email" placeholder="example@something.com" value={this.state.email} onChange={this.handleEmail}/>
+          <input type="email" placeholder="example@something.com" value={this.state.email} id="email" onChange={this.handleEmail}/>
         </label>
         <label>
           <p>Username</p>

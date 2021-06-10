@@ -9,12 +9,13 @@ import lombok.Data;
 @AllArgsConstructor
 public class UserDTOForPost {
     private Long id;
-    private String displayName;
+    private String displayName, avatar;
     private boolean admin;
 
     public UserDTOForPost(User user, boolean admin){
         id = user.getUser_id();
         displayName = user.getDisplayName();
         this.admin = admin;
+        avatar = user.getAvatar_path();
     }
 }

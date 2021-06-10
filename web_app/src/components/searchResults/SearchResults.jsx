@@ -7,6 +7,7 @@ export default function SearchResults(ids) {
   let q = new URLSearchParams(window.location.search).get("q");
   // console.log(gId);
   const id = ids.userId;
+  const token = ids.token;
   const ListLoading = WithLoading(DisplayResults);
   const [appState, setAppState] = useState({
     loading: false,
@@ -16,14 +17,17 @@ export default function SearchResults(ids) {
 
   useEffect(() => {
     setAppState({ loading: true });
+    const head = {'headers': {'Authorization': 'Bearer ' + token}}
     const apiUrl = '/app/users/?q='+q;
     const apiUrl2 = '/app/friends/?userId='+id;
-    Promise.all([fetch(apiUrl).then(res => res.json()),
-    fetch(apiUrl2).then(res => res.json())])
+    Promise.all([fetch(apiUrl, head).then(res => res.json()),
+    fetch(apiUrl2, head).then(res => res.json())])
     .then(([urlOneData, urlTwoData]) => {
+      console.log(urlOneData)
       let friends =[];
         if(urlTwoData !== null){
-          if (urlTwoData.status!==404||urlTwoData.status!==400||urlTwoData.status!==405||urlTwoData.status!==500){
+          console.log(urlTwoData.status)
+          if (urlTwoData.status!==404 && urlTwoData.status!==400 && urlTwoData.status!==405 && urlTwoData.status!==500 && urlTwoData.status!==401){
             urlTwoData.forEach(f => {
               friends.push(f.friendId)
             });}
@@ -43,23 +47,23 @@ export default function SearchResults(ids) {
   return (
     <div className="feed">
       <div className="feedWrapper">
-        <ListLoading isLoading={appState.loading} results={appState.results} userId={id} myFriends={appState.myFriends}/>
+        <ListLoading isLoading={appState.loading} results={appState.results} userId={id} myFriends={appState.myFriends} token={token}/>
       </div>
     </div>
   );
 }
 
 const DisplayResults = (props) =>{
-  const { results, userId, myFriends} = props;
+  const { results, userId, myFriends, token} = props;
   if(results === null) return <p>No results found!</p>
   if (!results || results.length === 0) return <p>No results found!</p>;
-  if(results.status === 400||results.status === 404||results.status === 405||results.status === 500) return <p>Something went wrong!</p>
+  if(results.status === 400||results.status === 404||results.status === 405||results.status === 500||results.status === 401) return <p>Something went wrong!</p>
   return(
     <div className="feed">
       <div className="feedWrapper">
         <h2>Users:</h2>
         {results.map((r) => {
-            return <Person result={r} userId={userId} friendList={myFriends}/>;
+            return <Person result={r} userId={userId} friendList={myFriends} token={token}/>;
           })}
         <hr />
         <h2>Groups:</h2>
@@ -127,7 +131,7 @@ class Person extends React.Component{
     // Simple POST request with a JSON body using fetch
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token },
         body: JSON.stringify({userId: this.state.userId, friendId: String(this.state.person.userId)})
     };
     await fetch('/app/friends', requestOptions)
@@ -148,7 +152,7 @@ class Person extends React.Component{
     // Simple POST request with a JSON body using fetch
     const requestOptions = {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.props.token },
         body: JSON.stringify({userId: this.state.userId, friendId: String(this.state.person.userId)})
     };
     await fetch('/app/friends', requestOptions)

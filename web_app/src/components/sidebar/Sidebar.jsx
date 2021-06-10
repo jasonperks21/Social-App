@@ -9,11 +9,11 @@ export default function Sidebar(userId) {
     <div className="sidebar">
       <div className="sidebarWrapper">
         <h3 className="sidebarHeading">Active Groups</h3>
-          <Groups userId={userId.userId}/>
-          <AddGroup userId={userId.userId}/>
+          <Groups userId={userId.userId} token = {userId.token}/>
+          <AddGroup userId={userId.userId} token = {userId.token}/>
         <hr className="sidebarHr" />
         <h3 className="sidebarHeading">Friends</h3>
-        <Friends userId={userId.userId}/>
+        <Friends userId={userId.userId} token = {userId.token}/>
       </div>
     </div>
   );

@@ -6,6 +6,8 @@ import WithLoading from './WithGroupLoading';
 
 function Groups(userId) {
   const id = userId.userId;
+  const token = userId.token;
+  //console.log(token);
   const ListLoading = WithLoading(GroupList);
   const [appState, setAppState] = useState({
     loading: false,
@@ -14,12 +16,18 @@ function Groups(userId) {
   });
 
   useEffect(() => {
+    //console.log(id);
+    //console.log(token);
     setAppState({ loading: true });
+    const head = {'headers': {'Authorization': 'Bearer ' + token}}
     const apiUrl = '/app/groups/?userId='+id;
-    fetch(apiUrl)
+    fetch(apiUrl, head)
       .then((res) => res.json())
       .then((groups) => {
-        
+        //console.log(groups)
+        if(groups.status === 400 || groups.status === 401 || groups.status === 405 || groups.status === 500 || groups.status === 404){
+          groups = []
+        }
         setAppState({ loading: false, groups: groups});
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -34,7 +42,7 @@ function Groups(userId) {
 
   return (
     <div className='Groups'>
-        <ListLoading isLoading={appState.loading} groups={appState.groups} />
+        <ListLoading isLoading={appState.loading} groups={appState.groups} token={token} />
         {checkMore3()}
         
     </div>

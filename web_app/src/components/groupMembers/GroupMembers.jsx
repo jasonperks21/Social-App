@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import  WithLoading from "../sidebar/WithGroupLoading";
 
 export default function GroupMembers(userId) {
-  //const id = userId.userId;
+  const token = userId.token;
   const gId = new URLSearchParams(window.location.search).get("gid");
   const ListLoading = WithLoading(MemberList);
   const [appState, setAppState] = useState({
@@ -16,11 +16,14 @@ export default function GroupMembers(userId) {
 
   useEffect(() => {
     setAppState({ loading: true });
+    const head = {'headers': {'Authorization': 'Bearer ' + token}}
     const apiUrl = '/app/groupmember/?groupId='+gId;
-    fetch(apiUrl)
+    fetch(apiUrl, head)
       .then((res) => res.json())
       .then((members) => {
+        //console.log(members)
         let admin = false;
+        if(members.status !==401 && members.status !== 500){
         members?.forEach(element => {
           if(element?.userId === parseInt(userId.userId)){ 
             if(element.admin){
@@ -28,6 +31,7 @@ export default function GroupMembers(userId) {
             }
           }
         });
+      }
         setAppState({ loading: false, members: members, admin:admin});
        
       });
@@ -41,15 +45,15 @@ export default function GroupMembers(userId) {
     </div>);
   }
   return (<div className='Groups'>
-          <ListLoading isLoading={appState.loading} members={appState.members} admin={appState.admin}/>
+          <ListLoading isLoading={appState.loading} members={appState.members} admin={appState.admin} token={token}/>
           </div>);
 }
 
 const MemberList = (props) =>{
-  const { members, admin } = props;
+  const { members, admin, token } = props;
   if(members === null) return <p>Please select group</p>
   if (!members|| members.length === 0) return <p>No Members Yet</p>;
-  if(members.status === 400||members.status === 404||members.status === 405||members.status === 500) return <p>Please select group</p>
+  if(members.status === 400||members.status === 404||members.status === 405||members.status === 500||members.status === 401) return <p></p>
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">
@@ -65,8 +69,8 @@ const MemberList = (props) =>{
                   alt=""
                   className="messageProfileImg"
                 />
-                <span className="messageUsername">{member.userId}</span>
-                {removeButton(admin, member)}
+                <span className="messageUsername">{member?.displayName}</span>
+                {removeButton(admin, member, token)}
                 </div>
                 <div className="messageBottom">
                 {checkAdmin(member.admin)}
@@ -90,21 +94,21 @@ function checkAdmin(bool){
   return <span className="messageText">Member</span>;
 }
 
-function removeButton(bool, member){
-  
+function removeButton(bool, member, token){
+  //console.log(token)
   if(bool){
-    return <button onClick={m => removeMember(member)} id="removeButton">Remove</button>
+    return <button onClick={m => removeMember(member, token)} id="removeButton">Remove</button>
   }
   else{
     return <> </>;
   }
 }
 
-async function removeMember(member){
+async function removeMember(member, token){
   // Simple POST request with a JSON body using fetch
   const requestOptions = {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       body: JSON.stringify({userId: member.userId, groupId: member.groupId})
   };
   await fetch('/app/friends', requestOptions)

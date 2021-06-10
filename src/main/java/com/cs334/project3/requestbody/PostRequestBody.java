@@ -6,4 +6,5 @@ import lombok.Data;
 public class PostRequestBody {
     private Long userId, groupId, replyId, categoryId;
     private String message;
+    private Double longitude, latitude;
 }

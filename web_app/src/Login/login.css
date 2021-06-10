@@ -65,6 +65,8 @@ html, body {
     font-family: "Montserrat", sans-serif;
     text-decoration: none;
     font-size: 15px;
+    display: flex;
+    flex-direction: column;
     text-align: center;
 }
 #switch{
@@ -75,4 +77,12 @@ html, body {
 }
 .errorMsg{
     color:red;
+}
+
+#RememberMe{
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: normal;
+    display: inline-block;
+    text-align: right;
 }

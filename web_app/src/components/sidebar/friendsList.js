@@ -6,6 +6,9 @@ const FriendList = (props) => {
   if (!friends || friends.length === 0) return <p>No Friends Yet</p>;
   if (friends===null) return <p>No Friends, sorry</p>;
   if (friends.status===404||friends.status===405||friends.status===400||friends.status===500){return <p>No Friends, sorry</p>;}
+  if(friends.status===401){
+    return <p>Unauthorized</p>;
+  }
   return (
     <ul className="sidebarFriendList">
       {friends.map((friend) => {
@@ -30,7 +33,7 @@ class Friend extends React.Component{
     return (
       <li className="sidebarFriend">
       <img src="/assets/person/2.jpeg" alt="" className="sidebarFriendImg"/>
-          <span className="sidebarFriendName">{this.state.friend.friendId}</span>
+          <span className="sidebarFriendName">{this.state.friend.friendDisplayName}</span>
         </li>
       );
   }

@@ -23,6 +23,7 @@ public class PostDTO {
     private Long postUserId;
     private String userDisplayName;
     private ZonedDateTime timePosted;
+    private String avatar;
 
 
     public PostDTO(PostResultSetMapping post){
@@ -36,6 +37,7 @@ public class PostDTO {
         timePosted = post.getTimePosted();
         groupName = post.getGroupName();
         categoryId = post.getCategoryId();
+        avatar = post.getAvatar();
     }
 
     public void addReply(PostDTO dto){

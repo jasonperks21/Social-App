@@ -7,7 +7,7 @@ export default function Search(ids) {
     <>
       <Topbar />
       <div className="homeContainer">
-        <SearchResults userId = {ids.userId}/>
+        <SearchResults userId = {ids.userId} token={ids.token}/>
       </div>
     </>
   );
