@@ -304,12 +304,9 @@ public class Controller {
 
     ////////////////////Controller for posts/////////////////////
     @GetMapping(value="/posts", params= {"userId", "filterUsedId", "groupId", "after", "time", "radiusKm", "longitude", "latitude"})
-    public ResponseEntity filter(@RequestParam Long userdId, @RequestParam Long filterUsedId,
-                                 @RequestParam Long groupId, @RequestParam Boolean after,
-                                 @RequestParam ZonedDateTime time, @RequestParam Double radiusKm,
-                                 @RequestParam Double longitude, @RequestParam Double latitude) {
+    public ResponseEntity filter(FilterPostsRequestBody criteria) {
         try {
-            List<PostDTO> posts = postService.filterPosts(userdId, filterUsedId, groupId, after, time, radiusKm, longitude, latitude);
+            List<PostDTO> posts = postService.filterPosts(criteria);
             return new ResponseEntity<>(posts, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

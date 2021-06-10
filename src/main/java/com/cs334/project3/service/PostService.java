@@ -62,21 +62,14 @@ public class PostService {
 
     /**
      * Search for posts based off filter criteria. Filter criteria can be null if filtering is not required.
-     * @param userId
-     * @param filterUsedId
-     * @param groupId
-     * @param after
-     * @param time
-     * @param radiusKm
-     * @param longitude
-     * @param latitude
+     * @param criteria
      * @return A list of DTOs ready for display.
      */
-    public List<PostDTO> filterPosts(Long userId, Long filterUsedId, Long groupId, Boolean after, ZonedDateTime time, Double radiusKm, Double longitude, Double latitude){
+    public List<PostDTO> filterPosts(FilterPostsRequestBody criteria) {
         GeometryFactory factory = new GeometryFactory();
-        Point loc = (radiusKm == null) ? null : factory.createPoint(new Coordinate(longitude, latitude));
-        List<PostResultSetMapping> l = postRepository.filter(userId, filterUsedId,
-                groupId, time, after, radiusKm, loc);
+        Point loc = (criteria.getRadiusKm() == null) ? null : factory.createPoint(new Coordinate(criteria.getLongitude(), criteria.getLatitude()));
+        List<PostResultSetMapping> l = postRepository.filter(criteria.getUserId(), criteria.getFilterUsedId(),
+                criteria.getGroupId(), criteria.getTime(), criteria.getAfter(), criteria.getRadiusKm(), loc);
         return PostDTOProcessor.createRecursiveDTOStructure(l);
     }
 
