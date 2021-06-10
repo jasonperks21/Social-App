@@ -14,6 +14,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -61,15 +62,21 @@ public class PostService {
 
     /**
      * Search for posts based off filter criteria. Filter criteria can be null if filtering is not required.
-     * @param criteria The criteria in the request body.
+     * @param userId
+     * @param filterUsedId
+     * @param groupId
+     * @param after
+     * @param time
+     * @param radiusKm
+     * @param longitude
+     * @param latitude
      * @return A list of DTOs ready for display.
      */
-
-    public List<PostDTO> filterPosts(FilterPostsRequestBody criteria){
+    public List<PostDTO> filterPosts(Long userId, Long filterUsedId, Long groupId, Boolean after, ZonedDateTime time, Double radiusKm, Double longitude, Double latitude){
         GeometryFactory factory = new GeometryFactory();
-        Point loc = (criteria.getRadiusKm() == null) ? null : factory.createPoint(new Coordinate(criteria.getLongitude(), criteria.getLatitude()));
-        List<PostResultSetMapping> l = postRepository.filter(criteria.getUserId(), criteria.getFilterUserId(),
-                criteria.getGroupId(), criteria.getTime(), criteria.getAfter(), criteria.getRadiusKm(), loc);
+        Point loc = (radiusKm == null) ? null : factory.createPoint(new Coordinate(longitude, latitude));
+        List<PostResultSetMapping> l = postRepository.filter(userId, filterUsedId,
+                groupId, time, after, radiusKm, loc);
         return PostDTOProcessor.createRecursiveDTOStructure(l);
     }
 
