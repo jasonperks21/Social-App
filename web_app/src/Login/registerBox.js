@@ -71,8 +71,6 @@ class RegisterBox extends React.Component {
               fetch('/app/authenticate', requestOptions)
               .then((res) => res.json())
               .then((response) =>  {
-                
-                alert('test')
                 if(response.status === 401){
                   this.setState({errorMsg: 'Something Went wrong'});
                 }
@@ -117,7 +115,7 @@ class RegisterBox extends React.Component {
       <form onSubmit={this.handleSubmit}>
       <label>
           <p>Email</p>
-          <input type="email" placeholder="example@something.com" value={this.state.email} onChange={this.handleEmail}/>
+          <input type="email" placeholder="example@something.com" value={this.state.email} id="email" onChange={this.handleEmail}/>
         </label>
         <label>
           <p>Username</p>
